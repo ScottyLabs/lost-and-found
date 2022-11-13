@@ -1,129 +1,81 @@
-import Head from "next/head";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { trpc } from "../utils/trpc";
+import ItemGrid from 'components/ItemGrid';
+import MainLayout from 'components/layout/MainLayout';
+import { GetServerSideProps } from 'next';
+import getServerAuthSession from 'server/common/get-server-auth-session';
 
-function AuthShowcase() {
-  const { data: secretMessage } = trpc.auth.getSecretMessage.useQuery();
-
-  const { data: sessionData } = useSession();
-
-  return (
-    <div className="flex flex-col items-center justify-center gap-2">
-      {sessionData && (
-        <p className="text-2xl">
-          Logged in as{" "}
-          <span className="font-bold text-accent">
-            {sessionData?.user?.name}
-          </span>
-        </p>
-      )}
-      {secretMessage && <p className="text-xl font-thin">{secretMessage}</p>}
-      <button
-        type="button"
-        className="btn-primary btn my-2"
-        onClick={sessionData ? () => signOut() : () => signIn()}
-      >
-        {sessionData ? "Sign out" : "Sign in"}
-      </button>
-    </div>
-  );
+function TablePage() {
+	return (
+		<MainLayout>
+			<div className='mx-20'>
+				<p>
+					To retrieve an object, go to the location listed next to the object on
+					the corresponding card. You will be required to identify any lost
+					possessions. All items must be picked up in person and a photo ID is
+					required.
+				</p>
+			</div>
+			<div className='m-5 flex flex-col gap-1 rounded-md border border-amber-800 bg-amber-50 p-5 text-amber-900'>
+				<div>
+					<h1 className='text-lg font-semibold'>Lost an item?</h1>
+					<p>
+						If you lost an item, please check the items below first to see if
+						your item is there. Otherwise, you can send an email to{' '}
+						<a
+							href='mailto:lost-and-found@cmu.edu'
+							className='link-accent link'
+						>
+							lost-and-found@cmu.edu
+						</a>
+						. Note that we do not actively cross-reference reported lost items
+						with current lost and found inventory. Instead, we use the
+						information submitted in special cases should we need to identify an
+						item.
+					</p>
+				</div>
+				<div>
+					<h1 className='text-lg font-semibold'>Found an item?</h1>
+					<p>
+						Please return it to the CUC Lost and Found. If you have any
+						inquiries, please send an email to{' '}
+						<a
+							href='mailto:cucinfodesk@andrew.cmu.edu'
+							className='link-accent link'
+						>
+							cucinfodesk@andrew.cmu.edu
+						</a>{' '}
+						or call 412-268-2107.
+					</p>
+				</div>
+				<div>
+					<h1 className='text-lg font-semibold'>Have feedback?</h1>
+					<p>
+						To leave feedback, please fill out this{' '}
+						<a
+							href='https://forms.gle/QDnNyjdzUBnFUkno8'
+							target='_blank'
+							rel='noreferrer'
+							className='link-accent link'
+						>
+							form
+						</a>
+						. Thanks!
+					</p>
+				</div>
+			</div>
+			<ItemGrid />
+		</MainLayout>
+	);
 }
 
-type TechnologyCardProps = {
-  name: string;
-  description: string;
-  documentation: string;
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+	const session = await getServerAuthSession(ctx);
+	if (!session)
+		return { redirect: { destination: '/auth/signin', permanent: true } };
+	return {
+		props: {
+			session
+		}
+	};
 };
 
-function TechnologyCard({
-  name,
-  description,
-  documentation,
-}: TechnologyCardProps) {
-  return (
-    <section className="justify-center rounded border-2 border-gray-500 p-6 shadow-xl duration-500 hover:scale-105">
-      <Link
-        className="link-secondary link text-lg font-bold"
-        href={documentation}
-        target="_blank"
-        rel="noreferrer"
-      >
-        {name}
-      </Link>
-      <p>{description}</p>
-    </section>
-  );
-}
-
-function Home() {
-  const hello = trpc.example.hello.useQuery({ text: "from tRPC" });
-
-  return (
-    <>
-      <Head>
-        <title>ScottyLabs Full-Stack Template</title>
-        <link rel="icon" href="/dog-logo.svg" />
-      </Head>
-      <main className="container mx-auto flex min-h-screen flex-col items-center justify-center p-4">
-        <h1 className="text-5xl font-extrabold leading-normal md:text-[5rem]">
-          Scotty<span className="text-red-500">Labs</span>
-        </h1>
-        <p className="text-2xl">This stack uses:</p>
-        <div className="mt-3 grid gap-3 pt-3 text-center md:grid-cols-3 lg:w-2/3">
-          <TechnologyCard
-            name="NextJS"
-            description="The React framework for production"
-            documentation="https://nextjs.org/"
-          />
-          <TechnologyCard
-            name="TypeScript"
-            description="Strongly typed programming language that builds on JavaScript"
-            documentation="https://www.typescriptlang.org/"
-          />
-          <TechnologyCard
-            name="TailwindCSS"
-            description="Rapidly build modern websites without ever leaving your HTML"
-            documentation="https://tailwindcss.com/"
-          />
-          <TechnologyCard
-            name="tRPC"
-            description="End-to-end typesafe APIs made easy"
-            documentation="https://trpc.io/"
-          />
-          <TechnologyCard
-            name="Next-Auth"
-            description="Authentication for Next.js"
-            documentation="https://next-auth.js.org/"
-          />
-          <TechnologyCard
-            name="Prisma"
-            description="Build data-driven JavaScript & TypeScript apps in less time"
-            documentation="https://www.prisma.io/docs/"
-          />
-          <TechnologyCard
-            name="Eslint"
-            description="Find and fix problems in your JavaScript code"
-            documentation="https://eslint.org/docs/latest/"
-          />
-          <TechnologyCard
-            name="Prettier"
-            description="You press save and code is formatted"
-            documentation="https://prettier.io/docs/en/"
-          />
-          <TechnologyCard
-            name="Husky"
-            description="Modern native git hooks made easy"
-            documentation="https://typicode.github.io/husky/#/"
-          />
-        </div>
-        <div className="flex w-full items-center justify-center py-6 text-2xl text-success">
-          {hello.data ? <p>{hello.data.greeting}</p> : <p>Loading..</p>}
-        </div>
-        <AuthShowcase />
-      </main>
-    </>
-  );
-}
-
-export default Home;
+export default TablePage;

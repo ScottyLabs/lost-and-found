@@ -1,17 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
-// src/pages/_app.tsx
-import "../styles/globals.css";
-import type { AppProps } from "next/app";
-import { SessionProvider } from "next-auth/react";
-import type { Session } from "next-auth";
-import { trpc } from "../utils/trpc";
+
+import '../styles/globals.css';
+import type { AppProps } from 'next/app';
+import { SessionProvider } from 'next-auth/react';
+import type { Session } from 'next-auth';
+import { ThemeProvider } from 'next-themes';
+import { ToastContainer } from 'react-toastify';
+import { trpc } from 'utils/trpc';
 
 function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
-  return (
-    <SessionProvider session={pageProps.session}>
-      <Component {...pageProps} />;
-    </SessionProvider>
-  );
+	return (
+		<ThemeProvider>
+			<SessionProvider session={pageProps.session}>
+				<ToastContainer />
+				<Component {...pageProps} />
+			</SessionProvider>
+		</ThemeProvider>
+	);
 }
 
 export default trpc.withTRPC(MyApp);
