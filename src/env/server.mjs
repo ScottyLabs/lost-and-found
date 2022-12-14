@@ -10,19 +10,19 @@ import clientEnv, { formatErrors } from './client.mjs';
 const serverEnv = serverSchema.safeParse(process.env);
 
 if (!serverEnv.success) {
-	console.error(
-		'❌ Invalid environment variables:\n',
-		...formatErrors(serverEnv.error.format())
-	);
-	throw new Error('Invalid environment variables');
+  console.error(
+    '❌ Invalid environment variables:\n',
+    ...formatErrors(serverEnv.error.format())
+  );
+  throw new Error('Invalid environment variables');
 }
 
 Object.keys(serverEnv.data).forEach((key) => {
-	if (key.startsWith('NEXT_PUBLIC_')) {
-		console.warn('❌ You are exposing a server-side env-variable:', key);
+  if (key.startsWith('NEXT_PUBLIC_')) {
+    console.warn('❌ You are exposing a server-side env-variable:', key);
 
-		throw new Error('You are exposing a server-side env-variable');
-	}
+    throw new Error('You are exposing a server-side env-variable');
+  }
 });
 
 export default { ...serverEnv.data, ...clientEnv };

@@ -1,26 +1,26 @@
 {
-	"parser": "@typescript-eslint/parser",
-	"parserOptions": {
-		"project": "./tsconfig.json"
-	},
-	"plugins": ["@typescript-eslint", "prettier"],
-	"extends": [
-		"next/core-web-vitals",
-		"plugin:react/jsx-runtime",
-		"airbnb",
-		"airbnb-typescript",
-		"prettier"
-	],
-	"rules": {
-		"prettier/prettier": "error",
-		"react/react-in-jsx-scope": "off"
-	},
-	"settings": {
-		"import/resolver": {
-			"node": {
-				"paths": ["src"],
-				"extensions": [".js", ".jsx", ".ts", ".tsx"]
-			}
-		}
-	}
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "project": "./tsconfig.json"
+  },
+  "plugins": ["@typescript-eslint", "prettier"],
+  "extends": [
+    "next/core-web-vitals",
+    "plugin:react/jsx-runtime",
+    "airbnb",
+    "airbnb-typescript",
+    "prettier"
+  ],
+  "rules": {
+    "prettier/prettier": "error",
+    "react/react-in-jsx-scope": "off"
+  },
+  "settings": {
+    "import/resolver": {
+      "node": {
+        "paths": ["src"],
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
+      }
+    }
+  }
 }

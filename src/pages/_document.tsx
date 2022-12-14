@@ -1,13 +1,17 @@
 import { Html, Head, Main, NextScript } from 'next/document';
 
 export default function Document() {
-	return (
-		<Html>
-			<Head title='CMU Lost and Found' />
-			<body>
-				<Main />
-				<NextScript />
-			</body>
-		</Html>
-	);
+  return (
+    <Html>
+      <Head>
+        {/* eslint-disable-next-line @next/next/no-title-in-document-head */}
+        <title>CMU Lost and Found</title>
+        <link rel="shortcut icon" href="/dog-logo.svg" />
+      </Head>
+      <body>
+        <Main />
+        <NextScript />
+      </body>
+    </Html>
+  );
 }
