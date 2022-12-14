@@ -5,19 +5,19 @@ import { fromZodError } from 'zod-validation-error';
 import type { Context } from './context';
 
 const t = initTRPC.context<Context>().create({
-	transformer: superjson,
-	errorFormatter({ shape, error }) {
-		return {
-			...shape,
-			data: {
-				...shape.data,
-				zodError:
-					error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
-						? fromZodError(error.cause)
-						: null
-			}
-		};
-	}
+  transformer: superjson,
+  errorFormatter({ shape, error }) {
+    return {
+      ...shape,
+      data: {
+        ...shape.data,
+        zodError:
+          error.code === 'BAD_REQUEST' && error.cause instanceof ZodError
+            ? fromZodError(error.cause)
+            : null
+      }
+    };
+  }
 });
 
 export const { router } = t;
@@ -32,15 +32,15 @@ export const publicProcedure = t.procedure;
  * users are logged in
  */
 const isAuthed = t.middleware(({ ctx, next }) => {
-	if (!ctx.session || !ctx.session.user) {
-		throw new TRPCError({ code: 'UNAUTHORIZED' });
-	}
-	return next({
-		ctx: {
-			// infers the `session` as non-nullable
-			session: { ...ctx.session, user: ctx.session.user }
-		}
-	});
+  if (!ctx.session || !ctx.session.user) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user }
+    }
+  });
 });
 
 /**

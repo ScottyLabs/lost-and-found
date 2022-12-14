@@ -6,6 +6,6 @@ import { authOptions } from '../../pages/api/auth/[...nextauth]';
 
 // Next API route example - /pages/api/restricted.ts
 export default async (ctx: {
-	req: GetServerSidePropsContext['req'];
-	res: GetServerSidePropsContext['res'];
+  req: GetServerSidePropsContext['req'];
+  res: GetServerSidePropsContext['res'];
 }) => unstableGetServerSession(ctx.req, ctx.res, authOptions);

@@ -35,43 +35,59 @@ enum ItemInteraction {
   UNARCHIVE
 }
 
+enum Status {
+  PUBLISHED
+  AVAILABLE
+  APPROVED
+  ARCHIVED
+}
+
+enum Value {
+  LOW
+  MEDIUM
+  HIGH
+}
+
 model Item {
-  id                  String   @id @default(auto()) @map("_id") @db.ObjectId
-  name                String
-  imageURL String
-  shortDescription    String
-  extendedDescription String?
-  retrieveFrom        Building
-  foundBuilding       Building
-  foundDescription    String?
-  foundTime           DateTime
-  categories          Category[]
-  isHighValue         Boolean
-  published           Boolean
-  available           Boolean
-  approved            Boolean
-  archived            Boolean
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  imageURL         String?
+  shortDescription String
+  longDescription  String?
+  foundBuilding    Building
+  foundDescription String?
+  foundDate        DateTime
+  retrieveBuilding Building
+  value            Value
+  categories       Category[]
+  status           Status
+  auditLog         AuditLog[]
 }
 
 model ItemInfoSnapshot {
-  id                  String    @id @default(auto()) @map("_id") @db.ObjectId
-  shortDescription    String?
-  extendedDescription String?
-  retrieveFrom        Building?
-  foundBuilding       Building?
-  foundDescription    String?
-  foundTime           DateTime?
-  category            Category?
-  isHighValue         Boolean?
-  auditLog            AuditLog  @relation(fields: [auditLogId], references: [id])
-  auditLogId          String    @unique
+  id               String     @id @default(auto()) @map("_id") @db.ObjectId
+  name             String
+  imageURL         String?
+  shortDescription String
+  longDescription  String?
+  foundBuilding    Building
+  foundDescription String?
+  foundDate        DateTime
+  retrieveBuilding Building
+  value            Value
+  categories       Category[]
+  status           Status
+  auditLog         AuditLog   @relation(fields: [auditLogId], references: [id], onDelete: Cascade)
+  auditLogId       String     @unique
 }
 
 model AuditLog {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
-  actor       User              @relation(fields: [actorId], references: [id])
+  actor       User              @relation(fields: [actorId], references: [id], onDelete: Cascade)
   actorId     String
+  item        Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId      String
   change      ItemInfoSnapshot?
   changeId    String?
 }
@@ -79,7 +95,7 @@ model AuditLog {
 model UserPermission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
-  actor       User            @relation(fields: [actorId], references: [id])
+  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
   actorId     String
   building    Building
 }
