@@ -1,22 +1,16 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { Building, Category, Item, ItemInteraction } from '@prisma/client';
-import { useState } from 'react';
+import { Building, Category, ItemInteraction, Value } from '@prisma/client';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
-import { useSession } from 'next-auth/react';
-import { FaCircleNotch, FaPlus } from 'react-icons/fa';
+import { ItemCreateSchema } from 'lib/schemas';
+import clsx from 'clsx';
+import useZodForm from 'hooks/useZodForm';
 
 function ItemCreateModal() {
-  const [newItem, setNewItem] = useState<Partial<Item>>({
-    foundBuilding: Building.CUC,
-    retrieveBuilding: Building.CUC,
-    categories: []
-  } as Partial<Item>);
-
   const context = trpc.useContext();
-  const { data, status } = useSession({ required: true });
 
   const clearForm = () => {
     (document.getElementById('item-create-form') as HTMLFormElement).reset();
@@ -25,14 +19,11 @@ function ItemCreateModal() {
 
   const auditCreateMutation = trpc.audit.create.useMutation();
 
-  if (status === 'loading') return <FaCircleNotch />;
-
   const itemMutation = trpc.item.create.useMutation({
     onError: (e) => toast(e.data?.zodError?.message ?? e.toString()),
     onSuccess: async (change) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.CREATE,
-        actorId: data.user?.id,
         itemId: change.id,
         change: { create: change }
       });
@@ -40,6 +31,10 @@ function ItemCreateModal() {
       clearForm();
       toast('Item Created');
     }
+  });
+
+  const methods = useZodForm({
+    schema: ItemCreateSchema
   });
 
   return (
@@ -52,10 +47,9 @@ function ItemCreateModal() {
           <form
             id="item-create-form"
             className="form-control"
-            onSubmit={(e) => {
-              e.preventDefault();
-              itemMutation.mutate(newItem as Item);
-            }}
+            onSubmit={methods.handleSubmit(async (vals) => {
+              await itemMutation.mutateAsync(vals);
+            })}
           >
             <div className="grid grid-cols-2 gap-2">
               <div className="col-span-2">
@@ -63,31 +57,27 @@ function ItemCreateModal() {
                   <span className="label-text">Item Name</span>
                 </label>
                 <input
-                  required
-                  type="text"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
-                  }
+                  {...methods.register('name')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.name?.message}
+                </span>
               </div>
               <div className="col-span-2">
                 <label className="label">
                   <span className="label-text">Date Found</span>
                 </label>
                 <input
-                  required
                   type="datetime-local"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) => {
-                    setNewItem({
-                      ...newItem,
-                      foundDate: new Date(e.target.value)
-                    });
-                  }}
+                  {...methods.register('foundDate')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundDate?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
@@ -95,100 +85,59 @@ function ItemCreateModal() {
                 </label>
                 <select
                   className="select-bordered select select-sm w-full"
-                  required
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      foundBuilding: e.target.value as Building
-                    })
-                  }
+                  {...methods.register('foundBuilding')}
                 >
                   {Object.values(Building).map((building) => (
                     <option key={building}>{building}</option>
                   ))}
                 </select>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundBuilding?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Location Found</span>
                 </label>
                 <input
-                  required
-                  type="text"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, foundDescription: e.target.value })
-                  }
+                  {...methods.register('foundDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundDescription?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Short Description</span>
                 </label>
                 <input
-                  required
                   type="text"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, shortDescription: e.target.value })
-                  }
+                  {...methods.register('shortDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.shortDescription?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Categories</span>
                 </label>
-                <div className="flex items-center gap-2">
-                  {newItem.categories?.map((category) => (
-                    <button
-                      type="button"
-                      className="badge-primary badge text-xs font-bold"
-                      onClick={() =>
-                        setNewItem({
-                          ...newItem,
-                          categories: newItem.categories?.filter(
-                            (c) => c !== category
-                          )
-                        })
-                      }
-                    >
-                      {category}
-                    </button>
+                <select
+                  multiple
+                  className="select-bordered select select-sm w-full"
+                  {...methods.register('categories')}
+                >
+                  {Object.values(Category).map((category) => (
+                    <option key={category}>{category}</option>
                   ))}
-                  <div className="dropdown-hover dropdown-bottom dropdown-end dropdown">
-                    <label tabIndex={0} className="btn-xs btn-circle btn m-1">
-                      <FaPlus />
-                    </label>
-                    <div
-                      tabIndex={0}
-                      className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow"
-                    >
-                      {Object.values(Category)
-                        .filter((c) =>
-                          newItem.categories?.every((ct) => ct !== c)
-                        )
-                        .map((category) => (
-                          <li>
-                            <button
-                              type="button"
-                              className="p-1 text-sm font-bold"
-                              onClick={() =>
-                                setNewItem({
-                                  ...newItem,
-                                  categories:
-                                    newItem.categories?.concat(category)
-                                })
-                              }
-                            >
-                              {category}
-                            </button>
-                          </li>
-                        ))}
-                    </div>
-                  </div>
-                </div>
+                </select>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.categories?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
@@ -198,36 +147,41 @@ function ItemCreateModal() {
                   <span className="label-text-alt">Low</span>
                   <input
                     type="radio"
-                    name="value"
-                    required
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'LOW' })}
+                    value={Value.LOW}
+                    {...methods.register('value')}
                   />
                 </label>
                 <label className="label cursor-pointer">
                   <span className="label-text-alt">Medium</span>
                   <input
                     type="radio"
-                    name="value"
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'MEDIUM' })}
+                    value={Value.MEDIUM}
+                    {...methods.register('value')}
                   />
                 </label>
                 <label className="label cursor-pointer">
                   <span className="label-text-alt">High</span>
                   <input
                     type="radio"
-                    name="value"
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'HIGH' })}
+                    value={Value.HIGH}
+                    {...methods.register('value')}
                   />
                 </label>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.value?.message}
+                </span>
               </div>
               <div>
                 <label className="label cursor-pointer">
                   <span className="label-text">Identifiable?</span>
                   <input type="checkbox" className="checkbox" />
                 </label>
+                {/* <span className="text-xs text-error">
+                  {methods.formState.errors.identifiable?.message}
+                </span> */}
               </div>
               <div className="col-span-2">
                 <label className="label">
@@ -235,28 +189,15 @@ function ItemCreateModal() {
                 </label>
                 <select
                   className="select-bordered select select-sm w-full"
-                  required
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      retrieveBuilding: e.target.value as Building
-                    })
-                  }
+                  {...methods.register('retrieveBuilding')}
                 >
                   {Object.values(Building).map((building) => (
                     <option key={building}>{building}</option>
                   ))}
                 </select>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Image Upload</span>
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="file-input-bordered file-input file-input-sm w-full"
-                />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.retrieveBuilding?.message}
+                </span>
               </div>
               <div className="col-span-2">
                 <label className="label">
@@ -265,13 +206,11 @@ function ItemCreateModal() {
                 <textarea
                   className="textarea-bordered textarea h-24 w-full"
                   placeholder="Type here"
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      longDescription: e.target.value
-                    })
-                  }
+                  {...methods.register('longDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.longDescription?.message}
+                </span>
               </div>
             </div>
             <div className="modal-action">
@@ -282,7 +221,13 @@ function ItemCreateModal() {
               >
                 Cancel
               </button>
-              <button type="submit" className="btn-success btn-sm btn">
+              <button
+                type="submit"
+                className={clsx(
+                  'btn-success btn-sm btn',
+                  itemMutation.isLoading && 'loading'
+                )}
+              >
                 Add
               </button>
             </div>

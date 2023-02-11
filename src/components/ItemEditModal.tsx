@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
@@ -8,39 +9,31 @@ import {
   ItemInteraction,
   Value
 } from '@prisma/client';
-import { useEffect, useState } from 'react';
-import { FaCircleNotch, FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
-
-import { useSession } from 'next-auth/react';
+import clsx from 'clsx';
+import { ItemEditSchema } from 'lib/schemas';
+import useZodForm from 'hooks/useZodForm';
 
 type Props = {
   item: Item;
 };
 
 function ItemEditModal({ item }: Props) {
-  const [newItem, setNewItem] = useState<Item>(item);
   const context = trpc.useContext();
-
-  useEffect(() => setNewItem(item), [item]);
 
   const clearForm = () => {
     (document.getElementById('item-edit-form') as HTMLFormElement).reset();
     document.getElementById('edit-item')!.click();
   };
 
-  const { data, status } = useSession({ required: true });
-
   const auditCreateMutation = trpc.audit.create.useMutation();
 
-  if (status === 'loading') return <FaCircleNotch />;
   const itemMutation = trpc.item.update.useMutation({
     onError: (e) => toast(e.data?.zodError?.message),
     onSuccess: async (change) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.EDIT,
-        actorId: data.user?.id,
         itemId: change.id,
         change: { create: change }
       });
@@ -51,20 +44,24 @@ function ItemEditModal({ item }: Props) {
     }
   });
 
+  const methods = useZodForm({
+    schema: ItemEditSchema,
+    values: item
+  });
+
   return (
     <>
       <input type="checkbox" id="edit-item" className="modal-toggle" />
       <div className="modal">
         <div className="modal-box relative">
-          <h3 className="text-center text-lg font-bold">Add Item</h3>
+          <h3 className="text-center text-lg font-bold">Edit Item</h3>
           <hr />
           <form
             id="item-edit-form"
             className="form-control"
-            onSubmit={(e) => {
-              e.preventDefault();
-              itemMutation.mutate({ id: item.id, data: newItem });
-            }}
+            onSubmit={methods.handleSubmit(async (vals) => {
+              await itemMutation.mutateAsync({ id: item.id, data: vals });
+            })}
           >
             <div className="grid grid-cols-2 gap-2">
               <div className="col-span-2">
@@ -72,35 +69,27 @@ function ItemEditModal({ item }: Props) {
                   <span className="label-text">Item Name</span>
                 </label>
                 <input
-                  required
-                  type="text"
-                  defaultValue={item.name}
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
-                  }
+                  {...methods.register('name')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.name?.message}
+                </span>
               </div>
               <div className="col-span-2">
                 <label className="label">
                   <span className="label-text">Date Found</span>
                 </label>
                 <input
-                  required
-                  defaultValue={item.foundDate
-                    .toISOString()
-                    .substring(0, item.foundDate.toISOString().indexOf('.'))}
                   type="datetime-local"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) => {
-                    setNewItem({
-                      ...newItem,
-                      foundDate: new Date(e.target.value)
-                    });
-                  }}
+                  {...methods.register('foundDate')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundDate?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
@@ -108,103 +97,59 @@ function ItemEditModal({ item }: Props) {
                 </label>
                 <select
                   className="select-bordered select select-sm w-full"
-                  required
-                  defaultValue={item.foundBuilding}
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      foundBuilding: e.target.value as Building
-                    })
-                  }
+                  {...methods.register('foundBuilding')}
                 >
                   {Object.values(Building).map((building) => (
                     <option key={building}>{building}</option>
                   ))}
                 </select>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundBuilding?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Location Found</span>
                 </label>
                 <input
-                  required
-                  defaultValue={item.foundDescription ?? undefined}
-                  type="text"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, foundDescription: e.target.value })
-                  }
+                  {...methods.register('foundDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.foundDescription?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Short Description</span>
                 </label>
                 <input
-                  required
-                  defaultValue={item.shortDescription ?? undefined}
                   type="text"
                   placeholder="Type here"
                   className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, shortDescription: e.target.value })
-                  }
+                  {...methods.register('shortDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.shortDescription?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
                   <span className="label-text">Categories</span>
                 </label>
-                <div className="flex items-center gap-2">
-                  {newItem.categories?.map((category) => (
-                    <button
-                      type="button"
-                      className="badge-primary badge text-xs font-bold"
-                      onClick={() =>
-                        setNewItem({
-                          ...newItem,
-                          categories: newItem.categories?.filter(
-                            (c) => c !== category
-                          )
-                        })
-                      }
-                    >
-                      {category}
-                    </button>
+                <select
+                  multiple
+                  className="select-bordered select select-sm w-full"
+                  {...methods.register('categories')}
+                >
+                  {Object.values(Category).map((category) => (
+                    <option key={category}>{category}</option>
                   ))}
-                  <div className="dropdown-hover dropdown-bottom dropdown-end dropdown">
-                    <label tabIndex={0} className="btn-xs btn-circle btn m-1">
-                      <FaPlus />
-                    </label>
-                    <div
-                      tabIndex={0}
-                      className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow"
-                    >
-                      {Object.values(Category)
-                        .filter((c) =>
-                          newItem.categories?.every((ct) => ct !== c)
-                        )
-                        .map((category) => (
-                          <li>
-                            <button
-                              type="button"
-                              className="p-1 text-sm font-bold"
-                              onClick={() =>
-                                setNewItem({
-                                  ...newItem,
-                                  categories:
-                                    newItem.categories?.concat(category)
-                                })
-                              }
-                            >
-                              {category}
-                            </button>
-                          </li>
-                        ))}
-                    </div>
-                  </div>
-                </div>
+                </select>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.categories?.message}
+                </span>
               </div>
               <div>
                 <label className="label">
@@ -213,44 +158,42 @@ function ItemEditModal({ item }: Props) {
                 <label className="label cursor-pointer">
                   <span className="label-text-alt">Low</span>
                   <input
-                    defaultChecked={item.value === Value.LOW}
                     type="radio"
-                    name="value"
-                    required
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'LOW' })}
+                    value={Value.LOW}
+                    {...methods.register('value')}
                   />
                 </label>
                 <label className="label cursor-pointer">
                   <span className="label-text-alt">Medium</span>
                   <input
-                    defaultChecked={item.value === Value.MEDIUM}
                     type="radio"
-                    name="value"
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'MEDIUM' })}
+                    value={Value.MEDIUM}
+                    {...methods.register('value')}
                   />
                 </label>
                 <label className="label cursor-pointer">
                   <span className="label-text-alt">High</span>
                   <input
-                    defaultChecked={item.value === Value.HIGH}
                     type="radio"
-                    name="value"
                     className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'HIGH' })}
+                    value={Value.HIGH}
+                    {...methods.register('value')}
                   />
                 </label>
+                <span className="text-xs text-error">
+                  {methods.formState.errors.value?.message}
+                </span>
               </div>
               <div>
                 <label className="label cursor-pointer">
                   <span className="label-text">Identifiable?</span>
-                  <input
-                    type="checkbox"
-                    defaultChecked={false}
-                    className="checkbox"
-                  />
+                  <input type="checkbox" className="checkbox" />
                 </label>
+                {/* <span className="text-xs text-error">
+                  {methods.formState.errors.identifiable?.message}
+                </span> */}
               </div>
               <div className="col-span-2">
                 <label className="label">
@@ -258,29 +201,15 @@ function ItemEditModal({ item }: Props) {
                 </label>
                 <select
                   className="select-bordered select select-sm w-full"
-                  defaultValue={item.retrieveBuilding}
-                  required
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      retrieveBuilding: e.target.value as Building
-                    })
-                  }
+                  {...methods.register('retrieveBuilding')}
                 >
                   {Object.values(Building).map((building) => (
                     <option key={building}>{building}</option>
                   ))}
                 </select>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Image Upload</span>
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="file-input-bordered file-input file-input-sm w-full"
-                />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.retrieveBuilding?.message}
+                </span>
               </div>
               <div className="col-span-2">
                 <label className="label">
@@ -288,15 +217,12 @@ function ItemEditModal({ item }: Props) {
                 </label>
                 <textarea
                   className="textarea-bordered textarea h-24 w-full"
-                  defaultValue={item.longDescription ?? undefined}
                   placeholder="Type here"
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      longDescription: e.target.value
-                    })
-                  }
+                  {...methods.register('longDescription')}
                 />
+                <span className="text-xs text-error">
+                  {methods.formState.errors.longDescription?.message}
+                </span>
               </div>
             </div>
             <div className="modal-action">
@@ -307,8 +233,15 @@ function ItemEditModal({ item }: Props) {
               >
                 Cancel
               </button>
-              <button type="submit" className="btn-success btn-sm btn">
-                Update
+              <button
+                type="submit"
+                className={clsx(
+                  'btn-success btn-sm btn',
+                  itemMutation.isLoading && 'loading',
+                  !methods.formState.isDirty && 'btn-disabled'
+                )}
+              >
+                Edit
               </button>
             </div>
           </form>
