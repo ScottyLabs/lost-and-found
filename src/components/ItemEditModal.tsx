@@ -22,12 +22,18 @@ type Props = {
 function ItemEditModal({ item }: Props) {
   const context = trpc.useContext();
 
+  const auditCreateMutation = trpc.audit.create.useMutation();
+
+  const methods = useZodForm({
+    schema: ItemEditSchema,
+    values: item
+  });
+
   const clearForm = () => {
     (document.getElementById('item-edit-form') as HTMLFormElement).reset();
     document.getElementById('edit-item')!.click();
+    methods.reset();
   };
-
-  const auditCreateMutation = trpc.audit.create.useMutation();
 
   const itemMutation = trpc.item.update.useMutation({
     onError: (e) => toast(e.data?.zodError?.message),
@@ -39,14 +45,8 @@ function ItemEditModal({ item }: Props) {
       });
       await context.item.invalidate();
       await context.audit.invalidate();
-      clearForm();
       toast('Item Updated');
     }
-  });
-
-  const methods = useZodForm({
-    schema: ItemEditSchema,
-    values: item
   });
 
   return (
@@ -61,7 +61,6 @@ function ItemEditModal({ item }: Props) {
             className="form-control"
             onSubmit={methods.handleSubmit(async (vals) => {
               await itemMutation.mutateAsync({ id: item.id, data: vals });
-              methods.reset();
             })}
           >
             <div className="grid grid-cols-2 gap-2">
