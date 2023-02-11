@@ -22,4 +22,9 @@ export default router({
         data: { actorId: ctx.session.user.id, ...input }
       })
     )
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.auditLog.create({
+        data: { ...input, actorId: ctx.session.user.id }
+      })
+    )
 });
