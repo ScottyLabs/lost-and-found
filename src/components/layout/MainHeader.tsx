@@ -4,15 +4,15 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import * as React from 'react';
 import { useTheme } from 'next-themes';
-
+import {FaUser} from 'react-icons/fa';
 export default function MainHeader() {
   const router = useRouter();
   const { data, status } = useSession({ required: true });
   const { theme, setTheme } = useTheme();
   return (
-    <header className="mx-auto flex w-full justify-between p-5">
-      <div className="flex flex-grow items-center gap-4">
-        <Link className="relative h-32 w-32" href="/">
+    <header className="mx-auto flex w-full justify-between p-5 border-b border-gray-400">
+      <div className="flex grow items-center gap-4">
+        <Link className="relative h-8 w-8" href="/">
           <Image
             src="/dog-logo.svg"
             alt="CMU Lost and Found Logo"
@@ -20,14 +20,12 @@ export default function MainHeader() {
             className="object-scale-down"
           />
         </Link>
-        <div className="font-semibold">
-          <h1 className="text-3xl">Carnegie Mellon University</h1>
-          <h2 className="text-xl">
-            Lost and Found Website - {router.pathname}
-          </h2>
-        </div>
       </div>
-      <div className="flex items-center gap-2">
+      <div className='flex justify-between gap-12 items-center'>
+        <Link href='/'>Lost & Found</Link>
+        <Link href='/'>Policies</Link>
+        <Link href='/'>About</Link>
+        <div>
         {status === 'loading' ? (
           <div className="relative h-8 w-8" />
         ) : (
@@ -36,14 +34,9 @@ export default function MainHeader() {
             <label
               // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex
               tabIndex={0}
-              className="online btn-ghost btn-circle avatar btn"
+              className="btn-ghost btn-circle avatar items-center justify-center"
             >
-              <Image
-                src={data.user?.image ?? 'default_image.png'}
-                alt={data.user?.name ?? ''}
-                layout="fill"
-                className="rounded-full object-scale-down"
-              />
+              <FaUser/>
             </label>
 
             <ul
@@ -89,7 +82,9 @@ export default function MainHeader() {
             </ul>
           </div>
         )}
+        </div>
       </div>
+      
     </header>
   );
 }
