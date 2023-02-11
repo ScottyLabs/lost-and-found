@@ -12,12 +12,17 @@ import useZodForm from 'hooks/useZodForm';
 function ItemCreateModal() {
   const context = trpc.useContext();
 
+  const auditCreateMutation = trpc.audit.create.useMutation();
+
+  const methods = useZodForm({
+    schema: ItemCreateSchema
+  });
+
   const clearForm = () => {
     (document.getElementById('item-create-form') as HTMLFormElement).reset();
     document.getElementById('create-item')!.click();
+    methods.reset();
   };
-
-  const auditCreateMutation = trpc.audit.create.useMutation();
 
   const itemMutation = trpc.item.create.useMutation({
     onError: (e) => toast(e.data?.zodError?.message ?? e.toString()),
@@ -31,10 +36,6 @@ function ItemCreateModal() {
       clearForm();
       toast('Item Created');
     }
-  });
-
-  const methods = useZodForm({
-    schema: ItemCreateSchema
   });
 
   return (
