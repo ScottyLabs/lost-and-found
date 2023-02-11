@@ -2,18 +2,20 @@ import { Building, Category, Status, Value } from '@prisma/client';
 import { z } from 'zod';
 
 export const ItemCreateSchema = z.object({
-  name: z.string(),
+  name: z.string().min(3),
   imageURL: z.string().nullish(),
   shortDescription: z.string(),
   longDescription: z.string().nullish(),
   foundBuilding: z.nativeEnum(Building),
   foundDescription: z.string().nullish(),
-  foundDate: z.date(),
+  foundDate: z.coerce.date(),
   retrieveBuilding: z.nativeEnum(Building),
   value: z.nativeEnum(Value),
   categories: z.array(z.nativeEnum(Category)),
   status: z.nativeEnum(Status).default('AVAILABLE')
 });
+
+export const ItemEditSchema = ItemCreateSchema;
 
 export const ItemUpdateSchema = z.object({
   id: z.string(),
