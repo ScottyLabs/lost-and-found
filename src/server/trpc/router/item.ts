@@ -3,7 +3,13 @@ import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export default router({
-  getAll: publicProcedure.query(({ ctx }) => ctx.prisma.item.findMany()),
+  getAll: publicProcedure.query(({ ctx }) =>
+    ctx.prisma.item.findMany({
+      orderBy: {
+        foundDate: 'desc'
+      }
+    })
+  ),
   infiniteItems: publicProcedure
     .input(
       z.object({
@@ -18,7 +24,7 @@ export default router({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          foundDate: 'asc'
+          foundDate: 'desc'
         }
       });
 
