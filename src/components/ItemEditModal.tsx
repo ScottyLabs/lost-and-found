@@ -4,11 +4,11 @@
 
 import { Building, Category, ItemInteraction, Value } from '@prisma/client';
 import useZodForm from 'lib/form';
-import { ItemCreateSchema } from 'lib/schemas';
-import { toast } from 'react-toastify';
-import { trpc } from 'utils/trpc';
 import useModalStore from '../stores/ModalStore';
 import { Dialog } from './Dialog';
+import { toast } from 'react-toastify';
+import { trpc } from 'utils/trpc';
+import { ItemEditSchema } from 'lib/schemas';
 
 type Props = {
   itemId: string;
@@ -20,7 +20,7 @@ function ItemEditModal({ itemId }: Props) {
   const { data: item, status } = trpc.item.byId.useQuery({ id: itemId });
 
   const methods = useZodForm({
-    schema: ItemCreateSchema
+    schema: ItemEditSchema
   });
 
   const context = trpc.useContext();
