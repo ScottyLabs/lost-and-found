@@ -61,6 +61,7 @@ function ItemEditModal({ item }: Props) {
             className="form-control"
             onSubmit={methods.handleSubmit(async (vals) => {
               await itemMutation.mutateAsync({ id: item.id, data: vals });
+              methods.reset();
             })}
           >
             <div className="grid grid-cols-2 gap-2">

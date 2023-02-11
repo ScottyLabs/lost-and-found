@@ -49,6 +49,7 @@ function ItemCreateModal() {
             className="form-control"
             onSubmit={methods.handleSubmit(async (vals) => {
               await itemMutation.mutateAsync(vals);
+              methods.reset();
             })}
           >
             <div className="grid grid-cols-2 gap-2">
