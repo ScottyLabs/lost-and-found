@@ -2,11 +2,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Building, Category, Item, ItemInteraction } from '@prisma/client';
+import { useSession } from 'next-auth/react';
 import { useState } from 'react';
+import { FaCircleNotch, FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
-import { useSession } from 'next-auth/react';
-import { FaCircleNotch, FaPlus } from 'react-icons/fa';
 
 function ItemCreateModal() {
   const [newItem, setNewItem] = useState<Partial<Item>>({

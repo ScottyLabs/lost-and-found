@@ -4,6 +4,8 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 
 import { Item, ItemInteraction, Status, Value } from '@prisma/client';
+import Image from 'next/image';
+import { Dispatch, ReactNode, SetStateAction } from 'react';
 import {
   FaArchive,
   FaBookOpen,
@@ -12,9 +14,7 @@ import {
   FaImage,
   FaNewspaper
 } from 'react-icons/fa';
-import Image from 'next/image';
 import { trpc } from 'utils/trpc';
-import { Dispatch, ReactNode, SetStateAction } from 'react';
 
 type ItemHistoryProps = {
   item: Item;
