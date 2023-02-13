@@ -1,17 +1,19 @@
 import { Status } from '@prisma/client';
-import { useState } from 'react';
-import { FaSpinner } from 'react-icons/fa';
+import { FaCircleNotch } from 'react-icons/fa';
 import { trpc } from 'utils/trpc';
 import ItemCard from './ItemCard';
 
-export default function ItemGrid() {
-  const [query, setQuery] = useState('');
+type Props = {
+  query: string;
+};
+
+export default function ItemGrid({ query }: Props) {
   const itemsQuery = trpc.item.getAll.useQuery();
 
   if (itemsQuery.status === 'loading')
     return (
       <span className="my-10">
-        <FaSpinner className="h-10 w-10 animate-spin transition-all" />
+        <FaCircleNotch className="h-10 w-10 animate-spin transition-all" />
       </span>
     );
 
@@ -24,29 +26,23 @@ export default function ItemGrid() {
       </span>
     );
 
+  if (!itemsQuery.data.length) {
+    return <p>Nothing to see here!</p>;
+  }
+
   return (
-    <>
-      <input
-        type="text"
-        placeholder="Search..."
-        className="input-bordered input w-full max-w-xs"
-        onChange={(e) => setQuery(e.target.value)}
-      />
-      <div className="mt-5 grid grid-cols-1 gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-        {itemsQuery.data.length ? (
-          itemsQuery.data
-            .filter(
-              (item) =>
-                item.status === Status.AVAILABLE &&
-                (item.name.toLowerCase().includes(query) ||
-                  item.shortDescription.toLowerCase().includes(query) ||
-                  item.foundDescription?.toLowerCase().includes(query))
-            )
-            .map((item) => <ItemCard key={item.id} item={item} />)
-        ) : (
-          <p>Nothing to see here!</p>
-        )}
-      </div>
-    </>
+    <div className="grid w-full grid-cols-1 gap-4">
+      {itemsQuery.data
+        .filter(
+          (item) =>
+            item.status === Status.AVAILABLE &&
+            (item.name.toLowerCase().includes(query) ||
+              item.shortDescription.toLowerCase().includes(query) ||
+              item.foundDescription?.toLowerCase().includes(query))
+        )
+        .map((item) => (
+          <ItemCard key={item.id} item={item} />
+        ))}
+    </div>
   );
 }

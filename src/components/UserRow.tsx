@@ -4,11 +4,11 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 
 import { Building, ItemInteraction, User } from '@prisma/client';
-import { FaPlus } from 'react-icons/fa';
-import { Dispatch, SetStateAction } from 'react';
 import Image from 'next/image';
-import { trpc } from 'utils/trpc';
+import { Dispatch, SetStateAction } from 'react';
+import { FaPlus } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import { trpc } from 'utils/trpc';
 
 type UserRowProps = {
   user: User;
@@ -87,7 +87,7 @@ export default function UserRow({ user, selected, setSelected }: UserRowProps) {
               {permission.building}:{permission.interaction}
             </button>
           ))}
-          <div className="dropdown-hover dropdown-bottom dropdown-end dropdown">
+          <div className="dropdown-end dropdown dropdown-bottom dropdown-hover">
             <label tabIndex={0} className="btn-xs btn-circle btn m-1">
               <FaPlus />
             </label>
