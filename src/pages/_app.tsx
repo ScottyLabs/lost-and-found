@@ -1,12 +1,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
-import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
+import '../styles/globals.css';
 
-import type { AppProps } from 'next/app';
-import { SessionProvider } from 'next-auth/react';
 import type { Session } from 'next-auth';
+import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
+import type { AppProps } from 'next/app';
 import { ToastContainer } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 

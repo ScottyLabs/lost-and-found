@@ -1,4 +1,3 @@
-import * as React from 'react';
 import { Segment } from 'semantic-ui-react';
 
 export default function MainFooter() {

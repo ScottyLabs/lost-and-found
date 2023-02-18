@@ -2,17 +2,17 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
+import { User } from '@prisma/client';
 import MainLayout from 'components/layout/MainLayout';
+import UserRow from 'components/UserRow';
 import { GetServerSideProps } from 'next';
-import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
-import getServerAuthSession from 'server/common/get-server-auth-session';
-import { trpc } from 'utils/trpc';
 import { unparse } from 'papaparse';
 import { Fragment, useEffect, useState } from 'react';
-import { User } from '@prisma/client';
+import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
-import UserRow from 'components/UserRow';
+import getServerAuthSession from 'server/common/get-server-auth-session';
+import { trpc } from 'utils/trpc';
 
 export default function AccountsPage() {
   const { ref, inView } = useInView();
