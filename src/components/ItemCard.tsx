@@ -1,6 +1,5 @@
-import * as React from 'react';
-import Image from 'next/image';
 import { Item } from '@prisma/client';
+import Image from 'next/image';
 
 type Props = {
   item: Item;
