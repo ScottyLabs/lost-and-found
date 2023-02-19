@@ -5,45 +5,47 @@ import { FaLocationArrow, FaMailBulk, FaPhoneAlt } from 'react-icons/fa';
 export default function FoundPage() {
   return (
     <MainLayout>
-      <div className="flex flex-col items-center">
-        <div>
-          <div className="text-lg font-bold">Found an item?</div>
-          <div className="mt-2 text-sm">
-            A found item can be taken to the Information Desk at the Cohon
-            University Center.
-          </div>
-        </div>
-        <div className="divider" />
-        <div className="w-full">
-          <div className="text-lg font-bold">Contact Information</div>
-          <div className="p-2 flex flex-col gap-2 items-start">
-            <div className="flex items-center gap-3">
-              <span>
-                <FaPhoneAlt />
-              </span>
-              <span className="text-sm font-display">412-268-2107</span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span>
-                <FaMailBulk />
-              </span>
-              <span className="text-sm font-display">
-                cucinfodesk@andrew.cmu.edu
-              </span>
-            </div>
-            <div className="flex items-center gap-3">
-              <span>
-                <FaLocationArrow />
-              </span>
-              <span className="text-sm font-display">
-                University Center, 5032 Forbes Ave
-              </span>
+      <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 md:flex-row-reverse">
+        <div className="flex flex-1 flex-col gap-4">
+          <div className="md:rounded-md md:border md:border-accent md:bg-secondary md:p-4">
+            <div className="text-lg font-bold">Found an item?</div>
+            <div className="mt-2 text-sm">
+              A found item can be taken to the Information Desk at the Cohon
+              University Center.
             </div>
           </div>
+          <div className="divider md:hidden" />
+          <div className="md:rounded-md md:border md:border-accent md:bg-secondary md:p-4">
+            <div className="text-lg font-bold">Contact Information</div>
+            <div className="flex flex-col items-start gap-2 p-2">
+              <div className="flex items-center gap-3">
+                <span>
+                  <FaPhoneAlt />
+                </span>
+                <span className="font-display text-sm">412-268-2107</span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span>
+                  <FaMailBulk />
+                </span>
+                <span className="font-display text-sm">
+                  cucinfodesk@andrew.cmu.edu
+                </span>
+              </div>
+              <div className="flex items-center gap-3">
+                <span>
+                  <FaLocationArrow />
+                </span>
+                <span className="font-display text-sm">
+                  University Center, 5032 Forbes Ave
+                </span>
+              </div>
+            </div>
+          </div>
         </div>
-        <div>
+        <div className="flex-1">
           <Image
-            className="rounded-lg border my-8"
+            className="my-8 rounded-lg border"
             alt="Cohon University Center"
             src="/cuc.png"
             width={384}

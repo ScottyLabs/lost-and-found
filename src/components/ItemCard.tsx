@@ -6,18 +6,18 @@ type Props = {
 
 export default function ItemCard({ item }: Props) {
   return (
-    <div className="w-full rounded-lg border border-accent p-3 shadow-md transition-all hover:shadow-lg text-black text-opacity-60">
-      <div className="flex">
+    <div className="w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg">
+      <div className="flex md:flex-col">
         <h2 className="flex-1 text-lg font-bold">{item.name}</h2>
         <span className="text-xs">
           Found on: {item.foundDate.toDateString()}
         </span>
       </div>
-      <div className="flex text-sm">
-        <div className="font-light flex-1">
+      <div className="flex text-sm md:flex-col">
+        <div className="flex-1 font-light">
           <p>{item.shortDescription ?? 'No Description'}</p>
         </div>
-        <div className="divider divider-horizontal" />
+        <div className="divider divider-horizontal md:divider-vertical" />
         <div>
           <div>
             <span className="font-bold">Color: </span>
