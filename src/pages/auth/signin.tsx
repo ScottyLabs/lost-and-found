@@ -6,12 +6,7 @@ export default function SigninPage() {
   return (
     <div className="mx-auto flex h-screen max-w-screen-md flex-col items-center justify-center gap-5">
       <div className="relative h-32 w-32">
-        <Image
-          src="/dog-logo.svg"
-          alt="logo"
-          fill
-          className="object-scale-down"
-        />
+        <Image src="/logo.svg" alt="" fill className="object-scale-down" />
       </div>
       <div className="flex flex-col items-center justify-center gap-4 rounded-md border p-10 shadow-md">
         <h1 className="text-xl font-semibold">
