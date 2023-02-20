@@ -40,7 +40,7 @@ export default function HomePage() {
             <input
               type="text"
               placeholder="Search lost items..."
-              className="input-bordered input w-full rounded-full border-4 bg-primary pl-10 font-display font-bold placeholder-accent placeholder-opacity-70"
+              className="input-bordered input w-full rounded-full border-4 bg-primary pl-10 font-bold placeholder-accent placeholder-opacity-70"
               onChange={(e) => setQuery(e.target.value)}
             />
           </div>

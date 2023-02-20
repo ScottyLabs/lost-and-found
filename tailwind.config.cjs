@@ -1,11 +1,11 @@
 /* eslint-disable global-require */
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   content: ['./src/**/*.{js,ts,jsx,tsx}'],
   theme: {
     fontFamily: {
-      display: ['Lato', 'sans-serif'],
-      body: ['Nunito', 'sans-serif']
+      sans: ['var(--font-lato)']
     }
   },
   daisyui: {

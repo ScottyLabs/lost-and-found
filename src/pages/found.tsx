@@ -22,21 +22,19 @@ export default function FoundPage() {
                 <span>
                   <FaPhoneAlt />
                 </span>
-                <span className="font-display text-sm">412-268-2107</span>
+                <span className="text-sm">412-268-2107</span>
               </div>
               <div className="flex items-center gap-3">
                 <span>
                   <FaMailBulk />
                 </span>
-                <span className="font-display text-sm">
-                  cucinfodesk@andrew.cmu.edu
-                </span>
+                <span className="text-sm">cucinfodesk@andrew.cmu.edu</span>
               </div>
               <div className="flex items-center gap-3">
                 <span>
                   <FaLocationArrow />
                 </span>
-                <span className="font-display text-sm">
+                <span className="text-sm">
                   University Center, 5032 Forbes Ave
                 </span>
               </div>

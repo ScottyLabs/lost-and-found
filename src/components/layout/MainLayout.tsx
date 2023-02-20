@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { Lato, Nunito } from '@next/font/google';
+import { Lato } from '@next/font/google';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -13,8 +13,11 @@ import { FaBars, FaUser } from 'react-icons/fa';
 import useDrawerStore from '../../stores/DrawerStore';
 import { Categories, Colors, Locations } from '../../types/index';
 
-const lato = Lato({ subsets: ['latin-ext'], weight: ['400'] });
-const nunito = Nunito({ subsets: ['latin-ext'] });
+const lato = Lato({
+  subsets: ['latin-ext'],
+  weight: ['400'],
+  variable: '--font-lato'
+});
 
 function Drawer() {
   const { drawer } = useDrawerStore();
@@ -156,7 +159,6 @@ export default function MainLayout({ children }: PropsWithChildren) {
       className={clsx(
         'drawer',
         lato.className,
-        nunito.className,
         drawer === 'filter' && 'drawer-end'
       )}
     >
