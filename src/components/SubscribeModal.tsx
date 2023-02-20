@@ -32,12 +32,12 @@ export const SubscribeModal = () => (
             You&apos;ll get notifications for seven days following which you can
             resubscribe for updates. You can unsubscribe at any time.
           </p>
-          <form className="w-full font-bold">
+          <form className="flex w-full flex-col gap-2 font-bold">
             <div className="form-control">
               <label className="label">
                 <span className="label-text">Item Category</span>
               </label>
-              <select className="select-bordered select select-lg w-full bg-primary">
+              <select className="select-bordered select w-full bg-primary">
                 {Categories.map((category) => (
                   <option key={category} value={category}>
                     {category}
@@ -51,15 +51,19 @@ export const SubscribeModal = () => (
               </label>
               <input
                 type="email"
-                placeholder="Type here"
                 className="input-bordered input w-full bg-primary"
               />
             </div>
+            <div className="form-control">
+              <label htmlFor="subscribe-modal" className="btn-ghost btn-xs btn">
+                Unsubscribe now
+              </label>
+            </div>
           </form>
-          <div className="modal-action">
+          <div className="modal-action w-full">
             <label
               htmlFor="subscribe-modal"
-              className="btn-accent btn-sm btn rounded-full px-4 py-2"
+              className="btn-accent btn-sm btn float-right rounded-full px-4 py-2"
             >
               Subscribe
             </label>
