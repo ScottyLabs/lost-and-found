@@ -4,6 +4,7 @@
 
 import ItemGrid from 'components/ItemGrid';
 import MainLayout from 'components/layout/MainLayout';
+import ScrollToTop from 'components/ScrollToTop';
 import { SubscribeModal } from 'components/SubscribeModal';
 import { GetServerSideProps } from 'next';
 import { useState } from 'react';
@@ -27,6 +28,7 @@ export default function HomePage() {
     <>
       <SubscribeModal />
       <MainLayout>
+        <ScrollToTop />
         <div className="mx-auto flex flex-col items-center gap-4">
           <div className="relative w-full max-w-3xl text-white">
             <span className="absolute inset-y-0 left-0 flex items-center pl-2">
