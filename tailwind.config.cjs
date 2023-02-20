@@ -13,7 +13,7 @@ module.exports = {
       {
         light: {
           primary: '#BDCDC9',
-          'primary-content': '#F9F9F9',
+          'primary-content': '#1F4C4C',
           secondary: '#FaF8F3',
           accent: '#1F4C4C',
           'accent-content': '#F9F9F9',
