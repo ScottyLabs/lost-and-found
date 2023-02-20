@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { Lato } from '@next/font/google';
 import clsx from 'clsx';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,12 +11,6 @@ import { PropsWithChildren } from 'react';
 import { FaBars, FaUser } from 'react-icons/fa';
 import useDrawerStore from '../../stores/DrawerStore';
 import { Categories, Colors, Locations } from '../../types/index';
-
-const lato = Lato({
-  subsets: ['latin-ext'],
-  weight: ['400'],
-  variable: '--font-lato'
-});
 
 function Drawer() {
   const { drawer } = useDrawerStore();
@@ -155,13 +148,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
   const { mainDrawer, drawer } = useDrawerStore();
   const router = useRouter();
   return (
-    <div
-      className={clsx(
-        'drawer',
-        lato.className,
-        drawer === 'filter' && 'drawer-end'
-      )}
-    >
+    <div className={clsx('drawer', drawer === 'filter' && 'drawer-end')}>
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
         <nav className="navbar bg-accent text-accent-content md:border-b-2 md:bg-base-100">
