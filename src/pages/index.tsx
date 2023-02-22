@@ -7,6 +7,7 @@ import MainLayout from 'components/layout/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
 import { SubscribeModal } from 'components/SubscribeModal';
 import { GetServerSideProps } from 'next';
+import Link from 'next/link';
 import { useState } from 'react';
 import {
   FaCalendar,
@@ -158,36 +159,39 @@ export default function HomePage() {
             </div>
             <div className="flex w-full flex-col gap-4">
               <ItemGrid query={query} />
-              <div className="prose hidden w-full rounded-lg border border-accent bg-secondary p-4 md:block">
-                <h3>Still can&apos;t find it?</h3>
-                <ul>
-                  <li>
-                    <p>
-                      Items that are deemed as having a high value or that are
-                      identifiable (e.g. student IDs) are not published on our
-                      website. Please contact the CUC Information Desk directly.
-                    </p>
-                    <button
-                      type="button"
-                      className="btn-accent btn-sm btn shadow-lg"
-                    >
-                      <span className="uppercase">More Info</span>
-                    </button>
-                  </li>
-                  <li>
-                    <p>
-                      Items can turn up at any time. Subscribe to be notified
-                      via email about items in your category that get added over
-                      the next 7 days.
-                    </p>
-                    <label
-                      htmlFor="subscribe-modal"
-                      className="btn-accent btn-sm btn shadow-lg"
-                    >
-                      <span className="uppercase">Subscribe</span>
-                    </label>
-                  </li>
-                </ul>
+              <div className="hidden w-full rounded-lg border border-accent bg-secondary p-4 md:block">
+                <div className="prose">
+                  <h3>Still can&apos;t find it?</h3>
+                  <ul>
+                    <li>
+                      <p>
+                        Items that are deemed as having a high value or that are
+                        identifiable (e.g. student IDs) are not published on our
+                        website. Please contact the CUC Information Desk
+                        directly.
+                      </p>
+                      <Link
+                        className="btn-accent btn-sm btn shadow-lg"
+                        href="/faq"
+                      >
+                        <span className="uppercase">More Info</span>
+                      </Link>
+                    </li>
+                    <li>
+                      <p>
+                        Items can turn up at any time. Subscribe to be notified
+                        via email about items in your category that get added
+                        over the next 7 days.
+                      </p>
+                      <label
+                        htmlFor="subscribe-modal"
+                        className="btn-accent btn-sm btn shadow-lg"
+                      >
+                        <span className="uppercase">Subscribe</span>
+                      </label>
+                    </li>
+                  </ul>
+                </div>
               </div>
             </div>
           </div>
@@ -201,12 +205,12 @@ export default function HomePage() {
             </div>
           </div>
           <div className="w-full md:hidden">
-            <button
-              type="button"
+            <Link
+              href="/faq"
               className="btn-outline btn-sm btn w-full shadow-lg"
             >
               <span className="uppercase">More Info</span>
-            </button>
+            </Link>
           </div>
           <div className="md:hidden">
             <div className="text-xl font-bold">Stay Updated</div>
