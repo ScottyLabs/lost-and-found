@@ -68,7 +68,8 @@ const FAQ: Record<string, ReactNode> = {
   ),
   'Where do I share some feedback?': (
     <div className="prose">
-      To leave feedback, please fill out this <Link href="/">form</Link>.
+      To leave feedback, please fill out this{' '}
+      <Link href="https://forms.gle/QDnNyjdzUBnFUkno8">form</Link>.
     </div>
   )
 };
