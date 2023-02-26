@@ -157,7 +157,7 @@ function ItemCreateModal() {
                       {category}
                     </button>
                   ))}
-                  <div className="dropdown-hover dropdown-bottom dropdown-end dropdown">
+                  <div className="dropdown-end dropdown dropdown-bottom dropdown-hover">
                     <label tabIndex={0} className="btn-xs btn-circle btn m-1">
                       <FaPlus />
                     </label>

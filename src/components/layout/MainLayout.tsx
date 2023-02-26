@@ -4,11 +4,12 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import clsx from 'clsx';
+import AuthWidget from 'components/AuthWidget';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { PropsWithChildren } from 'react';
-import { FaBars, FaUser } from 'react-icons/fa';
+import { FaBars } from 'react-icons/fa';
 import useDrawerStore from '../../stores/DrawerStore';
 import { Categories, Colors, Locations } from '../../types/index';
 
@@ -147,6 +148,7 @@ function Drawer() {
 export default function MainLayout({ children }: PropsWithChildren) {
   const { mainDrawer, drawer } = useDrawerStore();
   const router = useRouter();
+
   return (
     <div className={clsx('drawer', drawer === 'filter' && 'drawer-end')}>
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
@@ -166,9 +168,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
               <Image src="/logo.svg" alt="CMU Lost & Found" fill />
             </Link>
           </div>
-          <div className="flex-0 btn-ghost btn-circle btn">
-            <FaUser className="md:text-black" />
-          </div>
+          <AuthWidget />
         </nav>
         <div className="flex items-center justify-center gap-2 p-4 md:p-10">
           <div className="h-10 w-10 md:hidden">

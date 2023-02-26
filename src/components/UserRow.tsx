@@ -87,7 +87,7 @@ export default function UserRow({ user, selected, setSelected }: UserRowProps) {
               {permission.building}:{permission.interaction}
             </button>
           ))}
-          <div className="dropdown-end dropdown-bottom dropdown-hover dropdown">
+          <div className="dropdown-end dropdown dropdown-bottom dropdown-hover">
             <label tabIndex={0} className="btn-xs btn-circle btn m-1">
               <FaPlus />
             </label>

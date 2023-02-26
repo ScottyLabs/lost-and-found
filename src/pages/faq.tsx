@@ -96,9 +96,7 @@ export default function FAQPage() {
                   <div className="collapse-title text-lg font-bold">
                     {question}
                   </div>
-                  <div className="collapse-content">
-                    <p>{answer}</p>
-                  </div>
+                  <div className="collapse-content">{answer}</div>
                 </div>
                 <div className="divider my-1" />
               </div>

@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
@@ -7,6 +8,11 @@ import prisma from '../../../server/db/client';
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
+    // jwt: async ({ token, account, profile }) => {
+    //   if (profile) token.profile = profile;
+    //   if (account?.access_token) token.accessToken = account.access_token;
+    //   return token;
+    // },
     signIn: async ({ user }) => {
       const isAllowedToSignIn = user.email?.endsWith('cmu.edu');
       if (isAllowedToSignIn) return true;
@@ -14,8 +20,7 @@ export const authOptions: NextAuthOptions = {
     },
     session: async ({ session, user }) => {
       // Send properties to the client, like an access_token and user id from a provider.
-      // eslint-disable-next-line no-param-reassign
-      session.user = JSON.parse(JSON.stringify(user));
+      if (user) session.user = JSON.parse(JSON.stringify(user));
       return session;
     }
   },
@@ -28,8 +33,14 @@ export const authOptions: NextAuthOptions = {
       clientSecret: env.GOOGLE_CLIENT_SECRET
     })
   ],
+  jwt: {
+    maxAge: 14 * 24 * 30 * 60 // 2 weeks
+  },
+  session: {
+    strategy: 'jwt'
+  },
   pages: {
-    signIn: 'auth/signin'
+    signIn: '/auth/signin'
     // signOut: '/auth/signout',
     // error: '/auth/error', // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
