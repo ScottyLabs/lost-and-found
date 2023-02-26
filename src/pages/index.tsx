@@ -107,7 +107,7 @@ export default function HomePage() {
                     <input
                       type="date"
                       placeholder="Type here"
-                      className="input-bordered input input-sm w-full max-w-xs"
+                      className="input-bordered input input-sm w-full max-w-xs font-bold"
                     />
                   </div>
                   <div className="form-control w-full max-w-xs">
