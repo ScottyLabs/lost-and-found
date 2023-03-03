@@ -1,6 +1,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
+
 import MainLayout from 'components/layout/MainLayout';
-import { SubscribeModal } from 'components/SubscribeModal';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
@@ -37,9 +37,9 @@ const FAQ: Record<string, ReactNode> = {
         <li>
           Items are added at the end of the day, check back on the site to see
           if it has been added or{' '}
-          <label htmlFor="subscribe-modal" className="link">
+          <Link href="/subscribe" className="link">
             subscribe
-          </label>{' '}
+          </Link>{' '}
           for daily updates.
         </li>
       </ul>
@@ -76,34 +76,31 @@ const FAQ: Record<string, ReactNode> = {
 
 export default function FAQPage() {
   return (
-    <>
-      <SubscribeModal />
-      <MainLayout>
-        <div className="flex flex-col items-center gap-8">
-          <div className="flex flex-row items-center gap-4">
-            <div className="relative h-14 w-14">
-              <Image src="/question.svg" fill alt="" />
-            </div>
-            <div className="text-lg font-bold md:text-2xl">
-              Have Questions? We&apos;ve got the answers below.
-            </div>
+    <MainLayout>
+      <div className="flex flex-col items-center gap-8">
+        <div className="flex flex-row items-center gap-4">
+          <div className="relative h-14 w-14">
+            <Image src="/question.svg" fill alt="" />
           </div>
-          <div className="w-full max-w-2xl">
-            {Object.entries(FAQ).map(([question, answer]) => (
-              <div key={question}>
-                <div className="collapse-arrow rounded-box collapse">
-                  <input type="checkbox" />
-                  <div className="collapse-title text-lg font-bold">
-                    {question}
-                  </div>
-                  <div className="collapse-content">{answer}</div>
-                </div>
-                <div className="divider my-1" />
-              </div>
-            ))}
+          <div className="text-lg font-bold md:text-2xl">
+            Have Questions? We&apos;ve got the answers below.
           </div>
         </div>
-      </MainLayout>
-    </>
+        <div className="w-full max-w-2xl">
+          {Object.entries(FAQ).map(([question, answer]) => (
+            <div key={question}>
+              <div className="collapse-arrow rounded-box collapse">
+                <input type="checkbox" />
+                <div className="collapse-title text-lg font-bold">
+                  {question}
+                </div>
+                <div className="collapse-content">{answer}</div>
+              </div>
+              <div className="divider my-1" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </MainLayout>
   );
 }
