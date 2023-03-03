@@ -213,12 +213,12 @@ export default function HomePage() {
           </div>
         </div>
         <div className="w-full md:hidden">
-          <label
-            htmlFor="subscribe-modal"
+          <Link
+            href="/subscribe"
             className="btn-accent btn-sm btn w-full shadow-lg"
           >
             <span className="uppercase">Subscribe</span>
-          </label>
+          </Link>
         </div>
       </div>
     </MainLayout>
