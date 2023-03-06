@@ -78,16 +78,16 @@ model ItemInfoSnapshot {
   categories       Category[]
   status           Status
   auditLog         AuditLog   @relation(fields: [auditLogId], references: [id], onDelete: Cascade)
-  auditLogId       String     @unique
+  auditLogId       String     @unique @db.ObjectId
 }
 
 model AuditLog {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
   actor       User              @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String
+  actorId     String            @db.ObjectId
   item        Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId      String
+  itemId      String            @db.ObjectId
   change      ItemInfoSnapshot?
   changeId    String?
 }
@@ -96,13 +96,13 @@ model UserPermission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
   actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String
+  actorId     String          @db.ObjectId
   building    Building
 }
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String
+  userId            String  @db.ObjectId
   type              String
   provider          String
   providerAccountId String
@@ -121,7 +121,7 @@ model Account {
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
