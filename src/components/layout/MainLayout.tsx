@@ -74,7 +74,7 @@ function Drawer() {
                 <div className="collapse-title">Item Category</div>
                 <div className="collapse-content">
                   <div>
-                    {Categories.map((category) => (
+                    {Object.values(Categories).map((category) => (
                       <div className="flex items-center gap-2 p-1">
                         <input type="checkbox" className="checkbox" />
                         <label className="label">
@@ -153,7 +153,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
     <div className={clsx('drawer', drawer === 'filter' && 'drawer-end')}>
       <input id="my-drawer" type="checkbox" className="drawer-toggle" />
       <div className="drawer-content">
-        <nav className="navbar bg-accent text-accent-content md:border-b-2 md:bg-base-100">
+        <nav className="navbar fixed z-10 h-16 bg-accent text-accent-content md:border-b-2 md:bg-base-100">
           <div className="flex-1 md:hidden">
             <label
               htmlFor="my-drawer"
@@ -170,7 +170,7 @@ export default function MainLayout({ children }: PropsWithChildren) {
           </div>
           <AuthWidget />
         </nav>
-        <div className="flex items-center justify-center gap-2 p-4 md:p-10">
+        <div className="mt-16 flex items-center justify-center gap-2 p-4 md:p-10">
           <div className="h-10 w-10 md:hidden">
             <Image
               src="/logo.svg"
