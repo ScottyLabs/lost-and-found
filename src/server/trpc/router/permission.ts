@@ -1,25 +1,24 @@
 import { Building, ItemInteraction } from '@prisma/client';
 import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export default router({
-  list: publicProcedure
-    .input(z.object({ actorId: z.string() }))
-    .query(({ ctx, input }) =>
-      ctx.prisma.userPermission.findMany({
-        where: input
-      })
-    ),
-  create: publicProcedure
+  list: protectedProcedure.query(({ ctx }) =>
+    ctx.prisma.permission.findMany({
+      where: { actorId: ctx.session.user.id }
+    })
+  ),
+  create: protectedProcedure
     .input(
       z.object({
-        actorId: z.string(),
         interaction: z.nativeEnum(ItemInteraction),
         building: z.nativeEnum(Building)
       })
     )
     .mutation(({ ctx, input }) =>
-      ctx.prisma.userPermission.create({ data: input })
+      ctx.prisma.permission.create({
+        data: { actorId: ctx.session.user.id, ...input }
+      })
     ),
   delete: publicProcedure
     .input(
@@ -28,6 +27,6 @@ export default router({
       })
     )
     .mutation(({ ctx, input }) =>
-      ctx.prisma.userPermission.delete({ where: input })
+      ctx.prisma.permission.delete({ where: input })
     )
 });

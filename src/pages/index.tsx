@@ -112,9 +112,9 @@ export default function HomePage() {
                     <span className="label-text">Item Category</span>
                   </label>
                   <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Categories.map((category) => (
-                      <option key={category} value={category}>
-                        {category}
+                    {Object.entries(Categories).map(([k, v]) => (
+                      <option key={k} value={k}>
+                        {v}
                       </option>
                     ))}
                   </select>

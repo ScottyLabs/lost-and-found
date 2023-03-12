@@ -16,13 +16,13 @@ const SubscriptionData: Array<{
   {
     id: '1',
     userId: '1',
-    category: 'ELECTRONICS',
+    category: Category.HEADPHONE_CASE,
     createdAt: new Date()
   },
   {
     id: '2',
     userId: '1',
-    category: 'ACCESSORY',
+    category: Category.BEVERAGE_CONTAINER,
     createdAt: new Date()
   }
 ];

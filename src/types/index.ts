@@ -1,3 +1,5 @@
+import { Category } from '@prisma/client';
+
 export const Colors = [
   'Black',
   'Blue',
@@ -75,17 +77,17 @@ export const Locations = [
   'Other'
 ];
 export type Location = typeof Locations[number];
-export const Categories = [
-  'Clothing',
-  'Umbrellas',
-  'Glasses/Sunglasses/Cases',
-  'Jewelry',
-  'Watches',
-  'Identifiable',
-  'Electronics',
-  'Earbuds/Headphones/Cases',
-  'Phone',
-  'Laptop',
-  'Tablet',
-  'Misc'
-];
+export const Categories: Record<Category, string> = {
+  CLOTHING: 'Clothing',
+  UMBRELLA: 'Umbrellas',
+  EYEWARE_CASE: 'Glasses/Sunglasses/Cases',
+  JEWELRY: 'Jewelry',
+  WATCH: 'Watches',
+  BEVERAGE_CONTAINER: 'Beverage Containers',
+  CHARGER: 'Chargers',
+  HEADPHONE_CASE: 'Headphones/Earbuds/Case',
+  LAPTOP: 'Laptops',
+  PHONE: 'Phones',
+  TABLET: 'Tablets',
+  OTHER: 'Other'
+};

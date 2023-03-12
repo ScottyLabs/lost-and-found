@@ -102,7 +102,7 @@ model AuditLog {
   changeId    String?
 }
 
-model UserPermission {
+model Permission {
   id          String          @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
   actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
@@ -111,9 +111,9 @@ model UserPermission {
 }
 
 model Subscription {
-  id String @id @default(auto()) @map("_id") @db.ObjectId
-  userId String @db.ObjectId
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+  id       String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId   String   @db.ObjectId
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category Category
 }
 
@@ -144,16 +144,16 @@ model Session {
 }
 
 model User {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
-  name           String?
-  email          String?          @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  auditLogs      AuditLog[]
-  UserPermission UserPermission[]
-  subscriptions  Subscription[]
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  accounts      Account[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  permissions   Permission[]
+  subscriptions Subscription[]
 }
 
 model VerificationToken {
