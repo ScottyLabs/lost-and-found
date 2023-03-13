@@ -1,7 +1,7 @@
 import { ItemInteraction } from '@prisma/client';
 import { ItemCreateSchema } from 'lib/schemas';
 import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import { protectedProcedure, publicProcedure, router } from '../trpc';
 
 export default router({
   list: publicProcedure
@@ -9,16 +9,17 @@ export default router({
     .query(({ ctx, input }) =>
       ctx.prisma.auditLog.findMany({ include: { actor: true }, where: input })
     ),
-  create: publicProcedure
+  create: protectedProcedure
     .input(
       z.object({
         interaction: z.nativeEnum(ItemInteraction),
-        actorId: z.string(),
         itemId: z.string(),
-        change: z.object({
-          create: ItemCreateSchema
-        })
+        change: z.object({ create: ItemCreateSchema })
       })
     )
-    .mutation(({ ctx, input }) => ctx.prisma.auditLog.create({ data: input }))
+    .mutation(({ ctx, input }) =>
+      ctx.prisma.auditLog.create({
+        data: { actorId: ctx.session.user.id, ...input }
+      })
+    )
 });

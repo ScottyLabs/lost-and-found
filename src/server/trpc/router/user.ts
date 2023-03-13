@@ -61,13 +61,9 @@ export default router({
     ),
   update: publicProcedure
     .input(UserUpdateSchema)
-    .mutation(async ({ ctx, input }) => {
-      const user = await ctx.prisma.user.findFirstOrThrow({
-        where: { id: input.id }
-      });
-      await ctx.prisma.user.update({ where: { id: user.id }, data: input });
-      return user;
-    }),
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.user.update({ where: { id: input.id }, data: input })
+    ),
   create: publicProcedure
     .input(UserCreateSchema)
     .mutation(async ({ ctx, input }) => ctx.prisma.user.create({ data: input }))

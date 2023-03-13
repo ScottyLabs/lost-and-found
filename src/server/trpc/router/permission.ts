@@ -21,11 +21,7 @@ export default router({
       })
     ),
   delete: publicProcedure
-    .input(
-      z.object({
-        id: z.string()
-      })
-    )
+    .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) =>
       ctx.prisma.permission.delete({ where: input })
     )
