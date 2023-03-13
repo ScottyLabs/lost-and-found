@@ -6,8 +6,10 @@ import clsx from 'clsx';
 import MainLayout from 'components/layout/MainLayout';
 import useZodForm from 'lib/form';
 import { GetServerSideProps } from 'next';
+import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { toast } from 'react-toastify';
 import getServerAuthSession from 'server/common/get-server-auth-session';
 import { Categories } from 'types';
 import { trpc } from 'utils/trpc';
@@ -15,15 +17,43 @@ import { z } from 'zod';
 
 export default function SubscribePage() {
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
-
-  const methods = useZodForm({
-    schema: z.object({
-      email: z.string().email(),
-      categories: z.array(z.nativeEnum(Category)).max(2)
-    })
+  const { data: session, status: sessionStatus } = useSession({
+    required: true
   });
 
-  if (status === 'error') return <div>Failed to load</div>;
+  const context = trpc.useContext();
+
+  const subscriptionCreate = trpc.subscription.create.useMutation({
+    onSuccess: () => {
+      toast('Subscription created!');
+      context.subscription.invalidate();
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
+  });
+
+  const methods = useZodForm({
+    schema: z
+      .object({
+        categories: z.array(z.nativeEnum(Category)).max(2)
+      })
+      .superRefine((data, ctx) => {
+        if (
+          subscriptions &&
+          data.categories.length + subscriptions.length > 2
+        ) {
+          ctx.addIssue({
+            code: 'custom',
+            path: ['categories'],
+            message: 'You can only subscribe to two categories.'
+          });
+        }
+      })
+  });
+
+  if (status === 'error' || sessionStatus === 'loading')
+    return <div>Failed to load</div>;
   if (status === 'loading') return <div>Loading...</div>;
 
   return (
@@ -61,8 +91,9 @@ export default function SubscribePage() {
         <form
           className="flex w-full flex-col gap-2 font-bold"
           onSubmit={methods.handleSubmit(async (data) => {
-            // eslint-disable-next-line no-console
-            console.log(data);
+            data.categories.forEach(async (category) => {
+              await subscriptionCreate.mutateAsync({ category });
+            });
           })}
         >
           <div className="form-control gap-1">
@@ -72,11 +103,9 @@ export default function SubscribePage() {
             <input
               type="email"
               className="input-bordered input-primary input w-full"
-              {...methods.register('email')}
+              disabled
+              value={session.user.email}
             />
-            <span className="text-xs text-error">
-              {methods.formState.errors.email?.message}
-            </span>
           </div>
           <div className="form-control gap-1">
             <label className="label">
@@ -90,17 +119,17 @@ export default function SubscribePage() {
                     className="peer hidden"
                     value={category}
                     {...methods.register('categories')}
+                    disabled={subscriptions.some(
+                      (subscription) => subscription.category === category
+                    )}
                   />
-                  <span
+                  <div
                     className={clsx(
-                      'badge badge-lg cursor-pointer peer-checked:text-accent-content peer-checked:badge-accent',
-                      subscriptions.some(
-                        (subscription) => subscription.category === category
-                      ) && 'badge-accent'
+                      'badge badge-lg cursor-pointer peer-checked:badge-accent peer-disabled:cursor-default peer-disabled:badge-ghost'
                     )}
                   >
                     {Categories[category]}
-                  </span>
+                  </div>
                 </label>
               ))}
             </div>
@@ -108,16 +137,20 @@ export default function SubscribePage() {
               {methods.formState.errors.categories?.message}
             </span>
           </div>
-          <div className="divider" />
           <div className="form-control">
-            <button type="submit" className="btn-accent btn-sm btn">
+            <button
+              type="submit"
+              className="btn-accent btn-sm btn"
+              disabled={!methods.formState.isDirty}
+            >
               Subscribe
             </button>
           </div>
+          <div className="divider" />
           <div className="form-control">
             <Link
               href="/subscriptions"
-              className="btn-outline btn-accent btn-ghost btn-sm btn"
+              className=" btn-outline btn-accent btn-ghost btn-sm btn"
             >
               Manage Subscriptions
             </Link>
