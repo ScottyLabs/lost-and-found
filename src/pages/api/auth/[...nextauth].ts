@@ -18,9 +18,10 @@ export const authOptions: NextAuthOptions = {
       if (isAllowedToSignIn) return true;
       return false; // TODO: return custom unauthorized page
     },
-    session: async ({ session, user }) => {
+    session: async ({ session, user, token }) => {
       // Send properties to the client, like an access_token and user id from a provider.
       if (user) session.user = JSON.parse(JSON.stringify(user));
+      if (token.sub) session.user.id = token.sub;
       return session;
     }
   },
