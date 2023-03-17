@@ -3,26 +3,28 @@ import NextAuth, { type NextAuthOptions } from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+import { User } from '@prisma/client';
 import env from 'env/server.mjs';
 import prisma from '../../../server/db/client';
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
-    // jwt: async ({ token, account, profile }) => {
-    //   if (profile) token.profile = profile;
-    //   if (account?.access_token) token.accessToken = account.access_token;
-    //   return token;
-    // },
     signIn: async ({ user }) => {
       const isAllowedToSignIn = user.email?.endsWith('cmu.edu');
       if (isAllowedToSignIn) return true;
       return false; // TODO: return custom unauthorized page
     },
-    session: async ({ session, user, token }) => {
+    session: async ({ session, token }) => {
       // Send properties to the client, like an access_token and user id from a provider.
-      if (user) session.user = JSON.parse(JSON.stringify(user));
+      if (token.user) session.user = token.user as User;
       if (token.sub) session.user.id = token.sub;
+
       return session;
+    },
+    jwt: async ({ token, user }) => {
+      // Send properties to the client, like an access_token and user id from a provider.
+      if (user) token.user = JSON.parse(JSON.stringify(user));
+      return token;
     }
   },
   secret: env.NEXTAUTH_SECRET,
