@@ -208,8 +208,8 @@ export default function HomePage() {
         <div className="md:hidden">
           <div className="text-xl font-bold">Stay Updated</div>
           <div className="mt-2 text-sm">
-            Items can show up at any time. Subscribe to be notified via email
-            about items in your category that get added in the next 7 days.
+            Items can show up at any time. Stay updated via email to see newly
+            added items.
           </div>
         </div>
         <div className="w-full md:hidden">
