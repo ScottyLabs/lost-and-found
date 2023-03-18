@@ -3,7 +3,7 @@ import MainLayout from 'components/layout/MainLayout';
 export default function PoliciesPage() {
   return (
     <MainLayout>
-      <div className="prose">
+      <div className="prose mx-auto">
         <h1>Policies</h1>
 
         <h2>General</h2>
