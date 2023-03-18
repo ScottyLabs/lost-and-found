@@ -36,10 +36,15 @@ function ItemCreateModal() {
       <h3 className="text-center text-lg font-bold">Add Item</h3>
       <hr />
       <form
-        onSubmit={methods.handleSubmit(async (data) => {
-          await itemMutation.mutateAsync(data);
-          methods.reset();
-        })}
+        onSubmit={methods.handleSubmit(
+          async (data) => {
+            await itemMutation.mutateAsync(data);
+            methods.reset();
+          },
+          async (e) => {
+            toast(JSON.stringify(e));
+          }
+        )}
       >
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-2">
@@ -114,13 +119,14 @@ function ItemCreateModal() {
             <label className="label">
               <span className="label-text">Categories</span>
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {Object.values(Category).map((category) => (
                 <label key={category} className="label">
                   <input
                     type="checkbox"
                     className="peer"
                     {...methods.register('categories')}
+                    value={category}
                   />
                   <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
                     {category}

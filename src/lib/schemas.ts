@@ -8,7 +8,7 @@ export const ItemCreateSchema = z.object({
   longDescription: z.string().nullish(),
   foundBuilding: z.nativeEnum(Building),
   foundDescription: z.string().nullish(),
-  foundDate: z.date(),
+  foundDate: z.coerce.date(),
   retrieveBuilding: z.nativeEnum(Building),
   value: z.nativeEnum(Value),
   categories: z.array(z.nativeEnum(Category)),
