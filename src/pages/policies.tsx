@@ -1,6 +1,4 @@
 import MainLayout from 'components/layout/MainLayout';
-import { GetServerSideProps } from 'next';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 
 export default function PoliciesPage() {
   return (
@@ -115,14 +113,3 @@ export default function PoliciesPage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

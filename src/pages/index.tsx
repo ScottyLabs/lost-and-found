@@ -5,7 +5,6 @@
 import ItemGrid from 'components/ItemGrid';
 import MainLayout from 'components/layout/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { useState } from 'react';
 import {
@@ -16,7 +15,6 @@ import {
   FaSort,
   FaSquare
 } from 'react-icons/fa';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 import { Categories, Colors, Locations } from 'types';
 import useDrawerStore from '../stores/DrawerStore';
 
@@ -224,14 +222,3 @@ export default function HomePage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

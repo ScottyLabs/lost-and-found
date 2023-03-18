@@ -2,11 +2,9 @@
 
 import { Subscription } from '@prisma/client';
 import MainLayout from 'components/layout/MainLayout';
-import { GetServerSideProps } from 'next';
 import Link from 'next/link';
 import { FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 import { trpc } from 'utils/trpc';
 
 type SubscriptionItemProps = {
@@ -92,14 +90,3 @@ export default function SubscriptionsPage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

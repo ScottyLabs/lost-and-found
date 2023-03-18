@@ -5,12 +5,10 @@ import { Category } from '@prisma/client';
 import clsx from 'clsx';
 import MainLayout from 'components/layout/MainLayout';
 import useZodForm from 'lib/form';
-import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'react-toastify';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 import { Categories } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
@@ -160,14 +158,3 @@ export default function SubscribePage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

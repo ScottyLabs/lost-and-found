@@ -7,13 +7,11 @@ import ItemCreateModal from 'components/ItemCreateModal';
 import ItemEditModal from 'components/ItemEditModal';
 import ItemRow from 'components/ItemRow';
 import MainLayout from 'components/layout/MainLayout';
-import { GetServerSideProps } from 'next';
 import { unparse } from 'papaparse';
 import { Fragment, useEffect, useState } from 'react';
 import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 import { trpc } from 'utils/trpc';
 import useModalStore from '../stores/ModalStore';
 
@@ -169,14 +167,3 @@ export default function AdminPage() {
     </>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

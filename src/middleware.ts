@@ -1,16 +1,18 @@
+import { Permission } from '@prisma/client';
 import { withAuth } from 'next-auth/middleware';
 
 export default withAuth({
-  // callbacks: {
-  //   authorized({ req, token }) {
-  //     // `/admin` requires admin role
-  //     if (req.nextUrl.pathname === '/admin') {
-  //       return token?.userRole === 'admin';
-  //     }
-  //     // `/` only requires the user to be logged in
-  //     return !!token;
-  //   }
-  // }
+  callbacks: {
+    authorized({ req, token }) {
+      if (['/admin', '/accounts'].includes(req.nextUrl.pathname)) {
+        return !!token?.user && token.user.permission === Permission.ADMIN;
+      }
+
+      return !!token;
+    }
+  }
 });
 
-export const config = { matcher: ['/', '/admin', '/accounts'] };
+export const config = {
+  matcher: ['/', '/admin', '/accounts', '/subscribe', '/subscriptions']
+};

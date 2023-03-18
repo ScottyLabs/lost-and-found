@@ -5,13 +5,11 @@
 import { User } from '@prisma/client';
 import MainLayout from 'components/layout/MainLayout';
 import UserRow from 'components/UserRow';
-import { GetServerSideProps } from 'next';
 import { unparse } from 'papaparse';
 import { Fragment, useEffect, useState } from 'react';
 import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 import { trpc } from 'utils/trpc';
 
 export default function AccountsPage() {
@@ -148,14 +146,3 @@ export default function AccountsPage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};
