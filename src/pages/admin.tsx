@@ -15,6 +15,7 @@ import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
 import getServerAuthSession from 'server/common/get-server-auth-session';
 import { trpc } from 'utils/trpc';
+import useModalStore from '../stores/ModalStore';
 
 export default function AdminPage() {
   const { ref, inView } = useInView();
@@ -35,6 +36,8 @@ export default function AdminPage() {
     if (inView) itemsQuery.fetchNextPage();
   }, [inView, itemsQuery]);
 
+  const { createItemModal } = useModalStore();
+
   if (itemsQuery.isLoading) return <p>Loading...</p>;
   if (itemsQuery.error) return <p>Error...</p>;
 
@@ -52,9 +55,13 @@ export default function AdminPage() {
               className="input-bordered input w-full max-w-xs"
               onChange={(e) => setQuery(e.target.value)}
             />
-            <label htmlFor="create-item" className="btn-primary btn-square btn">
+            <button
+              type="button"
+              onClick={createItemModal}
+              className="btn-primary btn-square btn"
+            >
               <FaPlusCircle />
-            </label>
+            </button>
             <button
               type="button"
               className="btn-error btn"

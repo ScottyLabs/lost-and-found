@@ -1,295 +1,226 @@
+/* eslint-disable react/jsx-props-no-spreading */
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { Building, Category, Item, ItemInteraction } from '@prisma/client';
-import { useSession } from 'next-auth/react';
-import { useState } from 'react';
-import { FaCircleNotch, FaPlus } from 'react-icons/fa';
+import { Building, Category, ItemInteraction, Value } from '@prisma/client';
+import useZodForm from 'lib/form';
+import { ItemCreateSchema } from 'lib/schemas';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
+import useModalStore from '../stores/ModalStore';
+import { Dialog } from './Dialog';
 
 function ItemCreateModal() {
-  const [newItem, setNewItem] = useState<Partial<Item>>({
-    foundBuilding: Building.CUC,
-    retrieveBuilding: Building.CUC,
-    categories: []
-  } as Partial<Item>);
+  const { modal, clearModal } = useModalStore();
 
   const context = trpc.useContext();
-  const { data, status } = useSession({ required: true });
-
-  const clearForm = () => {
-    (document.getElementById('item-create-form') as HTMLFormElement).reset();
-    document.getElementById('create-item')!.click();
-  };
-
   const auditCreateMutation = trpc.audit.create.useMutation();
-
-  if (status === 'loading') return <FaCircleNotch />;
-
   const itemMutation = trpc.item.create.useMutation({
     onError: (e) => toast(e.data?.zodError?.message ?? e.toString()),
-    onSuccess: async (change) => {
+    onSuccess: async (item) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.CREATE,
-        actorId: data.user?.id,
-        itemId: change.id,
-        change: { create: change }
+        itemId: item.id,
+        change: { create: item }
       });
       await context.item.invalidate();
-      clearForm();
+      clearModal();
       toast('Item Created');
     }
   });
 
+  const methods = useZodForm({ schema: ItemCreateSchema });
+
   return (
-    <>
-      <input type="checkbox" id="create-item" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box relative">
-          <h3 className="text-center text-lg font-bold">Add Item</h3>
-          <hr />
-          <form
-            id="item-create-form"
-            className="form-control"
-            onSubmit={(e) => {
-              e.preventDefault();
-              itemMutation.mutate(newItem as Item);
+    <Dialog isOpen={modal === 'createItem'} onClose={clearModal}>
+      <h3 className="text-center text-lg font-bold">Add Item</h3>
+      <hr />
+      <form
+        onSubmit={methods.handleSubmit(async (data) => {
+          await itemMutation.mutateAsync(data);
+          methods.reset();
+        })}
+      >
+        <div className="grid grid-cols-2 gap-2">
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Item Name</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('name')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.name?.message}
+            </label>
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Date Found</span>
+            </label>
+            <input
+              type="datetime-local"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('foundDate')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.foundDate?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Building Found</span>
+            </label>
+            <select
+              className="select-bordered select select-sm w-full"
+              {...methods.register('foundBuilding')}
+            >
+              {Object.values(Building).map((building) => (
+                <option key={building}>{building}</option>
+              ))}
+            </select>
+            <label className="text-xs text-error">
+              {methods.formState.errors.foundBuilding?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Location Found</span>
+            </label>
+            <input
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              // {...methods.register('')}
+            />
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Short Description</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('shortDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.shortDescription?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Categories</span>
+            </label>
+            <div className="flex items-center gap-2">
+              {Object.values(Category).map((category) => (
+                <label key={category} className="label">
+                  <input
+                    type="checkbox"
+                    className="peer"
+                    {...methods.register('categories')}
+                  />
+                  <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
+                    {category}
+                  </span>
+                </label>
+              ))}
+              <label className="text-xs text-error">
+                {methods.formState.errors.categories?.message}
+              </label>
+            </div>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Value</span>
+            </label>
+            {Object.values(Value).map((value) => (
+              <label key={value} className="label cursor-pointer">
+                <input
+                  type="radio"
+                  className="radio radio-sm"
+                  {...methods.register('value')}
+                  value={value}
+                />
+                <span className="label-text-alt">{value}</span>
+              </label>
+            ))}
+            <label className="text-xs text-error">
+              {methods.formState.errors.value?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label cursor-pointer">
+              <span className="label-text">Identifiable?</span>
+              <input
+                type="checkbox"
+                className="checkbox"
+                // {...methods.register('identifiable')}
+              />
+            </label>
+            {/* <label className="text-xs text-error">
+                  {methods.formState.errors.identifiable?.message}
+                </label> */}
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Retrieve From</span>
+            </label>
+            <select
+              className="select-bordered select select-sm w-full"
+              {...methods.register('retrieveBuilding')}
+            >
+              {Object.values(Building).map((building) => (
+                <option key={building}>{building}</option>
+              ))}
+            </select>
+            <label className="text-xs text-error">
+              {methods.formState.errors.retrieveBuilding?.message}
+            </label>
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Image Upload</span>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input-bordered file-input file-input-sm w-full"
+            />
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Notes</span>
+            </label>
+            <textarea
+              className="textarea-bordered textarea h-24 w-full"
+              placeholder="Type here"
+              {...methods.register('longDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.longDescription?.message}
+            </label>
+          </div>
+        </div>
+        <div className="modal-action">
+          <button
+            type="button"
+            className="btn-error btn-sm btn"
+            onClick={() => {
+              methods.reset();
+              clearModal();
             }}
           >
-            <div className="grid grid-cols-2 gap-2">
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Item Name</span>
-                </label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, name: e.target.value })
-                  }
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Date Found</span>
-                </label>
-                <input
-                  required
-                  type="datetime-local"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  onChange={(e) => {
-                    setNewItem({
-                      ...newItem,
-                      foundDate: new Date(e.target.value)
-                    });
-                  }}
-                />
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Building Found</span>
-                </label>
-                <select
-                  className="select-bordered select select-sm w-full"
-                  required
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      foundBuilding: e.target.value as Building
-                    })
-                  }
-                >
-                  {Object.values(Building).map((building) => (
-                    <option key={building}>{building}</option>
-                  ))}
-                </select>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Location Found</span>
-                </label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, foundDescription: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Short Description</span>
-                </label>
-                <input
-                  required
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  onChange={(e) =>
-                    setNewItem({ ...newItem, shortDescription: e.target.value })
-                  }
-                />
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Categories</span>
-                </label>
-                <div className="flex items-center gap-2">
-                  {newItem.categories?.map((category) => (
-                    <button
-                      type="button"
-                      className="badge-primary badge text-xs font-bold"
-                      onClick={() =>
-                        setNewItem({
-                          ...newItem,
-                          categories: newItem.categories?.filter(
-                            (c) => c !== category
-                          )
-                        })
-                      }
-                    >
-                      {category}
-                    </button>
-                  ))}
-                  <div className="dropdown-end dropdown dropdown-bottom dropdown-hover">
-                    <label tabIndex={0} className="btn-xs btn-circle btn m-1">
-                      <FaPlus />
-                    </label>
-                    <div
-                      tabIndex={0}
-                      className="dropdown-content menu rounded-box w-52 bg-base-200 p-2 shadow"
-                    >
-                      {Object.values(Category)
-                        .filter((c) =>
-                          newItem.categories?.every((ct) => ct !== c)
-                        )
-                        .map((category) => (
-                          <li>
-                            <button
-                              type="button"
-                              className="p-1 text-sm font-bold"
-                              onClick={() =>
-                                setNewItem({
-                                  ...newItem,
-                                  categories:
-                                    newItem.categories?.concat(category)
-                                })
-                              }
-                            >
-                              {category}
-                            </button>
-                          </li>
-                        ))}
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Value</span>
-                </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">Low</span>
-                  <input
-                    type="radio"
-                    name="value"
-                    required
-                    className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'LOW' })}
-                  />
-                </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">Medium</span>
-                  <input
-                    type="radio"
-                    name="value"
-                    className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'MEDIUM' })}
-                  />
-                </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">High</span>
-                  <input
-                    type="radio"
-                    name="value"
-                    className="radio radio-sm"
-                    onChange={() => setNewItem({ ...newItem, value: 'HIGH' })}
-                  />
-                </label>
-              </div>
-              <div>
-                <label className="label cursor-pointer">
-                  <span className="label-text">Identifiable?</span>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Retrieve From</span>
-                </label>
-                <select
-                  className="select-bordered select select-sm w-full"
-                  required
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      retrieveBuilding: e.target.value as Building
-                    })
-                  }
-                >
-                  {Object.values(Building).map((building) => (
-                    <option key={building}>{building}</option>
-                  ))}
-                </select>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Image Upload</span>
-                </label>
-                <input
-                  type="file"
-                  accept="image/*"
-                  className="file-input-bordered file-input file-input-sm w-full"
-                />
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Notes</span>
-                </label>
-                <textarea
-                  className="textarea-bordered textarea h-24 w-full"
-                  placeholder="Type here"
-                  onChange={(e) =>
-                    setNewItem({
-                      ...newItem,
-                      longDescription: e.target.value
-                    })
-                  }
-                />
-              </div>
-            </div>
-            <div className="modal-action">
-              <button
-                type="button"
-                className="btn-error btn-sm btn"
-                onClick={clearForm}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="btn-success btn-sm btn">
-                Add
-              </button>
-            </div>
-          </form>
+            Cancel
+          </button>
+          <button type="submit" className="btn-success btn-sm btn">
+            Add
+          </button>
         </div>
-      </div>
-    </>
+      </form>
+    </Dialog>
   );
 }
 
