@@ -2,7 +2,6 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Category } from '@prisma/client';
-import clsx from 'clsx';
 import MainLayout from 'components/layout/MainLayout';
 import useZodForm from 'lib/form';
 import { useSession } from 'next-auth/react';
@@ -102,7 +101,7 @@ export default function SubscribePage() {
               type="email"
               className="input-bordered input-primary input w-full"
               disabled
-              value={session.user.email}
+              value={session.user.email ?? ''}
             />
           </div>
           <div className="form-control gap-1">
@@ -121,11 +120,7 @@ export default function SubscribePage() {
                       (subscription) => subscription.category === category
                     )}
                   />
-                  <div
-                    className={clsx(
-                      'badge badge-lg cursor-pointer peer-checked:badge-accent peer-disabled:cursor-default peer-disabled:badge-ghost'
-                    )}
-                  >
+                  <div className="badge badge-lg cursor-pointer peer-checked:badge-accent peer-disabled:cursor-default peer-disabled:badge-ghost">
                     {Categories[category]}
                   </div>
                 </label>
@@ -148,7 +143,7 @@ export default function SubscribePage() {
           <div className="form-control">
             <Link
               href="/subscriptions"
-              className=" btn-outline btn-accent btn-ghost btn-sm btn"
+              className="btn-outline btn-accent btn-ghost btn-sm btn"
             >
               Manage Subscriptions
             </Link>
