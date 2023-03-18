@@ -151,8 +151,8 @@ export default function AdminPage() {
                   .filter((item) => item.name.includes(query))
                   .map((item) => (
                     <ItemRow
-                      selected={selectedItems}
                       key={item.id}
+                      selected={selectedItems}
                       item={item}
                       setSelected={setSelectedItems}
                     />

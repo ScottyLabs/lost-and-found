@@ -75,7 +75,10 @@ function Drawer() {
                 <div className="collapse-content">
                   <div>
                     {Object.values(Categories).map((category) => (
-                      <div className="flex items-center gap-2 p-1">
+                      <div
+                        key={category}
+                        className="flex items-center gap-2 p-1"
+                      >
                         <input type="checkbox" className="checkbox" />
                         <label className="label">
                           <span className="label-text">{category}</span>
@@ -102,7 +105,10 @@ function Drawer() {
                     />
                     <div>
                       {Locations.map((location) => (
-                        <div className="flex items-center gap-2 p-1">
+                        <div
+                          key={location}
+                          className="flex items-center gap-2 p-1"
+                        >
                           <input type="checkbox" className="checkbox" />
                           <label className="label">
                             <span className="label-text">{location}</span>
@@ -123,7 +129,7 @@ function Drawer() {
                 <div className="collapse-title">Color</div>
                 <div className="collapse-content">
                   {Colors.map((color) => (
-                    <div className="flex items-center gap-2 p-1">
+                    <div key={color} className="flex items-center gap-2 p-1">
                       <input type="checkbox" className="checkbox" />
                       <label className="label">
                         <span className="label-text">{color}</span>

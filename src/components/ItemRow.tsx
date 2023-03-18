@@ -205,8 +205,8 @@ export default function ItemRow({ item, selected, setSelected }: ItemRowProps) {
         <div className="flex flex-col gap-2">
           {item.categories.map((category) => (
             <span
-              className="badge-primary badge badge-sm text-xs font-bold"
               key={category}
+              className="badge-primary badge badge-sm text-xs font-bold"
             >
               {category}
             </span>
