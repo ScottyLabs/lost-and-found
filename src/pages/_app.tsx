@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable react/jsx-props-no-spreading */
 
 import 'react-toastify/dist/ReactToastify.css';
@@ -21,10 +22,13 @@ const lato = Lato({
 function FontProvider({ children }: PropsWithChildren<{}>) {
   return (
     <>
-      <style>{`
-        html {
-          font-family: ${lato.style.fontFamily}
-        }`}</style>
+      <style jsx global>
+        {`
+          html {
+            font-family: ${lato.style.fontFamily};
+          }
+        `}
+      </style>
       <div className="antialiased">{children}</div>
     </>
   );
