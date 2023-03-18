@@ -27,7 +27,7 @@ export default router({
         take: limit + 1,
         cursor: cursor ? { id: cursor } : undefined,
         orderBy: {
-          foundDate: 'asc'
+          foundDate: 'desc'
         }
       });
 
