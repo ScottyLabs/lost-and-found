@@ -60,9 +60,9 @@ const FAQ: Record<string, ReactNode> = {
   'How do I subscribe/unsubscribe from item updates?': (
     <div className="prose">
       Click{' '}
-      <label htmlFor="subscribe-modal" className="link">
+      <Link href="/subscribe" className="link">
         here
-      </label>{' '}
+      </Link>{' '}
       to subscribe or unsubscribe from item updates.
     </div>
   ),
