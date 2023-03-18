@@ -2,13 +2,7 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import {
-  Building,
-  Category,
-  Item,
-  ItemInteraction,
-  Value
-} from '@prisma/client';
+import { Building, Category, ItemInteraction, Value } from '@prisma/client';
 import useZodForm from 'lib/form';
 import { ItemCreateSchema } from 'lib/schemas';
 import { toast } from 'react-toastify';
@@ -17,15 +11,16 @@ import useModalStore from '../stores/ModalStore';
 import { Dialog } from './Dialog';
 
 type Props = {
-  item: Item;
+  itemId: string;
 };
 
-function ItemEditModal({ item }: Props) {
+function ItemEditModal({ itemId }: Props) {
   const { modal, clearModal } = useModalStore();
 
+  const { data: item, status } = trpc.item.byId.useQuery({ id: itemId });
+
   const methods = useZodForm({
-    schema: ItemCreateSchema,
-    defaultValues: item
+    schema: ItemCreateSchema
   });
 
   const context = trpc.useContext();
@@ -45,13 +40,18 @@ function ItemEditModal({ item }: Props) {
     }
   });
 
+  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'error') return <div>Error</div>;
+
+  methods.reset(item);
+
   return (
     <Dialog isOpen={modal === 'editItem'} onClose={clearModal}>
       <h3 className="text-center text-lg font-bold">Add Item</h3>
       <hr />
       <form
         onSubmit={methods.handleSubmit(async (data) => {
-          await itemMutation.mutateAsync({ id: item.id, data });
+          await itemMutation.mutateAsync({ id: itemId, data });
           methods.reset();
         })}
       >
