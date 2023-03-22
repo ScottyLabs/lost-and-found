@@ -3,6 +3,15 @@ import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export default router({
+  byId: publicProcedure
+    .input(
+      z.object({
+        id: z.string()
+      })
+    )
+    .query(({ ctx, input }) =>
+      ctx.prisma.item.findUniqueOrThrow({ where: input })
+    ),
   getAll: publicProcedure.query(({ ctx }) =>
     ctx.prisma.item.findMany({
       orderBy: {

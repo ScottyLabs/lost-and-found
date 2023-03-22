@@ -2,39 +2,29 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import {
-  Building,
-  Category,
-  Item,
-  ItemInteraction,
-  Value
-} from '@prisma/client';
-import clsx from 'clsx';
-import useZodForm from 'hooks/useZodForm';
+import { Building, Category, ItemInteraction, Value } from '@prisma/client';
+import useZodForm from 'lib/form';
 import { ItemEditSchema } from 'lib/schemas';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
+import useModalStore from '../stores/ModalStore';
+import { Dialog } from './Dialog';
 
 type Props = {
-  item: Item;
+  itemId: string;
 };
 
-function ItemEditModal({ item }: Props) {
-  const context = trpc.useContext();
+function ItemEditModal({ itemId }: Props) {
+  const { modal, clearModal } = useModalStore();
 
-  const auditCreateMutation = trpc.audit.create.useMutation();
+  const { data: item, status } = trpc.item.byId.useQuery({ id: itemId });
 
   const methods = useZodForm({
-    schema: ItemEditSchema,
-    values: item
+    schema: ItemEditSchema
   });
 
-  const clearForm = () => {
-    (document.getElementById('item-edit-form') as HTMLFormElement).reset();
-    document.getElementById('edit-item')!.click();
-    methods.reset();
-  };
-
+  const context = trpc.useContext();
+  const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.update.useMutation({
     onError: (e) => toast(e.data?.zodError?.message),
     onSuccess: async (change) => {
@@ -45,209 +35,206 @@ function ItemEditModal({ item }: Props) {
       });
       await context.item.invalidate();
       await context.audit.invalidate();
+      methods.reset();
       toast('Item Updated');
     }
   });
 
+  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'error') return <div>Error</div>;
+
+  methods.reset(item);
+
   return (
-    <>
-      <input type="checkbox" id="edit-item" className="modal-toggle" />
-      <div className="modal">
-        <div className="modal-box relative">
-          <h3 className="text-center text-lg font-bold">Edit Item</h3>
-          <hr />
-          <form
-            id="item-edit-form"
-            className="form-control"
-            onSubmit={methods.handleSubmit(async (vals) => {
-              await itemMutation.mutateAsync({ id: item.id, data: vals });
-            })}
-          >
-            <div className="grid grid-cols-2 gap-2">
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Item Name</span>
-                </label>
-                <input
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  {...methods.register('name')}
-                />
-                <span className="text-xs text-error">
-                  {methods.formState.errors.name?.message}
-                </span>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Date Found</span>
-                </label>
-                <input
-                  type="datetime-local"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  {...methods.register('foundDate')}
-                />
-                <span className="text-xs text-error">
-                  {methods.formState.errors.foundDate?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Building Found</span>
-                </label>
-                <select
-                  className="select-bordered select select-sm w-full"
-                  {...methods.register('foundBuilding')}
-                >
-                  {Object.values(Building).map((building) => (
-                    <option key={building}>{building}</option>
-                  ))}
-                </select>
-                <span className="text-xs text-error">
-                  {methods.formState.errors.foundBuilding?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Location Found</span>
-                </label>
-                <input
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  {...methods.register('foundDescription')}
-                />
-                <span className="text-xs text-error">
-                  {methods.formState.errors.foundDescription?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Short Description</span>
-                </label>
-                <input
-                  type="text"
-                  placeholder="Type here"
-                  className="input-bordered input input-sm w-full"
-                  {...methods.register('shortDescription')}
-                />
-                <span className="text-xs text-error">
-                  {methods.formState.errors.shortDescription?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Categories</span>
-                </label>
-                <select
-                  multiple
-                  className="select-bordered select select-sm w-full"
-                  {...methods.register('categories')}
-                >
-                  {Object.values(Category).map((category) => (
-                    <option key={category}>{category}</option>
-                  ))}
-                </select>
-                <span className="text-xs text-error">
-                  {methods.formState.errors.categories?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label">
-                  <span className="label-text">Value</span>
-                </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">Low</span>
+    <Dialog isOpen={modal === 'editItem'} onClose={clearModal}>
+      <h3 className="text-center text-lg font-bold">Add Item</h3>
+      <hr />
+      <form
+        onSubmit={methods.handleSubmit(async (data) => {
+          await itemMutation.mutateAsync({ id: itemId, data });
+          methods.reset();
+        })}
+      >
+        <div className="grid grid-cols-2 gap-2">
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Item Name</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('name')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.name?.message}
+            </label>
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Date Found</span>
+            </label>
+            <input
+              type="datetime-local"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('foundDate')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.foundDate?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Building Found</span>
+            </label>
+            <select
+              className="select-bordered select select-sm w-full"
+              {...methods.register('foundBuilding')}
+            >
+              {Object.values(Building).map((building) => (
+                <option key={building}>{building}</option>
+              ))}
+            </select>
+            <label className="text-xs text-error">
+              {methods.formState.errors.foundBuilding?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Location Found</span>
+            </label>
+            <input
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              // {...methods.register('')}
+            />
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Short Description</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('shortDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.shortDescription?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Categories</span>
+            </label>
+            <div className="flex items-center gap-2">
+              {Object.values(Category).map((category) => (
+                <label key={category} className="label">
                   <input
-                    type="radio"
-                    className="radio radio-sm"
-                    value={Value.LOW}
-                    {...methods.register('value')}
+                    type="checkbox"
+                    className="peer"
+                    {...methods.register('categories')}
                   />
+                  <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
+                    {category}
+                  </span>
                 </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">Medium</span>
-                  <input
-                    type="radio"
-                    className="radio radio-sm"
-                    value={Value.MEDIUM}
-                    {...methods.register('value')}
-                  />
-                </label>
-                <label className="label cursor-pointer">
-                  <span className="label-text-alt">High</span>
-                  <input
-                    type="radio"
-                    className="radio radio-sm"
-                    value={Value.HIGH}
-                    {...methods.register('value')}
-                  />
-                </label>
-                <span className="text-xs text-error">
-                  {methods.formState.errors.value?.message}
-                </span>
-              </div>
-              <div>
-                <label className="label cursor-pointer">
-                  <span className="label-text">Identifiable?</span>
-                  <input type="checkbox" className="checkbox" />
-                </label>
-                {/* <span className="text-xs text-error">
+              ))}
+              <label className="text-xs text-error">
+                {methods.formState.errors.categories?.message}
+              </label>
+            </div>
+          </div>
+          <div>
+            <label className="label">
+              <span className="label-text">Value</span>
+            </label>
+            {Object.values(Value).map((value) => (
+              <label key={value} className="label cursor-pointer">
+                <input
+                  type="radio"
+                  className="radio radio-sm"
+                  {...methods.register('value')}
+                  value={value}
+                />
+                <span className="label-text-alt">{value}</span>
+              </label>
+            ))}
+            <label className="text-xs text-error">
+              {methods.formState.errors.value?.message}
+            </label>
+          </div>
+          <div>
+            <label className="label cursor-pointer">
+              <span className="label-text">Identifiable?</span>
+              <input
+                type="checkbox"
+                className="checkbox"
+                // {...methods.register('identifiable')}
+              />
+            </label>
+            {/* <label className="text-xs text-error">
                   {methods.formState.errors.identifiable?.message}
-                </span> */}
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Retrieve From</span>
-                </label>
-                <select
-                  className="select-bordered select select-sm w-full"
-                  {...methods.register('retrieveBuilding')}
-                >
-                  {Object.values(Building).map((building) => (
-                    <option key={building}>{building}</option>
-                  ))}
-                </select>
-                <span className="text-xs text-error">
-                  {methods.formState.errors.retrieveBuilding?.message}
-                </span>
-              </div>
-              <div className="col-span-2">
-                <label className="label">
-                  <span className="label-text">Notes</span>
-                </label>
-                <textarea
-                  className="textarea-bordered textarea h-24 w-full"
-                  placeholder="Type here"
-                  {...methods.register('longDescription')}
-                />
-                <span className="text-xs text-error">
-                  {methods.formState.errors.longDescription?.message}
-                </span>
-              </div>
-            </div>
-            <div className="modal-action">
-              <button
-                type="button"
-                className="btn-error btn-sm btn"
-                onClick={clearForm}
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                className={clsx(
-                  'btn-success btn-sm btn',
-                  itemMutation.isLoading && 'loading',
-                  !methods.formState.isDirty && 'btn-disabled'
-                )}
-              >
-                Edit
-              </button>
-            </div>
-          </form>
+                </label> */}
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Retrieve From</span>
+            </label>
+            <select
+              className="select-bordered select select-sm w-full"
+              {...methods.register('retrieveBuilding')}
+            >
+              {Object.values(Building).map((building) => (
+                <option key={building}>{building}</option>
+              ))}
+            </select>
+            <label className="text-xs text-error">
+              {methods.formState.errors.retrieveBuilding?.message}
+            </label>
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Image Upload</span>
+            </label>
+            <input
+              type="file"
+              accept="image/*"
+              className="file-input-bordered file-input file-input-sm w-full"
+            />
+          </div>
+          <div className="col-span-2">
+            <label className="label">
+              <span className="label-text">Notes</span>
+            </label>
+            <textarea
+              className="textarea-bordered textarea h-24 w-full"
+              placeholder="Type here"
+              {...methods.register('longDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.longDescription?.message}
+            </label>
+          </div>
         </div>
-      </div>
-    </>
+        <div className="modal-action">
+          <button
+            type="button"
+            className="btn-error btn-sm btn"
+            onClick={() => {
+              methods.reset();
+              clearModal();
+            }}
+          >
+            Cancel
+          </button>
+          <button type="submit" className="btn-success btn-sm btn">
+            Add
+          </button>
+        </div>
+      </form>
+    </Dialog>
   );
 }
 

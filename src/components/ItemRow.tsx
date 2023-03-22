@@ -15,6 +15,7 @@ import {
   FaNewspaper
 } from 'react-icons/fa';
 import { trpc } from 'utils/trpc';
+import useModalStore from '../stores/ModalStore';
 
 type ItemHistoryProps = {
   item: Item;
@@ -142,17 +143,13 @@ function ItemHistory({ item }: ItemHistoryProps) {
 
 type ItemRowProps = {
   item: Item;
-  setter: Dispatch<SetStateAction<Item | undefined>>;
   selected: Item[];
   setSelected: Dispatch<SetStateAction<Item[]>>;
 };
 
-export default function ItemRow({
-  item,
-  setter,
-  selected,
-  setSelected
-}: ItemRowProps) {
+export default function ItemRow({ item, selected, setSelected }: ItemRowProps) {
+  const { editItemModal } = useModalStore();
+
   return (
     <tr>
       <th>
@@ -208,8 +205,8 @@ export default function ItemRow({
         <div className="flex flex-col gap-2">
           {item.categories.map((category) => (
             <span
-              className="badge-primary badge badge-sm text-xs font-bold"
               key={category}
+              className="badge-primary badge badge-sm text-xs font-bold"
             >
               {category}
             </span>
@@ -218,13 +215,9 @@ export default function ItemRow({
       </td>
       <td>{StatusIcons[item.status]}</td>
       <td>
-        <label
-          htmlFor="edit-item"
-          className="btn-ghost btn"
-          onClick={() => setter(item)}
-        >
+        <button type="button" onClick={editItemModal} className="btn-ghost btn">
           <FaEdit size={20} />
-        </label>
+        </button>
       </td>
       <td>
         <ItemHistory item={item} />

@@ -17,8 +17,18 @@ enum Building {
 }
 
 enum Category {
-  ELECTRONICS
-  ACCESSORY
+  CHARGER
+  LAPTOP
+  PHONE
+  TABLET
+  HEADPHONE_CASE
+  EYEWARE_CASE
+  CLOTHING
+  JEWELRY
+  WATCH
+  UMBRELLA
+  BEVERAGE_CONTAINER
+  OTHER
 }
 
 enum ItemInteraction {
@@ -46,6 +56,12 @@ enum Value {
   LOW
   MEDIUM
   HIGH
+}
+
+enum Permission {
+  USER
+  MODERATOR
+  ADMIN
 }
 
 model Item {
@@ -78,31 +94,31 @@ model ItemInfoSnapshot {
   categories       Category[]
   status           Status
   auditLog         AuditLog   @relation(fields: [auditLogId], references: [id], onDelete: Cascade)
-  auditLogId       String     @unique
+  auditLogId       String     @unique @db.ObjectId
 }
 
 model AuditLog {
   id          String            @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
   actor       User              @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String
+  actorId     String            @db.ObjectId
   item        Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId      String
+  itemId      String            @db.ObjectId
   change      ItemInfoSnapshot?
   changeId    String?
 }
 
-model UserPermission {
-  id          String          @id @default(auto()) @map("_id") @db.ObjectId
-  interaction ItemInteraction
-  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String
-  building    Building
+model Subscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category  Category
+  createdAt DateTime @default(now())
 }
 
 model Account {
   id                String  @id @default(auto()) @map("_id") @db.ObjectId
-  userId            String
+  userId            String  @db.ObjectId
   type              String
   provider          String
   providerAccountId String
@@ -121,21 +137,22 @@ model Account {
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   sessionToken String   @unique
-  userId       String
+  userId       String   @db.ObjectId
   expires      DateTime
   user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model User {
-  id             String           @id @default(auto()) @map("_id") @db.ObjectId
-  name           String?
-  email          String?          @unique
-  emailVerified  DateTime?
-  image          String?
-  accounts       Account[]
-  sessions       Session[]
-  auditLogs      AuditLog[]
-  UserPermission UserPermission[]
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  name          String?
+  email         String?        @unique
+  emailVerified DateTime?
+  image         String?
+  permission    Permission     @default(USER)
+  accounts      Account[]
+  sessions      Session[]
+  auditLogs     AuditLog[]
+  subscriptions Subscription[]
 }
 
 model VerificationToken {

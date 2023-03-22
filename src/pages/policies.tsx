@@ -1,11 +1,9 @@
 import MainLayout from 'components/layout/MainLayout';
-import { GetServerSideProps } from 'next';
-import getServerAuthSession from 'server/common/get-server-auth-session';
 
 export default function PoliciesPage() {
   return (
     <MainLayout>
-      <div className="prose">
+      <div className="prose mx-auto">
         <h1>Policies</h1>
 
         <h2>General</h2>
@@ -115,14 +113,3 @@ export default function PoliciesPage() {
     </MainLayout>
   );
 }
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getServerAuthSession(ctx);
-  if (!session)
-    return { redirect: { destination: '/auth/signin', permanent: true } };
-  return {
-    props: {
-      session
-    }
-  };
-};

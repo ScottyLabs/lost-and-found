@@ -14,14 +14,12 @@ export default router({
       z.object({
         interaction: z.nativeEnum(ItemInteraction),
         itemId: z.string(),
-        change: z.object({
-          create: ItemCreateSchema
-        })
+        change: z.object({ create: ItemCreateSchema })
       })
     )
     .mutation(({ ctx, input }) =>
       ctx.prisma.auditLog.create({
-        data: { ...input, actorId: ctx.session.user.id }
+        data: { actorId: ctx.session.user.id, ...input }
       })
     )
 });
