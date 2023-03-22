@@ -18,7 +18,8 @@ Populate `.env`. Then run
  yarn dev
 ```
 
-If ```yarn``` doesn't work
+If `yarn` doesn't work
+
 ```
 npm install --global yarn
 ```
