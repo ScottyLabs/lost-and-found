@@ -5,6 +5,8 @@
 
 import clsx from 'clsx';
 import AuthWidget from 'components/AuthWidget';
+import SubscriptionDialog from 'components/SubscriptionDialog';
+import SubscriptionsDialog from 'components/SubscriptionsDialog';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
@@ -218,6 +220,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
             <span>FAQ</span>
           </Link>
         </div>
+        <SubscriptionDialog />
+        <SubscriptionsDialog />
         <main className="p-2 md:my-8">{children}</main>
       </div>
       <Drawer />
