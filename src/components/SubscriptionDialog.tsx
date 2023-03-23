@@ -6,6 +6,7 @@ import { Category } from '@prisma/client';
 import useZodForm from 'lib/form';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
+import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Categories } from 'types';
 import { trpc } from 'utils/trpc';
@@ -59,7 +60,18 @@ export default function SubscriptionDialog() {
   return (
     <Dialog isOpen={dialog === 'subscribe'} onClose={clearDialog}>
       <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold md:text-4xl">Item Subscription</div>
+        <div className="flex justify-between">
+          <span className="text-2xl font-bold md:text-3xl">
+            Item Subscription
+          </span>
+          <button
+            type="button"
+            onClick={clearDialog}
+            className="btn-ghost btn-circle btn"
+          >
+            <FaTimes className="h-6 w-6" />
+          </button>
+        </div>
         <div>
           <div className="flex items-center gap-2">
             <div className="relative h-20 w-20">

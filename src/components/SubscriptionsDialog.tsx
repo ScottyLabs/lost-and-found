@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Subscription } from '@prisma/client';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 import useDialogStore from '../stores/DialogStore';
@@ -68,10 +68,17 @@ export default function SubscriptionsDialog() {
   return (
     <Dialog isOpen={dialog === 'manageSubscriptions'} onClose={clearDialog}>
       <div className="flex flex-col gap-4">
-        <div>
-          <span className="text-2xl font-bold md:text-4xl">
+        <div className="flex justify-between">
+          <span className="text-2xl font-bold md:text-3xl">
             Manage Subscriptions
           </span>
+          <button
+            type="button"
+            onClick={clearDialog}
+            className="btn-ghost btn-circle btn"
+          >
+            <FaTimes className="h-6 w-6" />
+          </button>
         </div>
         <div>
           <span className="text-lg font-bold">Saved Searches</span>
