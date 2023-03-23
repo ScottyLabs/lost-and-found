@@ -1,11 +1,13 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Subscription } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
 import { FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 import useDialogStore from '../stores/DialogStore';
+import { Dialog } from './Dialog';
 
 type SubscriptionItemProps = {
   subscription: Subscription;
@@ -56,15 +58,15 @@ function SubscriptionItem({
   );
 }
 
-export default function SubscriptionsPage() {
+export default function SubscriptionsDialog() {
+  const { dialog, clearDialog, subscribeDialog } = useDialogStore();
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
-  const { manageSubscriptionsDialog } = useDialogStore();
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'error') return <div>Failed to load</div>;
 
   return (
-    <MainLayout>
+    <Dialog isOpen={dialog === 'manageSubscriptions'} onClose={clearDialog}>
       <div className="flex flex-col gap-4">
         <div>
           <span className="text-2xl font-bold md:text-4xl">
@@ -85,13 +87,13 @@ export default function SubscriptionsPage() {
         <div>
           <button
             type="button"
-            onClick={manageSubscriptionsDialog}
+            onClick={subscribeDialog}
             className="btn-accent btn-sm btn w-full"
           >
             New Item Subscription
           </button>
         </div>
       </div>
-    </MainLayout>
+    </Dialog>
   );
 }
