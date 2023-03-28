@@ -59,10 +59,10 @@ export default function SubscriptionDialog() {
 
   return (
     <Dialog isOpen={dialog === 'subscribe'} onClose={clearDialog}>
-      <div className="flex flex-col gap-2">
-        <div className="flex justify-between">
+      <div className="flex h-full flex-col gap-2">
+        <div className="flex items-center justify-between">
           <span className="text-2xl font-bold md:text-3xl">
-            Item Subscription
+            Email Notification Sign-Up
           </span>
           <button
             type="button"
@@ -72,6 +72,7 @@ export default function SubscriptionDialog() {
             <FaTimes className="h-6 w-6" />
           </button>
         </div>
+        <div className="divider my-0" />
         <div>
           <div className="flex items-center gap-2">
             <div className="relative h-20 w-20">
@@ -82,26 +83,25 @@ export default function SubscriptionDialog() {
             </span>
           </div>
         </div>
-        <div className="prose-sm prose">
+        <div className="prose-neutral prose">
           <strong>
             <ol>
-              <li>Add your information below.</li>
+              <li>Select up to two product categories below</li>
               <li>
-                You&apos;ll receive an email at the end of each day filtered to
-                your selected category.
+                You&apos;ll receive a daily email listing newly lost items for
+                each category. Email notifications will run for seven
+                consecutive days.
               </li>
               <li>
-                You&apos;ll receive emails for seven days, and you can
-                unsubscribe at any time.
+                If you wish to renew notifications after this period, please
+                revisit this page.
               </li>
             </ol>
           </strong>
         </div>
-        <div>
-          <span className="text-lg font-bold">Add Item Information</span>
-        </div>
+        <div className="divider my-0" />
         <form
-          className="flex w-full flex-col gap-2 font-bold"
+          className="flex w-full flex-1 flex-col gap-2 font-bold"
           onSubmit={methods.handleSubmit(async (data) => {
             data.categories.forEach(async (category) => {
               await subscriptionCreate.mutateAsync({ category });
@@ -110,7 +110,7 @@ export default function SubscriptionDialog() {
         >
           <div className="form-control gap-1">
             <label className="label">
-              <span className="label-text">Email Address</span>
+              <span className="label-text text-lg">Contact Information</span>
             </label>
             <input
               type="email"
@@ -121,7 +121,7 @@ export default function SubscriptionDialog() {
           </div>
           <div className="form-control gap-1">
             <label className="label">
-              <span className="label-text">Item Category</span>
+              <span className="label-text text-lg">Select Item Category</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {Object.values(Category).map((category) => (
@@ -145,7 +145,7 @@ export default function SubscriptionDialog() {
               {methods.formState.errors.categories?.message}
             </span>
           </div>
-          <div className="form-control">
+          <div className="form-control mt-4 flex-1 justify-end gap-2">
             <button
               type="submit"
               className="btn-accent btn-sm btn"
@@ -153,13 +153,10 @@ export default function SubscriptionDialog() {
             >
               Subscribe
             </button>
-          </div>
-          <div className="divider" />
-          <div className="form-control">
             <button
               type="button"
               onClick={manageSubscriptionsDialog}
-              className="btn-outline btn-accent btn-ghost btn-sm btn"
+              className="btn-accent btn-ghost btn-outline btn-sm btn"
             >
               Manage Subscriptions
             </button>

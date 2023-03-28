@@ -32,7 +32,7 @@ function SubscriptionItem({
     <div className="flex items-center gap-4">
       <div className="flex flex-1 justify-between rounded-lg p-2 shadow-lg">
         <div className="p-3">
-          <span className="font-bold">{category}</span>
+          <span className="font-bold text-neutral">{category}</span>
         </div>
         <div>
           <span className="text-xs font-thin">
@@ -68,9 +68,9 @@ export default function SubscriptionsDialog() {
   return (
     <Dialog isOpen={dialog === 'manageSubscriptions'} onClose={clearDialog}>
       <div className="flex flex-col gap-4">
-        <div className="flex justify-between">
+        <div className="flex items-center justify-between">
           <span className="text-2xl font-bold md:text-3xl">
-            Manage Subscriptions
+            Manage Notifications
           </span>
           <button
             type="button"
@@ -80,6 +80,7 @@ export default function SubscriptionsDialog() {
             <FaTimes className="h-6 w-6" />
           </button>
         </div>
+        <div className="divider my-0" />
         <div>
           <span className="text-lg font-bold">Saved Searches</span>
         </div>
