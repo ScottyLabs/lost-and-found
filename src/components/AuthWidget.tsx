@@ -58,7 +58,7 @@ function AuthWidget() {
               </Link>
             </li>
             <li>
-              <Link className="font-bold text-base-content" href="/items">
+              <Link className="font-bold text-base-content" href="/">
                 <FaList />
                 <span>Items</span>
               </Link>
