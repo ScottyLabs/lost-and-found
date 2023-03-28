@@ -6,14 +6,18 @@ import Link from 'next/link';
 import {
   FaCircleNotch,
   FaList,
+  FaMailBulk,
+  FaNotesMedical,
   FaSignInAlt,
   FaSignOutAlt,
   FaUser,
   FaUserGraduate
 } from 'react-icons/fa';
+import useDialogStore from '../stores/DialogStore';
 
 function AuthWidget() {
   const { data: session, status } = useSession();
+  const { subscribeDialog, manageSubscriptionsDialog } = useDialogStore();
 
   if (status === 'loading') {
     return (
@@ -54,7 +58,7 @@ function AuthWidget() {
               </Link>
             </li>
             <li>
-              <Link className="font-bold text-base-content" href="/items">
+              <Link className="font-bold text-base-content" href="/">
                 <FaList />
                 <span>Items</span>
               </Link>
@@ -62,6 +66,28 @@ function AuthWidget() {
             <li />
           </>
         )}
+
+        <li>
+          <button
+            type="button"
+            onClick={subscribeDialog}
+            className="font-bold text-base-content"
+          >
+            <FaMailBulk />
+            <span>Subscriptions</span>
+          </button>
+        </li>
+        <li>
+          <button
+            type="button"
+            onClick={manageSubscriptionsDialog}
+            className="font-bold text-base-content"
+          >
+            <FaNotesMedical />
+            <span>Manage</span>
+          </button>
+        </li>
+        <li />
         <li>
           <button
             type="button"

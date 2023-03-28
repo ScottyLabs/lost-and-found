@@ -4,56 +4,47 @@
 
 import { Building, Category, ItemInteraction, Value } from '@prisma/client';
 import useZodForm from 'lib/form';
-import { ItemEditSchema } from 'lib/schemas';
+import { ItemCreateSchema } from 'lib/schemas';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
-import useModalStore from '../stores/ModalStore';
+import useDialogStore from '../stores/DialogStore';
 import { Dialog } from './Dialog';
 
-type Props = {
-  itemId: string;
-};
-
-function ItemEditModal({ itemId }: Props) {
-  const { modal, clearModal } = useModalStore();
-
-  const { data: item, status } = trpc.item.byId.useQuery({ id: itemId });
-
-  const methods = useZodForm({
-    schema: ItemEditSchema
-  });
+function ItemCreateDialog() {
+  const { dialog, clearDialog } = useDialogStore();
 
   const context = trpc.useContext();
   const auditCreateMutation = trpc.audit.create.useMutation();
-  const itemMutation = trpc.item.update.useMutation({
-    onError: (e) => toast(e.data?.zodError?.message),
-    onSuccess: async (change) => {
+  const itemMutation = trpc.item.create.useMutation({
+    onError: (e) => toast(e.data?.zodError?.message ?? e.toString()),
+    onSuccess: async (item) => {
       await auditCreateMutation.mutateAsync({
-        interaction: ItemInteraction.EDIT,
-        itemId: change.id,
-        change: { create: change }
+        interaction: ItemInteraction.CREATE,
+        itemId: item.id,
+        change: { create: item }
       });
       await context.item.invalidate();
-      await context.audit.invalidate();
-      methods.reset();
-      toast('Item Updated');
+      clearDialog();
+      toast('Item Created');
     }
   });
 
-  if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'error') return <div>Error</div>;
-
-  methods.reset(item);
+  const methods = useZodForm({ schema: ItemCreateSchema });
 
   return (
-    <Dialog isOpen={modal === 'editItem'} onClose={clearModal}>
+    <Dialog isOpen={dialog === 'createItem'} onClose={clearDialog}>
       <h3 className="text-center text-lg font-bold">Add Item</h3>
       <hr />
       <form
-        onSubmit={methods.handleSubmit(async (data) => {
-          await itemMutation.mutateAsync({ id: itemId, data });
-          methods.reset();
-        })}
+        onSubmit={methods.handleSubmit(
+          async (data) => {
+            await itemMutation.mutateAsync(data);
+            methods.reset();
+          },
+          async (e) => {
+            toast(JSON.stringify(e));
+          }
+        )}
       >
         <div className="grid grid-cols-2 gap-2">
           <div className="col-span-2">
@@ -128,13 +119,14 @@ function ItemEditModal({ itemId }: Props) {
             <label className="label">
               <span className="label-text">Categories</span>
             </label>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {Object.values(Category).map((category) => (
                 <label key={category} className="label">
                   <input
                     type="checkbox"
                     className="peer"
                     {...methods.register('categories')}
+                    value={category}
                   />
                   <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
                     {category}
@@ -224,7 +216,7 @@ function ItemEditModal({ itemId }: Props) {
             className="btn-error btn-sm btn"
             onClick={() => {
               methods.reset();
-              clearModal();
+              clearDialog();
             }}
           >
             Cancel
@@ -238,4 +230,4 @@ function ItemEditModal({ itemId }: Props) {
   );
 }
 
-export default ItemEditModal;
+export default ItemCreateDialog;

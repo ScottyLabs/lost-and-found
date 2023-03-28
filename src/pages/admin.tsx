@@ -3,8 +3,8 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Item } from '@prisma/client';
-import ItemCreateModal from 'components/ItemCreateModal';
-import ItemEditModal from 'components/ItemEditModal';
+import ItemCreateDialog from 'components/ItemCreateDialog';
+import ItemEditDialog from 'components/ItemEditDialog';
 import ItemRow from 'components/ItemRow';
 import MainLayout from 'components/layout/MainLayout';
 import { unparse } from 'papaparse';
@@ -14,7 +14,7 @@ import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
 import useEditItemStore from 'stores/EditItemStore';
 import { trpc } from 'utils/trpc';
-import useModalStore from '../stores/ModalStore';
+import useDialogStore from '../stores/DialogStore';
 
 export default function AdminPage() {
   const { ref, inView } = useInView();
@@ -35,7 +35,7 @@ export default function AdminPage() {
     if (inView) itemsQuery.fetchNextPage();
   }, [inView, itemsQuery]);
 
-  const { createItemModal } = useModalStore();
+  const { createItemDialog } = useDialogStore();
   const { itemId } = useEditItemStore();
 
   if (itemsQuery.isLoading) return <p>Loading...</p>;
@@ -43,8 +43,8 @@ export default function AdminPage() {
 
   return (
     <MainLayout>
-      <ItemCreateModal />
-      {itemId && <ItemEditModal itemId={itemId} />}
+      <ItemCreateDialog />
+      {itemId && <ItemEditDialog itemId={itemId} />}
 
       <form className="my-5 flex flex-col">
         <div className="input-group mx-auto">
@@ -56,7 +56,7 @@ export default function AdminPage() {
           />
           <button
             type="button"
-            onClick={createItemModal}
+            onClick={createItemDialog}
             className="btn-primary btn-square btn"
           >
             <FaPlusCircle />

@@ -15,7 +15,7 @@ import {
   FaNewspaper
 } from 'react-icons/fa';
 import { trpc } from 'utils/trpc';
-import useModalStore from '../stores/ModalStore';
+import useDialogStore from '../stores/DialogStore';
 
 type ItemHistoryProps = {
   item: Item;
@@ -148,7 +148,7 @@ type ItemRowProps = {
 };
 
 export default function ItemRow({ item, selected, setSelected }: ItemRowProps) {
-  const { editItemModal } = useModalStore();
+  const { editItemDialog } = useDialogStore();
 
   return (
     <tr>
@@ -215,7 +215,11 @@ export default function ItemRow({ item, selected, setSelected }: ItemRowProps) {
       </td>
       <td>{StatusIcons[item.status]}</td>
       <td>
-        <button type="button" onClick={editItemModal} className="btn-ghost btn">
+        <button
+          type="button"
+          onClick={editItemDialog}
+          className="btn-ghost btn"
+        >
           <FaEdit size={20} />
         </button>
       </td>

@@ -1,24 +1,28 @@
 /* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Category } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
 import useZodForm from 'lib/form';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
-import Link from 'next/link';
+import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { Categories } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
+import useDialogStore from '../stores/DialogStore';
+import { Dialog } from './Dialog';
 
-export default function SubscribePage() {
+export default function SubscriptionDialog() {
+  const { dialog, clearDialog, manageSubscriptionsDialog } = useDialogStore();
+
+  const context = trpc.useContext();
+
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
   const { data: session, status: sessionStatus } = useSession({
     required: true
   });
-
-  const context = trpc.useContext();
 
   const subscriptionCreate = trpc.subscription.create.useMutation({
     onSuccess: () => {
@@ -54,9 +58,21 @@ export default function SubscribePage() {
   if (status === 'loading') return <div>Loading...</div>;
 
   return (
-    <MainLayout>
-      <div className="flex flex-col gap-2">
-        <div className="text-2xl font-bold md:text-4xl">Item Subscription</div>
+    <Dialog isOpen={dialog === 'subscribe'} onClose={clearDialog}>
+      <div className="flex h-full flex-col gap-2">
+        <div className="flex items-center justify-between">
+          <span className="text-2xl font-bold md:text-3xl">
+            Email Notification Sign-Up
+          </span>
+          <button
+            type="button"
+            onClick={clearDialog}
+            className="btn-ghost btn-circle btn"
+          >
+            <FaTimes className="h-6 w-6" />
+          </button>
+        </div>
+        <div className="divider my-0" />
         <div>
           <div className="flex items-center gap-2">
             <div className="relative h-20 w-20">
@@ -67,26 +83,25 @@ export default function SubscribePage() {
             </span>
           </div>
         </div>
-        <div className="prose-sm prose">
+        <div className="prose-neutral prose">
           <strong>
             <ol>
-              <li>Add your information below.</li>
+              <li>Select up to two product categories below</li>
               <li>
-                You&apos;ll receive an email at the end of each day filtered to
-                your selected category.
+                You&apos;ll receive a daily email listing newly lost items for
+                each category. Email notifications will run for seven
+                consecutive days.
               </li>
               <li>
-                You&apos;ll receive emails for seven days, and you can
-                unsubscribe at any time.
+                If you wish to renew notifications after this period, please
+                revisit this page.
               </li>
             </ol>
           </strong>
         </div>
-        <div>
-          <span className="text-lg font-bold">Add Item Information</span>
-        </div>
+        <div className="divider my-0" />
         <form
-          className="flex w-full flex-col gap-2 font-bold"
+          className="flex w-full flex-1 flex-col gap-2 font-bold"
           onSubmit={methods.handleSubmit(async (data) => {
             data.categories.forEach(async (category) => {
               await subscriptionCreate.mutateAsync({ category });
@@ -95,7 +110,7 @@ export default function SubscribePage() {
         >
           <div className="form-control gap-1">
             <label className="label">
-              <span className="label-text">Email Address</span>
+              <span className="label-text text-lg">Contact Information</span>
             </label>
             <input
               type="email"
@@ -106,7 +121,7 @@ export default function SubscribePage() {
           </div>
           <div className="form-control gap-1">
             <label className="label">
-              <span className="label-text">Item Category</span>
+              <span className="label-text text-lg">Select Item Category</span>
             </label>
             <div className="flex flex-wrap gap-2">
               {Object.values(Category).map((category) => (
@@ -130,7 +145,7 @@ export default function SubscribePage() {
               {methods.formState.errors.categories?.message}
             </span>
           </div>
-          <div className="form-control">
+          <div className="form-control mt-4 flex-1 justify-end gap-2">
             <button
               type="submit"
               className="btn-accent btn-sm btn"
@@ -138,18 +153,16 @@ export default function SubscribePage() {
             >
               Subscribe
             </button>
-          </div>
-          <div className="divider" />
-          <div className="form-control">
-            <Link
-              href="/subscriptions"
-              className="btn-outline btn-accent btn-ghost btn-sm btn"
+            <button
+              type="button"
+              onClick={manageSubscriptionsDialog}
+              className="btn-accent btn-ghost btn-outline btn-sm btn"
             >
               Manage Subscriptions
-            </Link>
+            </button>
           </div>
         </form>
       </div>
-    </MainLayout>
+    </Dialog>
   );
 }

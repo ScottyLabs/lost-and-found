@@ -16,10 +16,12 @@ import {
   FaSquare
 } from 'react-icons/fa';
 import { Categories, Colors, Locations } from 'types';
+import useDialogStore from '../stores/DialogStore';
 import useDrawerStore from '../stores/DrawerStore';
 
 export default function HomePage() {
   const { filterDrawer } = useDrawerStore();
+  const { subscribeDialog } = useDialogStore();
   const [query, setQuery] = useState('');
 
   return (
@@ -177,12 +179,13 @@ export default function HomePage() {
                       via email about items in your category that get added over
                       the next 7 days.
                     </p>
-                    <Link
-                      href="/subscribe"
+                    <button
+                      type="button"
+                      onClick={subscribeDialog}
                       className="btn-accent btn-sm btn shadow-lg"
                     >
                       <span className="uppercase">Subscribe</span>
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -211,12 +214,13 @@ export default function HomePage() {
           </div>
         </div>
         <div className="w-full md:hidden">
-          <Link
-            href="/subscribe"
+          <button
+            type="button"
+            onClick={subscribeDialog}
             className="btn-accent btn-sm btn w-full shadow-lg"
           >
             <span className="uppercase">Subscribe</span>
-          </Link>
+          </button>
         </div>
       </div>
     </MainLayout>

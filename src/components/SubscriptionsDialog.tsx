@@ -1,11 +1,13 @@
+/* eslint-disable react/jsx-props-no-spreading */
+/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Subscription } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
-import Link from 'next/link';
-import { FaTrashAlt } from 'react-icons/fa';
+import { FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
+import useDialogStore from '../stores/DialogStore';
+import { Dialog } from './Dialog';
 
 type SubscriptionItemProps = {
   subscription: Subscription;
@@ -30,7 +32,7 @@ function SubscriptionItem({
     <div className="flex items-center gap-4">
       <div className="flex flex-1 justify-between rounded-lg p-2 shadow-lg">
         <div className="p-3">
-          <span className="font-bold">{category}</span>
+          <span className="font-bold text-neutral">{category}</span>
         </div>
         <div>
           <span className="text-xs font-thin">
@@ -56,20 +58,29 @@ function SubscriptionItem({
   );
 }
 
-export default function SubscriptionsPage() {
+export default function SubscriptionsDialog() {
+  const { dialog, clearDialog, subscribeDialog } = useDialogStore();
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
 
   if (status === 'loading') return <div>Loading...</div>;
   if (status === 'error') return <div>Failed to load</div>;
 
   return (
-    <MainLayout>
+    <Dialog isOpen={dialog === 'manageSubscriptions'} onClose={clearDialog}>
       <div className="flex flex-col gap-4">
-        <div>
-          <span className="text-2xl font-bold md:text-4xl">
-            Manage Subscriptions
+        <div className="flex items-center justify-between">
+          <span className="text-2xl font-bold md:text-3xl">
+            Manage Notifications
           </span>
+          <button
+            type="button"
+            onClick={clearDialog}
+            className="btn-ghost btn-circle btn"
+          >
+            <FaTimes className="h-6 w-6" />
+          </button>
         </div>
+        <div className="divider my-0" />
         <div>
           <span className="text-lg font-bold">Saved Searches</span>
         </div>
@@ -82,11 +93,15 @@ export default function SubscriptionsPage() {
           ))}
         </div>
         <div>
-          <Link href="/subscribe" className="btn-accent btn-sm btn w-full">
+          <button
+            type="button"
+            onClick={subscribeDialog}
+            className="btn-accent btn-sm btn w-full"
+          >
             New Item Subscription
-          </Link>
+          </button>
         </div>
       </div>
-    </MainLayout>
+    </Dialog>
   );
 }

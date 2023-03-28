@@ -26,7 +26,7 @@ export function Dialog({ children, isOpen, onClose }: DialogProps) {
         </Transition.Child>
 
         <div className="fixed inset-0 overflow-y-auto">
-          <div className="flex min-h-full items-center justify-center p-4 text-center">
+          <div className="flex h-screen items-center justify-center text-center md:min-h-full md:p-4">
             <Transition.Child
               as={Fragment}
               enter="ease-out duration-300"
@@ -36,7 +36,7 @@ export function Dialog({ children, isOpen, onClose }: DialogProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <HeadlessDialog.Panel className="w-full max-w-md transform overflow-hidden rounded-2xl bg-base-100 p-6 text-left align-middle shadow-xl transition-all">
+              <HeadlessDialog.Panel className="h-full w-full transform overflow-hidden bg-base-100 p-6 text-left align-middle shadow-xl transition-all md:h-auto md:max-w-md md:rounded-2xl">
                 {children}
               </HeadlessDialog.Panel>
             </Transition.Child>
