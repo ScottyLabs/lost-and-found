@@ -14,7 +14,6 @@ async function getSub() {
 async function subAutoRemove() {
     const weekTime = 604800000;
     const subscriptions = await prisma.subscription.findMany();
-    let diff = (new Date()).getTime() - Date.parse('2023-03-13T19:17:29.930Z');
     subscriptions.filter((subscription) => {
         const difference = new Date().getTime() - subscription.createdAt.getTime();
         return difference > weekTime;
@@ -25,10 +24,6 @@ async function subAutoRemove() {
         }
     } });
     const subscriptionsValid = await prisma.subscription.findMany();
-
-
-    console.log("delete");
-    console.log(diff);
 }
 
 getSub();
