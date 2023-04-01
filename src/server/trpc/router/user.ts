@@ -1,9 +1,9 @@
-import { z } from 'zod';
 import {
   UserCreateSchema,
   UserListSchema,
   UserUpdateSchema
-} from '../../../lib/schemas';
+} from 'lib/schemas';
+import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export default router({

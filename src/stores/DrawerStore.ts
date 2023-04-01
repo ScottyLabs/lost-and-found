@@ -1,13 +1,15 @@
 import { create } from 'zustand';
 
 type DrawerStore = {
-  drawer: 'main' | 'filter';
-  mainDrawer: () => void;
+  drawer: 'navigate' | 'filter' | null;
+  navigateDrawer: () => void;
   filterDrawer: () => void;
+  clearDrawer: () => void;
 };
 
 export default create<DrawerStore>((set) => ({
-  drawer: 'main',
-  mainDrawer: () => set(() => ({ drawer: 'main' })),
-  filterDrawer: () => set(() => ({ drawer: 'filter' }))
+  drawer: null,
+  navigateDrawer: () => set(() => ({ drawer: 'navigate' })),
+  filterDrawer: () => set(() => ({ drawer: 'filter' })),
+  clearDrawer: () => set(() => ({ drawer: null }))
 }));

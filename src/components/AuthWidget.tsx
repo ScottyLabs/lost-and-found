@@ -13,7 +13,7 @@ import {
   FaUser,
   FaUserGraduate
 } from 'react-icons/fa';
-import useDialogStore from '../stores/DialogStore';
+import useDialogStore from 'stores/DialogStore';
 
 function AuthWidget() {
   const { data: session, status } = useSession();
@@ -58,7 +58,7 @@ function AuthWidget() {
               </Link>
             </li>
             <li>
-              <Link className="font-bold text-base-content" href="/">
+              <Link className="font-bold text-base-content" href="/items">
                 <FaList />
                 <span>Items</span>
               </Link>

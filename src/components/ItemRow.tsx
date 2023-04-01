@@ -14,8 +14,8 @@ import {
   FaImage,
   FaNewspaper
 } from 'react-icons/fa';
+import useDialogStore from 'stores/DialogStore';
 import { trpc } from 'utils/trpc';
-import useDialogStore from '../stores/DialogStore';
 
 type ItemHistoryProps = {
   item: Item;

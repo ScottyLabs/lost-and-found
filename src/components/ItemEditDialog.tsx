@@ -3,11 +3,11 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Building, Category, ItemInteraction, Value } from '@prisma/client';
-import useZodForm from 'lib/form';
+import useZodForm from 'hooks/useZodForm';
 import { ItemEditSchema } from 'lib/schemas';
 import { toast } from 'react-toastify';
+import useDialogStore from 'stores/DialogStore';
 import { trpc } from 'utils/trpc';
-import useDialogStore from '../stores/DialogStore';
 import { Dialog } from './Dialog';
 
 type Props = {
@@ -136,7 +136,7 @@ function ItemEditDialog({ itemId }: Props) {
                     className="peer"
                     {...methods.register('categories')}
                   />
-                  <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
+                  <span className="badge badge-primary text-xs font-bold peer-checked:badge-primary">
                     {category}
                   </span>
                 </label>

@@ -4,7 +4,7 @@ import MainLayout from 'components/layout/MainLayout';
 import Image from 'next/image';
 import Link from 'next/link';
 import { ReactNode } from 'react';
-import useDialogStore from '../stores/DialogStore';
+import useDialogStore from 'stores/DialogStore';
 
 const FAQ: Record<string, () => ReactNode> = {
   'Where do I go to retrieve my item?': () => (
