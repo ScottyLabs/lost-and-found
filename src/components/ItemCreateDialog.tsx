@@ -128,7 +128,7 @@ function ItemCreateDialog() {
                     {...methods.register('categories')}
                     value={category}
                   />
-                  <span className="badge badge-primary text-xs font-bold peer-checked:badge-primary">
+                  <span className="badge-primary badge text-xs font-bold peer-checked:badge-primary">
                     {category}
                   </span>
                 </label>
