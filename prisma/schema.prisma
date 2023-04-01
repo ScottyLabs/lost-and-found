@@ -64,6 +64,22 @@ enum Permission {
   ADMIN
 }
 
+enum Color {
+  BLACK
+  BLUE
+  BROWN
+  GREEN
+  GREY
+  MULTICOLOR
+  METALLIC
+  ORANGE
+  PURPLE
+  RED
+  WHITE
+  YELLOW
+  OTHER
+}
+
 model Item {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
   name             String
@@ -76,6 +92,7 @@ model Item {
   retrieveBuilding Building
   value            Value
   categories       Category[]
+  color            Color
   status           Status
   auditLog         AuditLog[]
 }
