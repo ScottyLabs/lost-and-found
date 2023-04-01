@@ -2,8 +2,12 @@
 /* eslint-disable react/jsx-props-no-spreading */
 
 import 'react-toastify/dist/ReactToastify.css';
-import '../styles/globals.css';
+import 'styles/globals.css';
 
+import FilterDrawer from 'components/layout/FilterDrawer';
+import NavigationDrawer from 'components/layout/NavigationDrawer';
+import SubscriptionDialog from 'components/SubscriptionDialog';
+import SubscriptionsDialog from 'components/SubscriptionsDialog';
 import type { Session } from 'next-auth';
 import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
@@ -40,6 +44,10 @@ function MyApp({ Component, pageProps }: AppProps<{ session: Session }>) {
       <FontProvider>
         <SessionProvider session={pageProps.session}>
           <ToastContainer position="bottom-right" />
+          <NavigationDrawer />
+          <FilterDrawer />
+          <SubscriptionDialog />
+          <SubscriptionsDialog />
           <Component {...pageProps} />
         </SessionProvider>
       </FontProvider>
