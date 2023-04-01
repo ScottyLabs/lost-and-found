@@ -3,20 +3,19 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Category } from '@prisma/client';
-import useZodForm from 'lib/form';
+import useZodForm from 'hooks/useZodForm';
 import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import useDialogStore from 'stores/DialogStore';
 import { Categories } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
-import useDialogStore from '../stores/DialogStore';
 import { Dialog } from './Dialog';
 
-export default function SubscriptionDialog() {
-  const { dialog, clearDialog, manageSubscriptionsDialog } = useDialogStore();
-
+function SubscriptionsForm() {
+  const { manageSubscriptionsDialog } = useDialogStore();
   const context = trpc.useContext();
 
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
@@ -56,6 +55,75 @@ export default function SubscriptionDialog() {
   if (status === 'error' || sessionStatus === 'loading')
     return <div>Failed to load</div>;
   if (status === 'loading') return <div>Loading...</div>;
+
+  return (
+    <form
+      className="flex w-full flex-1 flex-col gap-2 font-bold"
+      onSubmit={methods.handleSubmit(async (data) => {
+        data.categories.forEach(async (category) => {
+          await subscriptionCreate.mutateAsync({ category });
+        });
+      })}
+    >
+      <div className="form-control gap-1">
+        <label className="label">
+          <span className="label-text text-lg">Contact Information</span>
+        </label>
+        <input
+          type="email"
+          className="input-bordered input-primary input w-full"
+          disabled
+          value={session.user.email ?? ''}
+        />
+      </div>
+      <div className="form-control gap-1">
+        <label className="label">
+          <span className="label-text text-lg">Select Item Category</span>
+        </label>
+        <div className="flex flex-wrap gap-2">
+          {Object.values(Category).map((category) => (
+            <label key={category}>
+              <input
+                type="checkbox"
+                className="peer hidden"
+                value={category}
+                {...methods.register('categories')}
+                disabled={subscriptions.some(
+                  (subscription) => subscription.category === category
+                )}
+              />
+              <div className="badge badge-lg cursor-pointer peer-checked:badge-accent peer-disabled:cursor-default peer-disabled:badge-ghost">
+                {Categories[category]}
+              </div>
+            </label>
+          ))}
+        </div>
+        <span className="text-xs text-error">
+          {methods.formState.errors.categories?.message}
+        </span>
+      </div>
+      <div className="form-control mt-4 flex-1 justify-end gap-2">
+        <button
+          type="submit"
+          className="btn-accent btn-sm btn"
+          disabled={!methods.formState.isDirty}
+        >
+          Subscribe
+        </button>
+        <button
+          type="button"
+          onClick={manageSubscriptionsDialog}
+          className="btn-outline btn-accent btn-ghost btn-sm btn"
+        >
+          Manage Subscriptions
+        </button>
+      </div>
+    </form>
+  );
+}
+
+export default function SubscriptionDialog() {
+  const { dialog, clearDialog } = useDialogStore();
 
   return (
     <Dialog isOpen={dialog === 'subscribe'} onClose={clearDialog}>
@@ -100,68 +168,7 @@ export default function SubscriptionDialog() {
           </strong>
         </div>
         <div className="divider my-0" />
-        <form
-          className="flex w-full flex-1 flex-col gap-2 font-bold"
-          onSubmit={methods.handleSubmit(async (data) => {
-            data.categories.forEach(async (category) => {
-              await subscriptionCreate.mutateAsync({ category });
-            });
-          })}
-        >
-          <div className="form-control gap-1">
-            <label className="label">
-              <span className="label-text text-lg">Contact Information</span>
-            </label>
-            <input
-              type="email"
-              className="input-bordered input-primary input w-full"
-              disabled
-              value={session.user.email ?? ''}
-            />
-          </div>
-          <div className="form-control gap-1">
-            <label className="label">
-              <span className="label-text text-lg">Select Item Category</span>
-            </label>
-            <div className="flex flex-wrap gap-2">
-              {Object.values(Category).map((category) => (
-                <label key={category}>
-                  <input
-                    type="checkbox"
-                    className="peer hidden"
-                    value={category}
-                    {...methods.register('categories')}
-                    disabled={subscriptions.some(
-                      (subscription) => subscription.category === category
-                    )}
-                  />
-                  <div className="badge badge-lg cursor-pointer peer-checked:badge-accent peer-disabled:cursor-default peer-disabled:badge-ghost">
-                    {Categories[category]}
-                  </div>
-                </label>
-              ))}
-            </div>
-            <span className="text-xs text-error">
-              {methods.formState.errors.categories?.message}
-            </span>
-          </div>
-          <div className="form-control mt-4 flex-1 justify-end gap-2">
-            <button
-              type="submit"
-              className="btn-accent btn-sm btn"
-              disabled={!methods.formState.isDirty}
-            >
-              Subscribe
-            </button>
-            <button
-              type="button"
-              onClick={manageSubscriptionsDialog}
-              className="btn-accent btn-ghost btn-outline btn-sm btn"
-            >
-              Manage Subscriptions
-            </button>
-          </div>
-        </form>
+        <SubscriptionsForm />
       </div>
     </Dialog>
   );

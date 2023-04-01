@@ -1,6 +1,8 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
+// eslint-disable import/no-named-as-default
+
 import { Status } from '@prisma/client';
 import { FaCircleNotch } from 'react-icons/fa';
+import useItemFilterStore from 'stores/ItemFilterStore';
 import { trpc } from 'utils/trpc';
 import ItemCard from './ItemCard';
 
@@ -10,6 +12,7 @@ type Props = {
 
 export default function ItemGrid({ query }: Props) {
   const itemsQuery = trpc.item.getAll.useQuery();
+  const { category, color, date, location } = useItemFilterStore();
 
   if (itemsQuery.status === 'loading')
     return (
@@ -39,7 +42,11 @@ export default function ItemGrid({ query }: Props) {
             item.status === Status.AVAILABLE &&
             (item.name.toLowerCase().includes(query) ||
               item.shortDescription.toLowerCase().includes(query) ||
-              item.foundDescription?.toLowerCase().includes(query))
+              item.foundDescription?.toLowerCase().includes(query)) &&
+            (!category || item.categories.includes(category)) &&
+            (!color || item.color === color) &&
+            (!date || item.foundDate.getTime() > date.getTime()) &&
+            (!location || item.retrieveBuilding === location)
         )
         .map((item) => (
           <ItemCard key={item.id} item={item} />

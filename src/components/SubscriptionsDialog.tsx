@@ -5,8 +5,8 @@
 import { Subscription } from '@prisma/client';
 import { FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';
+import useDialogStore from 'stores/DialogStore';
 import { trpc } from 'utils/trpc';
-import useDialogStore from '../stores/DialogStore';
 import { Dialog } from './Dialog';
 
 type SubscriptionItemProps = {
@@ -58,12 +58,20 @@ function SubscriptionItem({
   );
 }
 
+function SubscriptionList() {
+  const { data: subscriptions } = trpc.subscription.list.useQuery();
+
+  return (
+    <div className="flex flex-col gap-4">
+      {subscriptions?.map((subscription) => (
+        <SubscriptionItem key={subscription.id} subscription={subscription} />
+      ))}
+    </div>
+  );
+}
+
 export default function SubscriptionsDialog() {
   const { dialog, clearDialog, subscribeDialog } = useDialogStore();
-  const { data: subscriptions, status } = trpc.subscription.list.useQuery();
-
-  if (status === 'loading') return <div>Loading...</div>;
-  if (status === 'error') return <div>Failed to load</div>;
 
   return (
     <Dialog isOpen={dialog === 'manageSubscriptions'} onClose={clearDialog}>
@@ -84,14 +92,7 @@ export default function SubscriptionsDialog() {
         <div>
           <span className="text-lg font-bold">Saved Searches</span>
         </div>
-        <div className="flex flex-col gap-3">
-          {subscriptions.map((subscription) => (
-            <SubscriptionItem
-              key={subscription.id}
-              subscription={subscription}
-            />
-          ))}
-        </div>
+        <SubscriptionList />
         <div>
           <button
             type="button"

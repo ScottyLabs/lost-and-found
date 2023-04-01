@@ -5,6 +5,7 @@
 import ItemGrid from 'components/ItemGrid';
 import MainLayout from 'components/layout/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
+import SortWidget from 'components/SortWidget';
 import Link from 'next/link';
 import { useState } from 'react';
 import {
@@ -15,9 +16,8 @@ import {
   FaSort,
   FaSquare
 } from 'react-icons/fa';
-import { Categories, Colors, Locations } from 'types';
-import useDialogStore from '../stores/DialogStore';
-import useDrawerStore from '../stores/DrawerStore';
+import useDialogStore from 'stores/DialogStore';
+import useDrawerStore from 'stores/DrawerStore';
 
 export default function HomePage() {
   const { filterDrawer } = useDrawerStore();
@@ -94,65 +94,7 @@ export default function HomePage() {
         <div className="divider m-0 md:hidden" />
         <div className="flex w-full max-w-5xl gap-10">
           <div className="hidden md:block">
-            <div className="w-80 self-start rounded-lg bg-primary p-5 text-accent">
-              <span className="text-xl font-bold">Filters</span>
-              <form className="form-control gap-4">
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Date Lost</span>
-                  </label>
-                  <input
-                    type="date"
-                    placeholder="Type here"
-                    className="input-bordered input input-sm w-full max-w-xs font-bold"
-                  />
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Item Category</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Object.entries(Categories).map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Location Lost</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Locations.map((location) => (
-                      <option key={location} value={location}>
-                        {location}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Color</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Colors.map((color) => (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    className="btn-accent btn-sm btn rounded-full"
-                  >
-                    <span className="uppercase">Apply Filters</span>
-                  </button>
-                </div>
-              </form>
-            </div>
+            <SortWidget />
           </div>
           <div className="flex w-full flex-col gap-4">
             <ItemGrid query={query} />
