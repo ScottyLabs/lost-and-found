@@ -16,7 +16,7 @@ import useDialogStore from 'stores/DialogStore';
 import useEditItemStore from 'stores/EditItemStore';
 import { trpc } from 'utils/trpc';
 
-export default function AdminPage() {
+export default function Manage() {
   const { ref, inView } = useInView();
   const [selectedItems, setSelectedItems] = useState<Item[]>([]);
   const [query, setQuery] = useState('');

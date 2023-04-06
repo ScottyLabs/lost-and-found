@@ -52,15 +52,15 @@ function AuthWidget() {
         {session.user.permission === Permission.ADMIN && (
           <>
             <li>
-              <Link className="font-bold text-base-content" href="/admin">
-                <FaUserGraduate />
-                <span>Admin</span>
+              <Link className="font-bold text-base-content" href="/manage">
+                <FaList />
+                <span>Manage Items</span>
               </Link>
             </li>
             <li>
-              <Link className="font-bold text-base-content" href="/items">
-                <FaList />
-                <span>Items</span>
+              <Link className="font-bold text-base-content" href="/accounts">
+                <FaUserGraduate />
+                <span>Accounts</span>
               </Link>
             </li>
             <li />
