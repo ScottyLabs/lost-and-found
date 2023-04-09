@@ -35,19 +35,14 @@ enum ItemInteraction {
   CREATE
   APPROVE
   UNAPPROVE
-  PUBLISH
-  UNPUBLISH
-  MAKE_AVAILABLE
-  MAKE_UNAVAILABLE
-  EDIT
-  DELETE
   ARCHIVE
   UNARCHIVE
+  EDIT
+  DELETE
 }
 
 enum Status {
-  PUBLISHED
-  AVAILABLE
+  PENDING
   APPROVED
   ARCHIVED
 }
@@ -83,46 +78,29 @@ enum Color {
 model Item {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
   name             String
-  imageURL         String?
-  shortDescription String
-  longDescription  String?
-  foundBuilding    Building
-  foundDescription String?
   foundDate        DateTime
-  retrieveBuilding Building
-  value            Value
+  foundBuilding    Building
+  foundDescription String
+  shortDescription String
   categories       Category[]
   color            Color
-  status           Status
-  auditLog         AuditLog[]
-}
-
-model ItemInfoSnapshot {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  imageURL         String?
-  shortDescription String
-  longDescription  String?
-  foundBuilding    Building
-  foundDescription String?
-  foundDate        DateTime
-  retrieveBuilding Building
   value            Value
-  categories       Category[]
+  identifiable     Boolean
+  retrieveBuilding Building
+  longDescription  String?
+  auditLogs        AuditLog[]
   status           Status
-  auditLog         AuditLog   @relation(fields: [auditLogId], references: [id], onDelete: Cascade)
-  auditLogId       String     @unique @db.ObjectId
+  createdAt        DateTime   @default(now())
 }
 
 model AuditLog {
-  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
-  actor       User              @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String            @db.ObjectId
-  item        Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId      String            @db.ObjectId
-  change      ItemInfoSnapshot?
-  changeId    String?
+  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  actorId     String          @db.ObjectId
+  item        Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId      String          @db.ObjectId
+  createdAt   DateTime        @default(now())
 }
 
 model Subscription {
