@@ -35,49 +35,51 @@ export default function AccountsPage() {
 
   return (
     <MainLayout>
-      <form className="form-control my-5">
-        <div className="input-group">
-          <input
-            type="text"
-            placeholder="Search..."
-            className="input-bordered input w-full max-w-xs"
-            onChange={(e) => setQuery(e.target.value)}
-          />
-          <label htmlFor="create-item" className="btn-primary btn-square btn">
-            <FaPlusCircle />
-          </label>
-          <button
-            type="button"
-            className="btn-error btn"
-            disabled={selectedUsers.length === 0}
-            onClick={async () => {
-              const res = await itemDeleteMutation.mutateAsync(
-                selectedUsers.map((selItem) => selItem.id)
-              );
-              setSelectedUsers([]);
-              usersQuery.refetch();
-              toast(`Deleted ${res.count} Items`);
-            }}
-          >
-            <FaTrash />
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              const csv = unparse(usersQuery.data.pages, { header: true });
-              const file = new Blob([csv], { type: 'text/csv' });
-              const url = URL.createObjectURL(file);
-              const element = document.createElement('a');
-              element.download = 'lostAndFoundData.csv';
-              element.href = url;
-              element.click();
-            }}
-            className="btn-secondary btn-square btn"
-          >
-            <FaDownload />
-          </button>
-        </div>
-      </form>
+      <div className="my-5 flex w-full items-center justify-center">
+        <form className="form-control">
+          <div className="input-group">
+            <input
+              type="text"
+              placeholder="Search..."
+              className="input-bordered input w-full max-w-xs"
+              onChange={(e) => setQuery(e.target.value)}
+            />
+            <label htmlFor="create-item" className="btn-primary btn-square btn">
+              <FaPlusCircle />
+            </label>
+            <button
+              type="button"
+              className="btn-error btn"
+              disabled={selectedUsers.length === 0}
+              onClick={async () => {
+                const res = await itemDeleteMutation.mutateAsync(
+                  selectedUsers.map((selItem) => selItem.id)
+                );
+                setSelectedUsers([]);
+                usersQuery.refetch();
+                toast(`Deleted ${res.count} Items`);
+              }}
+            >
+              <FaTrash />
+            </button>
+            <button
+              type="button"
+              onClick={() => {
+                const csv = unparse(usersQuery.data.pages, { header: true });
+                const file = new Blob([csv], { type: 'text/csv' });
+                const url = URL.createObjectURL(file);
+                const element = document.createElement('a');
+                element.download = 'lostAndFoundData.csv';
+                element.href = url;
+                element.click();
+              }}
+              className="btn-secondary btn-square btn"
+            >
+              <FaDownload />
+            </button>
+          </div>
+        </form>
+      </div>
 
       <div className="w-full">
         <table className="table-zebra table-compact m-auto table  w-full max-w-3xl table-fixed">

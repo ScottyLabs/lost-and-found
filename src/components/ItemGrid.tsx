@@ -11,7 +11,7 @@ type Props = {
 };
 
 export default function ItemGrid({ query }: Props) {
-  const itemsQuery = trpc.item.getAll.useQuery();
+  const itemsQuery = trpc.item.list.useQuery();
   const { category, color, date, location } = useItemFilterStore();
 
   if (itemsQuery.status === 'loading')
@@ -39,7 +39,7 @@ export default function ItemGrid({ query }: Props) {
       {itemsQuery.data
         .filter(
           (item) =>
-            item.status === Status.AVAILABLE &&
+            item.status === Status.APPROVED &&
             (item.name.toLowerCase().includes(query) ||
               item.shortDescription.toLowerCase().includes(query) ||
               item.foundDescription?.toLowerCase().includes(query)) &&
