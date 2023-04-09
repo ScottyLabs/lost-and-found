@@ -1,14 +1,7 @@
 import { create } from 'zustand';
 
 type DialogStore = {
-  dialog:
-    | 'createItem'
-    | 'editItem'
-    | 'subscribe'
-    | 'manageSubscriptions'
-    | null;
-  createItemDialog: () => void;
-  editItemDialog: () => void;
+  dialog: 'subscribe' | 'manageSubscriptions' | null;
   subscribeDialog: () => void;
   manageSubscriptionsDialog: () => void;
   clearDialog: () => void;
@@ -16,8 +9,6 @@ type DialogStore = {
 
 export default create<DialogStore>((set) => ({
   dialog: null,
-  createItemDialog: () => set(() => ({ dialog: 'createItem' })),
-  editItemDialog: () => set(() => ({ dialog: 'editItem' })),
   subscribeDialog: () => set(() => ({ dialog: 'subscribe' })),
   manageSubscriptionsDialog: () =>
     set(() => ({ dialog: 'manageSubscriptions' })),
