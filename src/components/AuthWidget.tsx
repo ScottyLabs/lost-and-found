@@ -47,14 +47,14 @@ function AuthWidget() {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu rounded-box menu-compact w-36 bg-base-200 p-2 shadow"
+        className="dropdown-content menu rounded-box menu-compact bg-base-200 p-2 shadow"
       >
         {session.user.permission === Permission.ADMIN && (
           <>
             <li>
               <Link className="font-bold text-base-content" href="/manage">
                 <FaList />
-                <span>Manage Items</span>
+                <span>Manage</span>
               </Link>
             </li>
             <li>
@@ -84,7 +84,7 @@ function AuthWidget() {
             className="font-bold text-base-content"
           >
             <FaNotesMedical />
-            <span>Manage</span>
+            <span>Notifications</span>
           </button>
         </li>
         <li />
