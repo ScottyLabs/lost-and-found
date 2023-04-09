@@ -12,7 +12,7 @@ export default router({
     .query(({ ctx, input }) =>
       ctx.prisma.item.findUniqueOrThrow({ where: input })
     ),
-  getAll: publicProcedure.query(({ ctx }) =>
+  list: publicProcedure.query(({ ctx }) =>
     ctx.prisma.item.findMany({
       orderBy: {
         foundDate: 'desc'
