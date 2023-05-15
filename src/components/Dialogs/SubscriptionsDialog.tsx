@@ -1,7 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import { Subscription } from '@prisma/client';
 import { FaTimes, FaTrashAlt } from 'react-icons/fa';
 import { toast } from 'react-toastify';

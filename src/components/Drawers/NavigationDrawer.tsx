@@ -1,8 +1,3 @@
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
 import { Fragment } from 'react';

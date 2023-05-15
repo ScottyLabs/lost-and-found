@@ -1,5 +1,3 @@
-/* eslint-disable import/prefer-default-export */
-
 import { Dialog as HeadlessDialog, Transition } from '@headlessui/react';
 import { Fragment } from 'react';
 

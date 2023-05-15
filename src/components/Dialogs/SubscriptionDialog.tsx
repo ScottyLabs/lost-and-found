@@ -1,7 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/no-noninteractive-tabindex */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import { Category } from '@prisma/client';
 import useZodForm from 'hooks/useZodForm';
 import { useSession } from 'next-auth/react';
