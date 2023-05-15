@@ -1,8 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import {
   Building,
   Category,
@@ -10,21 +5,20 @@ import {
   ItemInteraction,
   Value
 } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
+import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
 import { ItemSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
+import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 
-export default function Create() {
+const EditItem: NextPageWithLayout = () => {
   const router = useRouter();
   const { itemId } = router.query;
   const item = trpc.item.byId.useQuery(
     { id: itemId as string },
-    {
-      enabled: typeof itemId === 'string'
-    }
+    { enabled: typeof itemId === 'string' }
   );
 
   const methods = useZodForm({
@@ -55,7 +49,7 @@ export default function Create() {
   if (!item) return <p>Could not find item {itemId}</p>;
 
   return (
-    <MainLayout>
+    <>
       <h3 className="mx-auto w-full max-w-2xl text-2xl font-bold">Edit Item</h3>
       <div className="divider mx-auto max-w-2xl" />
       <form
@@ -249,6 +243,10 @@ export default function Create() {
           </button>
         </div>
       </form>
-    </MainLayout>
+    </>
   );
-}
+};
+
+EditItem.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
+
+export default EditItem;

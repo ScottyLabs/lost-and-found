@@ -1,9 +1,5 @@
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import { User } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
+import ManageLayout from 'components/Layouts/ManageLayout';
 import UserRow from 'components/UserRow';
 import { unparse } from 'papaparse';
 import { Fragment, useEffect, useState } from 'react';
@@ -11,8 +7,9 @@ import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
+import { NextPageWithLayout } from './_app';
 
-export default function AccountsPage() {
+const Accounts: NextPageWithLayout = () => {
   const { ref, inView } = useInView();
   const [selectedUsers, setSelectedUsers] = useState<User[]>([]);
   const [query, setQuery] = useState('');
@@ -34,7 +31,7 @@ export default function AccountsPage() {
   if (usersQuery.error) return <p>Error...</p>;
 
   return (
-    <MainLayout>
+    <>
       <div className="my-5 flex w-full items-center justify-center">
         <form className="form-control">
           <div className="input-group">
@@ -145,6 +142,10 @@ export default function AccountsPage() {
         </table>
         <p ref={ref}>{usersQuery.isFetchingNextPage && 'Loading more...'}</p>
       </div>
-    </MainLayout>
+    </>
   );
-}
+};
+
+Accounts.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
+
+export default Accounts;

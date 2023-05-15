@@ -3,8 +3,9 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import ItemRow from 'components/ItemRow';
-import MainLayout from 'components/layout/MainLayout';
+import ManageLayout from 'components/Layouts/ManageLayout';
 import Link from 'next/link';
+import { NextPageWithLayout } from 'pages/_app';
 import { useState } from 'react';
 import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -12,7 +13,7 @@ import useSelectedItemsStore from 'stores/SelectedItemStore';
 import downloadItems from 'utils/downloadItems';
 import { trpc } from 'utils/trpc';
 
-export default function Manage() {
+const Manage: NextPageWithLayout = () => {
   const [query, setQuery] = useState('');
   const context = trpc.useContext();
 
@@ -24,7 +25,7 @@ export default function Manage() {
   if (items.error) return <p>Error...</p>;
 
   return (
-    <MainLayout>
+    <>
       <div className="my-5 flex w-full items-center justify-center">
         <form className="form-control">
           <div className="input-group mx-auto">
@@ -68,6 +69,10 @@ export default function Manage() {
             <ItemRow key={item.id} item={item} />
           ))}
       </div>
-    </MainLayout>
+    </>
   );
-}
+};
+
+Manage.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
+
+export default Manage;

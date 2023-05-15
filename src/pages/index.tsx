@@ -1,9 +1,5 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import ItemGrid from 'components/ItemGrid';
-import MainLayout from 'components/layout/MainLayout';
+import MainLayout from 'components/Layouts/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
 import SortWidget from 'components/SortWidget';
 import Link from 'next/link';
@@ -18,14 +14,15 @@ import {
 } from 'react-icons/fa';
 import useDialogStore from 'stores/DialogStore';
 import useDrawerStore from 'stores/DrawerStore';
+import { NextPageWithLayout } from './_app';
 
-export default function HomePage() {
+const Home: NextPageWithLayout = () => {
   const { filterDrawer } = useDrawerStore();
   const { subscribeDialog } = useDialogStore();
   const [query, setQuery] = useState('');
 
   return (
-    <MainLayout>
+    <>
       <ScrollToTop />
       <div className="mx-auto flex flex-col items-center gap-4">
         <div className="relative w-full max-w-3xl text-white">
@@ -165,6 +162,12 @@ export default function HomePage() {
           </button>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
-}
+};
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Home;

@@ -10,14 +10,15 @@ import {
   ItemInteraction,
   Value
 } from '@prisma/client';
-import MainLayout from 'components/layout/MainLayout';
+import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
 import { ItemCreateSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
+import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 
-export default function Create() {
+const CreateItem: NextPageWithLayout = () => {
   const context = trpc.useContext();
   const router = useRouter();
   const auditCreateMutation = trpc.audit.create.useMutation();
@@ -37,7 +38,7 @@ export default function Create() {
   const methods = useZodForm({ schema: ItemCreateSchema });
 
   return (
-    <MainLayout>
+    <>
       <h3 className="text-2xl font-bold">Add Item</h3>
       <hr />
       <form
@@ -227,6 +228,10 @@ export default function Create() {
           </button>
         </div>
       </form>
-    </MainLayout>
+    </>
   );
-}
+};
+
+CreateItem.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
+
+export default CreateItem;
