@@ -1,5 +1,3 @@
-// eslint-disable import/no-named-as-default
-
 import { Status } from '@prisma/client';
 import { FaCircleNotch } from 'react-icons/fa';
 import useItemFilterStore from 'stores/ItemFilterStore';
