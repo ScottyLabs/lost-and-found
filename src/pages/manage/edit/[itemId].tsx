@@ -16,16 +16,26 @@ import { trpc } from 'utils/trpc';
 const EditItem: NextPageWithLayout = () => {
   const router = useRouter();
   const { itemId } = router.query;
-  const item = trpc.item.byId.useQuery(
-    { id: itemId as string },
-    { enabled: typeof itemId === 'string' }
-  );
 
   const methods = useZodForm({
-    schema: ItemSchema,
-    defaultValues: item.data
+    schema: ItemSchema
   });
 
+  const item = trpc.item.byId.useQuery(
+    { id: itemId as string },
+    {
+      enabled: typeof itemId === 'string',
+      refetchOnWindowFocus: false,
+      onSuccess(data) {
+        methods.reset({
+          ...data,
+          foundDate: data.foundDate
+            .toISOString()
+            .substring(0, 16) as unknown as Date
+        });
+      }
+    }
+  );
   const context = trpc.useContext();
   const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.update.useMutation({
@@ -93,7 +103,7 @@ const EditItem: NextPageWithLayout = () => {
             type="datetime-local"
             placeholder="Type here"
             className="input-bordered input input-sm w-full"
-            {...methods.register('foundDate')}
+            {...methods.register('foundDate', { valueAsDate: true })}
           />
           <label className="text-xs text-error">
             {methods.formState.errors.foundDate?.message?.toString()}
@@ -233,11 +243,19 @@ const EditItem: NextPageWithLayout = () => {
             {methods.formState.errors.longDescription?.message?.toString()}
           </label>
         </div>
-        <div>
+        <div className="flex justify-end gap-2">
+          <button
+            type="button"
+            disabled={!methods.formState.isDirty}
+            onClick={() => methods.reset()}
+            className="btn-outline btn"
+          >
+            Cancel
+          </button>
           <button
             type="submit"
             disabled={!methods.formState.isDirty}
-            className="btn-success btn w-full"
+            className="btn-primary btn"
           >
             Update
           </button>
