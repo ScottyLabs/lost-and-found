@@ -26,7 +26,7 @@ export default function SortWidget() {
     }
   });
 
-  const { setFilter } = useItemFilterStore();
+  const { setFilter, resetFilter } = useItemFilterStore();
 
   return (
     <div className="w-80 self-start rounded-lg bg-primary p-5 text-accent">
@@ -35,7 +35,10 @@ export default function SortWidget() {
         <button
           type="button"
           className="btn-ghost btn-sm btn"
-          onClick={() => methods.reset()}
+          onClick={() => {
+            methods.reset();
+            resetFilter();
+          }}
         >
           Clear
         </button>
