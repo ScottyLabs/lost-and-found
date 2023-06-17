@@ -17,6 +17,7 @@ type ItemFilterStore = {
     location: Building | null;
     color: Color | null;
   }) => void;
+  resetFilter: () => void;
 };
 
 export default create<ItemFilterStore>((set) => ({
@@ -29,5 +30,7 @@ export default create<ItemFilterStore>((set) => ({
     category = null,
     location = null,
     color = null
-  }) => set(() => ({ date, category, location, color }))
+  }) => set(() => ({ date, category, location, color })),
+  resetFilter: () =>
+    set(() => ({ date: null, category: null, location: null, color: null }))
 }));
