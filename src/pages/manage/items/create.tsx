@@ -10,6 +10,7 @@ import {
   ItemInteraction,
   Value
 } from '@prisma/client';
+import MyListbox from 'components/Form/Listbox';
 import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
 import { ItemCreateSchema } from 'lib/schemas';
@@ -23,7 +24,7 @@ const CreateItem: NextPageWithLayout = () => {
   const router = useRouter();
   const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.create.useMutation({
-    onError: (e) => toast.error(e.data?.zodError?.message ?? e.toString()),
+    onError: (e) => toast.error(e.data?.zodError),
     onSuccess: async (item) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.CREATE,
@@ -38,7 +39,7 @@ const CreateItem: NextPageWithLayout = () => {
   const methods = useZodForm({ schema: ItemCreateSchema });
 
   return (
-    <div className="mx-auto w-full max-w-lg">
+    <div className="mx-auto max-w-lg">
       <h3 className="text-2xl font-bold">Add Item</h3>
       <div className="divider" />
       <form
@@ -80,14 +81,14 @@ const CreateItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Building Found</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full"
-            {...methods.register('foundBuilding')}
-          >
-            {Object.values(Building).map((building) => (
-              <option key={building}>{building}</option>
-            ))}
-          </select>
+          <MyListbox
+            values={Object.values(Building)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="foundBuilding"
+            control={methods.control}
+            placeholder="Select building"
+          />
           <label className="text-xs text-error">
             {methods.formState.errors.foundBuilding?.message}
           </label>
@@ -120,15 +121,15 @@ const CreateItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Categories</span>
           </label>
-          <select
+          <MyListbox
+            values={Object.values(Category)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="categories"
+            control={methods.control}
+            placeholder="Select categories"
             multiple
-            className="select-bordered select"
-            {...methods.register('categories')}
-          >
-            {Object.values(Category).map((category) => (
-              <option key={category}>{category}</option>
-            ))}
-          </select>
+          />
           <label className="text-xs text-error">
             {methods.formState.errors.categories?.message}
           </label>
@@ -137,14 +138,14 @@ const CreateItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Color</span>
           </label>
-          <select
-            className="select-bordered select"
-            {...methods.register('color')}
-          >
-            {Object.values(Color).map((color) => (
-              <option key={color}>{color}</option>
-            ))}
-          </select>
+          <MyListbox
+            values={Object.values(Color)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="color"
+            control={methods.control}
+            placeholder="Select color"
+          />
           <label className="text-xs text-error">
             {methods.formState.errors.color?.message}
           </label>

@@ -5,6 +5,7 @@ import {
   ItemInteraction,
   Value
 } from '@prisma/client';
+import MyListbox from 'components/Form/Listbox';
 import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
 import { ItemSchema } from 'lib/schemas';
@@ -39,7 +40,7 @@ const EditItem: NextPageWithLayout = () => {
   const context = trpc.useContext();
   const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.update.useMutation({
-    onError: (e) => toast.error(e.data?.zodError?.message),
+    onError: (e) => toast.error(e.data?.zodError),
     onSuccess: async (change) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.EDIT,
@@ -59,7 +60,7 @@ const EditItem: NextPageWithLayout = () => {
   if (!item) return <p>Could not find item {itemId}</p>;
 
   return (
-    <div className="mx-auto w-full max-w-lg">
+    <div className="mx-auto max-w-lg">
       <h3 className="text-2xl font-bold">Edit Item</h3>
       <div className="divider" />
       <form
@@ -101,16 +102,16 @@ const EditItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Building Found</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full"
-            {...methods.register('foundBuilding')}
-          >
-            {Object.values(Building).map((building) => (
-              <option key={building}>{building}</option>
-            ))}
-          </select>
+          <MyListbox
+            values={Object.values(Building)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="foundBuilding"
+            control={methods.control}
+            placeholder="Select building"
+          />
           <label className="text-xs text-error">
-            {methods.formState.errors.foundBuilding?.message?.toString()}
+            {methods.formState.errors.foundBuilding?.message}
           </label>
         </div>
         <div>
@@ -141,33 +142,33 @@ const EditItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Categories</span>
           </label>
-          <select
+          <MyListbox
+            values={Object.values(Category)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="categories"
+            control={methods.control}
+            placeholder="Select categories"
             multiple
-            className="select-bordered select"
-            {...methods.register('categories')}
-          >
-            {Object.values(Category).map((category) => (
-              <option key={category}>{category}</option>
-            ))}
-          </select>
+          />
           <label className="text-xs text-error">
-            {methods.formState.errors.categories?.message?.toString()}
+            {methods.formState.errors.categories?.message}
           </label>
         </div>
         <div>
           <label className="label">
             <span className="label-text">Color</span>
           </label>
-          <select
-            className="select-bordered select"
-            {...methods.register('color')}
-          >
-            {Object.values(Color).map((color) => (
-              <option key={color}>{color}</option>
-            ))}
-          </select>
+          <MyListbox
+            values={Object.values(Color)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="color"
+            control={methods.control}
+            placeholder="Select color"
+          />
           <label className="text-xs text-error">
-            {methods.formState.errors.color?.message?.toString()}
+            {methods.formState.errors.color?.message}
           </label>
         </div>
         <div>
