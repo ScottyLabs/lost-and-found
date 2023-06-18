@@ -7,7 +7,7 @@ const Found: NextPageWithLayout = () => {
   return (
     <div className="mx-auto flex w-full max-w-3xl flex-col items-center gap-4 md:flex-row-reverse">
       <div className="flex flex-1 flex-col gap-4">
-        <div className="md:rounded-md md:border md:border-accent md:bg-secondary md:p-4">
+        <div className="md:rounded-md md:border md:border-accent md:p-4">
           <div className="text-lg font-bold">Found an item?</div>
           <div className="mt-2 text-sm">
             A found item can be taken to the Information Desk at the Cohon
@@ -15,7 +15,7 @@ const Found: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="divider md:hidden" />
-        <div className="md:rounded-md md:border md:border-accent md:bg-secondary md:p-4">
+        <div className="md:rounded-md md:border md:border-accent md:p-4">
           <div className="text-lg font-bold">Contact Information</div>
           <div className="flex flex-col items-start gap-2 p-2">
             <div className="flex items-center gap-3">

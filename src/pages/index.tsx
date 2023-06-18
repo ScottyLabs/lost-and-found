@@ -95,7 +95,7 @@ const Home: NextPageWithLayout = () => {
           </div>
           <div className="flex w-full flex-col gap-4">
             <ItemGrid query={query} />
-            <div className="hidden w-full rounded-lg border border-accent bg-secondary p-4 md:block">
+            <div className="hidden h-full w-full rounded-lg border border-accent p-4 md:block">
               <div className="prose">
                 <h3>Still can&apos;t find it?</h3>
                 <ul>
@@ -145,7 +145,7 @@ const Home: NextPageWithLayout = () => {
             <span className="uppercase">More Info</span>
           </Link>
         </div>
-        <div className="md:hidden">
+        <div className="w-full md:hidden">
           <div className="text-xl font-bold">Stay Updated</div>
           <div className="mt-2 text-sm">
             Items can show up at any time. Stay updated via email to see newly

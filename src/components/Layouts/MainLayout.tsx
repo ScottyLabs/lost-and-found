@@ -28,8 +28,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <Link
           href="/"
           className={clsx(
-            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary bg-secondary uppercase shadow-lg',
-            router.pathname === '/' && '!bg-accent text-accent-content'
+            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary uppercase shadow-lg',
+            router.pathname === '/' && 'bg-accent text-accent-content'
           )}
         >
           <span>Lost an Item</span>
@@ -37,8 +37,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <Link
           href="/found"
           className={clsx(
-            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary bg-secondary uppercase shadow-lg',
-            router.pathname === '/found' && '!bg-accent text-accent-content'
+            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary uppercase shadow-lg',
+            router.pathname === '/found' && 'bg-accent text-accent-content'
           )}
         >
           <span>Found an Item</span>
@@ -46,8 +46,8 @@ export default function MainLayout({ children }: PropsWithChildren) {
         <Link
           href="/faq"
           className={clsx(
-            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary bg-secondary uppercase shadow-lg',
-            router.pathname === '/faq' && '!bg-accent text-accent-content'
+            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary uppercase shadow-lg',
+            router.pathname === '/faq' && 'bg-accent text-accent-content'
           )}
         >
           <span>FAQ</span>
