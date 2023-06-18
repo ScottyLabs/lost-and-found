@@ -1,8 +1,3 @@
-/* eslint-disable react/jsx-props-no-spreading */
-/* eslint-disable jsx-a11y/control-has-associated-label */
-/* eslint-disable no-nested-ternary */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import {
   Building,
   Category,
@@ -12,39 +7,65 @@ import {
 } from '@prisma/client';
 import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
-import { ItemCreateSchema } from 'lib/schemas';
+import { ItemSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 
-const CreateItem: NextPageWithLayout = () => {
-  const context = trpc.useContext();
+const EditItem: NextPageWithLayout = () => {
   const router = useRouter();
+  const { itemId } = router.query;
+
+  const methods = useZodForm({
+    schema: ItemSchema
+  });
+
+  const item = trpc.item.byId.useQuery(
+    { id: itemId as string },
+    {
+      enabled: typeof itemId === 'string',
+      refetchOnWindowFocus: false,
+      onSuccess(data) {
+        methods.reset({
+          ...data,
+          foundDate: data.foundDate
+            .toISOString()
+            .substring(0, 16) as unknown as Date
+        });
+      }
+    }
+  );
+  const context = trpc.useContext();
   const auditCreateMutation = trpc.audit.create.useMutation();
-  const itemMutation = trpc.item.create.useMutation({
-    onError: (e) => toast.error(e.data?.zodError?.message ?? e.toString()),
-    onSuccess: async (item) => {
+  const itemMutation = trpc.item.update.useMutation({
+    onError: (e) => toast.error(e.data?.zodError?.message),
+    onSuccess: async (change) => {
       await auditCreateMutation.mutateAsync({
-        interaction: ItemInteraction.CREATE,
-        itemId: item.id
+        interaction: ItemInteraction.EDIT,
+        itemId: change.id
       });
       await context.item.invalidate();
-      router.push('/manage');
-      toast.success('Item Created');
+      await context.audit.invalidate();
+      methods.reset();
+      router.push('/manage/items');
+      toast.success('Item Updated');
     }
   });
 
-  const methods = useZodForm({ schema: ItemCreateSchema });
+  if (typeof itemId !== 'string') return <p>Invalid Item ID</p>;
+  if (item.isLoading) return <p>Loading...</p>;
+  if (item.error) return <p>Error...</p>;
+  if (!item) return <p>Could not find item {itemId}</p>;
 
   return (
     <>
-      <h3 className="text-2xl font-bold">Add Item</h3>
-      <hr />
+      <h3 className="mx-auto w-full max-w-2xl text-2xl font-bold">Edit Item</h3>
+      <div className="divider mx-auto max-w-2xl" />
       <form
         onSubmit={methods.handleSubmit(
           async (data) => {
-            await itemMutation.mutateAsync(data);
+            await itemMutation.mutateAsync({ id: itemId, data });
             methods.reset();
           },
           async (e) => {
@@ -58,7 +79,7 @@ const CreateItem: NextPageWithLayout = () => {
             );
           }
         )}
-        className="form-control gap-2"
+        className="form-control mx-auto w-full max-w-2xl gap-2"
       >
         <div>
           <label className="label">
@@ -71,7 +92,7 @@ const CreateItem: NextPageWithLayout = () => {
             {...methods.register('name')}
           />
           <label className="text-xs text-error">
-            {methods.formState.errors.name?.message}
+            {methods.formState.errors.name?.message?.toString()}
           </label>
         </div>
         <div>
@@ -82,10 +103,10 @@ const CreateItem: NextPageWithLayout = () => {
             type="datetime-local"
             placeholder="Type here"
             className="input-bordered input input-sm w-full"
-            {...methods.register('foundDate')}
+            {...methods.register('foundDate', { valueAsDate: true })}
           />
           <label className="text-xs text-error">
-            {methods.formState.errors.foundDate?.message}
+            {methods.formState.errors.foundDate?.message?.toString()}
           </label>
         </div>
         <div>
@@ -101,7 +122,7 @@ const CreateItem: NextPageWithLayout = () => {
             ))}
           </select>
           <label className="text-xs text-error">
-            {methods.formState.errors.foundBuilding?.message}
+            {methods.formState.errors.foundBuilding?.message?.toString()}
           </label>
         </div>
         <div>
@@ -125,7 +146,7 @@ const CreateItem: NextPageWithLayout = () => {
             {...methods.register('shortDescription')}
           />
           <label className="text-xs text-error">
-            {methods.formState.errors.shortDescription?.message}
+            {methods.formState.errors.shortDescription?.message?.toString()}
           </label>
         </div>
         <div>
@@ -142,7 +163,7 @@ const CreateItem: NextPageWithLayout = () => {
             ))}
           </select>
           <label className="text-xs text-error">
-            {methods.formState.errors.categories?.message}
+            {methods.formState.errors.categories?.message?.toString()}
           </label>
         </div>
         <div>
@@ -158,7 +179,7 @@ const CreateItem: NextPageWithLayout = () => {
             ))}
           </select>
           <label className="text-xs text-error">
-            {methods.formState.errors.color?.message}
+            {methods.formState.errors.color?.message?.toString()}
           </label>
         </div>
         <div>
@@ -177,7 +198,7 @@ const CreateItem: NextPageWithLayout = () => {
             </label>
           ))}
           <label className="text-xs text-error">
-            {methods.formState.errors.value?.message}
+            {methods.formState.errors.value?.message?.toString()}
           </label>
         </div>
         <div>
@@ -190,7 +211,7 @@ const CreateItem: NextPageWithLayout = () => {
             />
           </label>
           <label className="text-xs text-error">
-            {methods.formState.errors.identifiable?.message}
+            {methods.formState.errors.identifiable?.message?.toString()}
           </label>
         </div>
         <div>
@@ -206,7 +227,7 @@ const CreateItem: NextPageWithLayout = () => {
             ))}
           </select>
           <label className="text-xs text-error">
-            {methods.formState.errors.retrieveBuilding?.message}
+            {methods.formState.errors.retrieveBuilding?.message?.toString()}
           </label>
         </div>
         <div>
@@ -219,12 +240,24 @@ const CreateItem: NextPageWithLayout = () => {
             {...methods.register('longDescription')}
           />
           <label className="text-xs text-error">
-            {methods.formState.errors.longDescription?.message}
+            {methods.formState.errors.longDescription?.message?.toString()}
           </label>
         </div>
-        <div>
-          <button type="submit" className="btn-success btn w-full">
-            Create
+        <div className="flex justify-end gap-4">
+          <button
+            type="button"
+            disabled={!methods.formState.isDirty}
+            onClick={() => methods.reset()}
+            className="btn-outline btn"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            disabled={!methods.formState.isDirty}
+            className="btn-primary btn"
+          >
+            Update
           </button>
         </div>
       </form>
@@ -232,6 +265,6 @@ const CreateItem: NextPageWithLayout = () => {
   );
 };
 
-CreateItem.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
+EditItem.getLayout = (page) => <ManageLayout>{page}</ManageLayout>;
 
-export default CreateItem;
+export default EditItem;

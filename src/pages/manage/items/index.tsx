@@ -36,35 +36,32 @@ const Manage: NextPageWithLayout = () => {
   return (
     <>
       <div className="my-5 flex w-full items-center justify-center">
-        <form className="form-control">
-          <div className="input-group mx-auto">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="input-bordered input w-full max-w-xs"
-              onChange={(e) => setQuery(e.target.value)}
-            />
-            <Link href="/manage/create" className="btn-primary btn-square btn">
-              <FaPlusCircle />
-            </Link>
-            <button
-              type="button"
-              className="btn-error btn"
-              disabled={selectedItems.length === 0}
-              onClick={async () =>
-                itemDeleteMutation.mutateAsync(selectedItems)
-              }
-            >
-              <FaTrash />
-            </button>
-            <button
-              type="button"
-              onClick={() => downloadItems(items.data)}
-              className="btn-secondary btn-square btn"
-            >
-              <FaDownload />
-            </button>
-          </div>
+        <form className="flex w-full gap-2">
+          <input
+            type="text"
+            placeholder="Search..."
+            className="input-bordered input w-full"
+            onChange={(e) => setQuery(e.target.value)}
+          />
+          <Link href="/manage/items/create" className="btn-primary btn">
+            <FaPlusCircle />
+          </Link>
+          <button
+            type="button"
+            className="btn-error btn"
+            disabled={selectedItems.length === 0}
+            onClick={async () => itemDeleteMutation.mutateAsync(selectedItems)}
+          >
+            <FaTrash />
+          </button>
+          <button
+            type="button"
+            onClick={() => downloadItems(items.data)}
+            disabled={selectedItems.length === 0}
+            className="btn-secondary btn"
+          >
+            <FaDownload />
+          </button>
         </form>
       </div>
 

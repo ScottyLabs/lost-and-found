@@ -43,7 +43,7 @@ function AuthWidget() {
   return (
     <div className="dropdown-end dropdown">
       <label tabIndex={0} className="flex-0 btn-ghost btn-circle btn">
-        <FaUser className="md:text-black" />
+        <FaUser className="md:text-base-content" />
       </label>
       <ul
         tabIndex={0}
@@ -52,15 +52,21 @@ function AuthWidget() {
         {session.user.permission === Permission.ADMIN && (
           <>
             <li>
-              <Link className="font-bold text-base-content" href="/manage">
+              <Link
+                className="font-bold text-base-content"
+                href="/manage/items"
+              >
                 <FaList />
-                <span>Manage</span>
+                <span>Items</span>
               </Link>
             </li>
             <li>
-              <Link className="font-bold text-base-content" href="/accounts">
+              <Link
+                className="font-bold text-base-content"
+                href="/manage/users"
+              >
                 <FaUserGraduate />
-                <span>Accounts</span>
+                <span>Users</span>
               </Link>
             </li>
             <li />

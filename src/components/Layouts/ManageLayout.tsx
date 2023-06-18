@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { PropsWithChildren } from 'react';
-import { FaHouseUser, FaSitemap, FaUserFriends } from 'react-icons/fa';
+import { FaSitemap, FaUserFriends } from 'react-icons/fa';
 import Navbar from './Navbar';
 
 export default function ManageLayout({ children }: PropsWithChildren) {
@@ -22,29 +22,19 @@ export default function ManageLayout({ children }: PropsWithChildren) {
               <span>Manage</span>
             </li>
             <li>
-              <Link href="/manage">
+              <Link href="/manage/items">
                 <FaSitemap /> <span>Items</span>
               </Link>
             </li>
             <li>
-              <Link href="/accounts">
+              <Link href="/manage/users">
                 <FaUserFriends />
                 <span>Users</span>
               </Link>
             </li>
-            <li />
-            <li className="menu-title">
-              <span>Subscriptions</span>
-            </li>
-            <li>
-              <Link href="/manage">
-                <FaHouseUser />
-                <span>Manage</span>
-              </Link>
-            </li>
           </ul>
         </aside>
-        <main className="w-full max-w-5xl flex-1 p-2">{children}</main>
+        <main className="w-full max-w-3xl flex-1 p-2">{children}</main>
       </div>
     </div>
   );

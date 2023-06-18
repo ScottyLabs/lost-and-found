@@ -7,7 +7,7 @@ import { FaDownload, FaPlusCircle, FaTrash } from 'react-icons/fa';
 import { useInView } from 'react-intersection-observer';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
-import { NextPageWithLayout } from './_app';
+import { NextPageWithLayout } from '../../_app';
 
 const Accounts: NextPageWithLayout = () => {
   const { ref, inView } = useInView();

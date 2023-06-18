@@ -78,7 +78,7 @@ export default function ItemRow({ item }: ItemRowProps) {
           </select>
           <Link
             className="btn-accent btn-xs btn"
-            href={`/manage/edit/${item.id}`}
+            href={`/manage/items/${item.id}`}
           >
             Edit
           </Link>
