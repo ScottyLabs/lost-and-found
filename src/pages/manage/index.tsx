@@ -18,7 +18,16 @@ const Manage: NextPageWithLayout = () => {
   const context = trpc.useContext();
 
   const items = trpc.item.list.useQuery();
-  const itemDeleteMutation = trpc.item.delete.useMutation();
+  const itemDeleteMutation = trpc.item.delete.useMutation({
+    onSuccess: (res) => {
+      context.item.infiniteItems.invalidate();
+      setSelectedItems([]);
+      toast.success(`Deleted ${res.count} Items`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
+  });
   const { selectedItems, setSelectedItems } = useSelectedItemsStore();
 
   if (items.isLoading) return <p>Loading...</p>;
@@ -42,12 +51,9 @@ const Manage: NextPageWithLayout = () => {
               type="button"
               className="btn-error btn"
               disabled={selectedItems.length === 0}
-              onClick={async () => {
-                const res = await itemDeleteMutation.mutateAsync(selectedItems);
-                setSelectedItems([]);
-                toast(`Deleted ${res.count} Items`);
-                context.item.infiniteItems.invalidate();
-              }}
+              onClick={async () =>
+                itemDeleteMutation.mutateAsync(selectedItems)
+              }
             >
               <FaTrash />
             </button>

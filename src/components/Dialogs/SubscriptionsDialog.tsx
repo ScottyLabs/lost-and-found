@@ -16,7 +16,7 @@ function SubscriptionItem({
 
   const subscriptionDelete = trpc.subscription.delete.useMutation({
     onSuccess: () => {
-      toast('Subscription deleted!');
+      toast.success('Subscription deleted!');
       context.subscription.invalidate();
     },
     onError: (err) => {

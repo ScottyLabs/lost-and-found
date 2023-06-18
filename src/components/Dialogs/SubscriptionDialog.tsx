@@ -21,7 +21,7 @@ function SubscriptionsForm() {
 
   const subscriptionCreate = trpc.subscription.create.useMutation({
     onSuccess: () => {
-      toast('Subscription created!');
+      toast.success('Subscription created!');
       context.subscription.invalidate();
     },
     onError: (err) => {

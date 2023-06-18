@@ -23,7 +23,7 @@ const CreateItem: NextPageWithLayout = () => {
   const router = useRouter();
   const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.create.useMutation({
-    onError: (e) => toast(e.data?.zodError?.message ?? e.toString()),
+    onError: (e) => toast.error(e.data?.zodError?.message ?? e.toString()),
     onSuccess: async (item) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.CREATE,
@@ -31,7 +31,7 @@ const CreateItem: NextPageWithLayout = () => {
       });
       await context.item.invalidate();
       router.push('/manage');
-      toast('Item Created');
+      toast.success('Item Created');
     }
   });
 
@@ -48,7 +48,7 @@ const CreateItem: NextPageWithLayout = () => {
             methods.reset();
           },
           async (e) => {
-            toast(
+            toast.error(
               JSON.stringify(
                 Object.entries(e).map(([key, value]) => ({
                   key,

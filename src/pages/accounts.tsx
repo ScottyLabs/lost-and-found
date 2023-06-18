@@ -21,7 +21,16 @@ const Accounts: NextPageWithLayout = () => {
       getNextPageParam: (lastPage) => lastPage.nextCursor
     }
   );
-  const itemDeleteMutation = trpc.item.delete.useMutation();
+  const itemDeleteMutation = trpc.item.delete.useMutation({
+    onSuccess: (res) => {
+      setSelectedUsers([]);
+      usersQuery.refetch();
+      toast.success(`Deleted ${res.count} Items`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
+    }
+  });
 
   useEffect(() => {
     if (inView) usersQuery.fetchNextPage();
@@ -48,14 +57,11 @@ const Accounts: NextPageWithLayout = () => {
               type="button"
               className="btn-error btn"
               disabled={selectedUsers.length === 0}
-              onClick={async () => {
-                const res = await itemDeleteMutation.mutateAsync(
+              onClick={async () =>
+                itemDeleteMutation.mutateAsync(
                   selectedUsers.map((selItem) => selItem.id)
-                );
-                setSelectedUsers([]);
-                usersQuery.refetch();
-                toast(`Deleted ${res.count} Items`);
-              }}
+                )
+              }
             >
               <FaTrash />
             </button>
