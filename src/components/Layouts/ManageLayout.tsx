@@ -2,15 +2,49 @@ import Link from 'next/link';
 import { PropsWithChildren } from 'react';
 import { FaHouseUser, FaSitemap, FaUserFriends } from 'react-icons/fa';
 import Navbar from './Navbar';
-import ManageDrawer from 'components/Drawers/ManageDrawer';
 
 export default function ManageLayout({ children }: PropsWithChildren) {
   return (
     <div>
       <Navbar />
       <div className="mt-16 flex flex-1">
-        <ManageDrawer />
-        <main className="flex-1 p-2 md:my-8">{children}</main>
+        <aside className="hidden h-screen w-80 border-r bg-base-100 lg:block">
+          <div className="sticky top-0 z-20 flex items-center gap-2 bg-base-100 bg-opacity-90 px-4 py-2 backdrop-blur lg:hidden">
+            <Link href="/" className="btn-ghost btn px-2">
+              <div className="font-title inline-flex items-end text-3xl text-primary">
+                <span className="text-base-content">CMU</span>
+                <span className="text-sm">Lost & Found</span>
+              </div>
+            </Link>
+          </div>
+          <ul className="menu p-4 text-base-content">
+            <li className="menu-title">
+              <span>Manage</span>
+            </li>
+            <li>
+              <Link href="/manage">
+                <FaSitemap /> <span>Items</span>
+              </Link>
+            </li>
+            <li>
+              <Link href="/accounts">
+                <FaUserFriends />
+                <span>Users</span>
+              </Link>
+            </li>
+            <li />
+            <li className="menu-title">
+              <span>Subscriptions</span>
+            </li>
+            <li>
+              <Link href="/manage">
+                <FaHouseUser />
+                <span>Manage</span>
+              </Link>
+            </li>
+          </ul>
+        </aside>
+        <main className="w-full max-w-5xl flex-1 p-2">{children}</main>
       </div>
     </div>
   );
