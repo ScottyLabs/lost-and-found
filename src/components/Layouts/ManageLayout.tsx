@@ -8,7 +8,7 @@ export default function ManageLayout({ children }: PropsWithChildren) {
     <div>
       <Navbar />
       <div className="mt-16 flex flex-1">
-        <aside className="hidden h-screen w-80 border-r bg-base-100 lg:block">
+        <aside className="hidden h-screen w-64 border-r bg-base-100 lg:block">
           <div className="sticky top-0 z-20 flex items-center gap-2 bg-base-100 bg-opacity-90 px-4 py-2 backdrop-blur lg:hidden">
             <Link href="/" className="btn-ghost btn px-2">
               <div className="font-title inline-flex items-end text-3xl text-primary">
@@ -34,7 +34,9 @@ export default function ManageLayout({ children }: PropsWithChildren) {
             </li>
           </ul>
         </aside>
-        <main className="w-full max-w-3xl flex-1 p-2">{children}</main>
+        <main className="mx-auto w-full max-w-3xl flex-1 p-10 lg:mx-0">
+          {children}
+        </main>
       </div>
     </div>
   );

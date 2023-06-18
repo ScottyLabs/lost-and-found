@@ -35,7 +35,7 @@ const Manage: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="my-8 flex w-full items-center justify-center">
+      <div className="flex items-center justify-center">
         <form className="flex w-full gap-2">
           <input
             type="text"
@@ -72,8 +72,7 @@ const Manage: NextPageWithLayout = () => {
           </div>
         </form>
       </div>
-
-      <div className="flex flex-col gap-2">
+      <div className="mt-4 flex flex-col gap-2">
         {items.data
           .filter((item) => item.name.includes(query))
           .map((item) => (
