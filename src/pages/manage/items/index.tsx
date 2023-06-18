@@ -20,7 +20,7 @@ const Manage: NextPageWithLayout = () => {
   const items = trpc.item.list.useQuery();
   const itemDeleteMutation = trpc.item.delete.useMutation({
     onSuccess: (res) => {
-      context.item.infiniteItems.invalidate();
+      context.item.list.invalidate();
       setSelectedItems([]);
       toast.success(`Deleted ${res.count} Items`);
     },
@@ -35,7 +35,7 @@ const Manage: NextPageWithLayout = () => {
 
   return (
     <>
-      <div className="my-5 flex w-full items-center justify-center">
+      <div className="my-8 flex w-full items-center justify-center">
         <form className="flex w-full gap-2">
           <input
             type="text"

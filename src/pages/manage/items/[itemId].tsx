@@ -59,26 +59,14 @@ const EditItem: NextPageWithLayout = () => {
   if (!item) return <p>Could not find item {itemId}</p>;
 
   return (
-    <>
-      <h3 className="mx-auto w-full max-w-2xl text-2xl font-bold">Edit Item</h3>
-      <div className="divider mx-auto max-w-2xl" />
+    <div className="mx-auto w-full max-w-lg">
+      <h3 className="text-2xl font-bold">Edit Item</h3>
+      <div className="divider" />
       <form
-        onSubmit={methods.handleSubmit(
-          async (data) => {
-            await itemMutation.mutateAsync({ id: itemId, data });
-            methods.reset();
-          },
-          async (e) => {
-            toast.error(
-              JSON.stringify(
-                Object.entries(e).map(([key, value]) => ({
-                  key,
-                  value: value?.message
-                }))
-              )
-            );
-          }
-        )}
+        onSubmit={methods.handleSubmit(async (data) => {
+          await itemMutation.mutateAsync({ id: itemId, data });
+          methods.reset();
+        })}
         className="form-control mx-auto w-full max-w-2xl gap-2"
       >
         <div>
@@ -261,7 +249,7 @@ const EditItem: NextPageWithLayout = () => {
           </button>
         </div>
       </form>
-    </>
+    </div>
   );
 };
 

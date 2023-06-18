@@ -40,24 +40,12 @@ const CreateItem: NextPageWithLayout = () => {
   return (
     <div className="mx-auto w-full max-w-lg">
       <h3 className="text-2xl font-bold">Add Item</h3>
-      <hr />
+      <div className="divider" />
       <form
-        onSubmit={methods.handleSubmit(
-          async (data) => {
-            await itemMutation.mutateAsync(data);
-            methods.reset();
-          },
-          async (e) => {
-            toast.error(
-              JSON.stringify(
-                Object.entries(e).map(([key, value]) => ({
-                  key,
-                  value: value?.message
-                }))
-              )
-            );
-          }
-        )}
+        onSubmit={methods.handleSubmit(async (data) => {
+          await itemMutation.mutateAsync(data);
+          methods.reset();
+        })}
         className="form-control gap-2"
       >
         <div>
@@ -227,7 +215,7 @@ const CreateItem: NextPageWithLayout = () => {
             type="button"
             disabled={!methods.formState.isDirty}
             onClick={() => router.push('/manage/items')}
-            className="btn-ghost btn"
+            className="btn-outline btn"
           >
             Cancel
           </button>

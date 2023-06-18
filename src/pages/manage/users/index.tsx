@@ -25,7 +25,7 @@ const Accounts: NextPageWithLayout = () => {
     onSuccess: (res) => {
       setSelectedUsers([]);
       usersQuery.refetch();
-      toast.success(`Deleted ${res.count} Items`);
+      toast.success(`Deleted ${res.count} Users`);
     },
     onError: (err) => {
       toast.error(err.message);
