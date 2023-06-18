@@ -43,25 +43,33 @@ const Manage: NextPageWithLayout = () => {
             className="input-bordered input w-full"
             onChange={(e) => setQuery(e.target.value)}
           />
-          <Link href="/manage/items/create" className="btn-primary btn">
-            <FaPlusCircle />
-          </Link>
-          <button
-            type="button"
-            className="btn-error btn"
-            disabled={selectedItems.length === 0}
-            onClick={async () => itemDeleteMutation.mutateAsync(selectedItems)}
-          >
-            <FaTrash />
-          </button>
-          <button
-            type="button"
-            onClick={() => downloadItems(items.data)}
-            disabled={selectedItems.length === 0}
-            className="btn-secondary btn"
-          >
-            <FaDownload />
-          </button>
+          <div className="tooltip" data-tip="Add Item">
+            <Link href="/manage/items/create" className="btn-primary btn">
+              <FaPlusCircle />
+            </Link>
+          </div>
+          <div className="tooltip" data-tip="Delete Items">
+            <button
+              type="button"
+              className="btn-error btn"
+              disabled={selectedItems.length === 0}
+              onClick={async () =>
+                itemDeleteMutation.mutateAsync(selectedItems)
+              }
+            >
+              <FaTrash />
+            </button>
+          </div>
+          <div className="tooltip" data-tip="Download Items">
+            <button
+              type="button"
+              onClick={() => downloadItems(items.data)}
+              disabled={selectedItems.length === 0}
+              className="btn-secondary btn"
+            >
+              <FaDownload />
+            </button>
+          </div>
         </form>
       </div>
 
