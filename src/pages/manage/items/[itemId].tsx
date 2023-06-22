@@ -2,6 +2,7 @@ import {
   Building,
   Category,
   Color,
+  Item,
   ItemInteraction,
   Value
 } from '@prisma/client';
@@ -14,31 +15,22 @@ import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 
-const EditItem: NextPageWithLayout = () => {
+type EditItemFormProps = {
+  item: Item;
+};
+function EditItemForm({ item }: EditItemFormProps) {
   const router = useRouter();
-  const { itemId } = router.query;
-
   const methods = useZodForm({
-    schema: ItemSchema
-  });
-
-  const item = trpc.item.byId.useQuery(
-    { id: itemId as string },
-    {
-      enabled: typeof itemId === 'string',
-      refetchOnWindowFocus: false,
-      onSuccess(data) {
-        methods.reset({
-          ...data,
-          foundDate: data.foundDate
-            .toISOString()
-            .substring(0, 16) as unknown as Date
-        });
-      }
+    schema: ItemSchema,
+    defaultValues: {
+      ...item,
+      foundDate: item.foundDate
+        .toISOString()
+        .substring(0, 16) as unknown as Date
     }
-  );
-  const context = trpc.useContext();
+  });
   const auditCreateMutation = trpc.audit.create.useMutation();
+  const context = trpc.useContext();
   const itemMutation = trpc.item.update.useMutation({
     onError: (e) => toast.error(e.data?.zodError),
     onSuccess: async (change) => {
@@ -48,208 +40,223 @@ const EditItem: NextPageWithLayout = () => {
       });
       await context.item.invalidate();
       await context.audit.invalidate();
-      methods.reset();
       router.push('/manage/items');
       toast.success('Item Updated');
     }
   });
 
+  return (
+    <form
+      onSubmit={methods.handleSubmit(async (data) => {
+        await itemMutation.mutateAsync({ id: item.id, data });
+        methods.reset();
+      })}
+      className="form-control mx-auto w-full max-w-2xl gap-2"
+    >
+      <div>
+        <label className="label">
+          <span className="label-text">Item Name</span>
+        </label>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('name')}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.name?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Date Found</span>
+        </label>
+        <input
+          type="datetime-local"
+          placeholder="Type here"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('foundDate', { valueAsDate: true })}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.foundDate?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Building Found</span>
+        </label>
+        <MyListbox
+          values={Object.values(Building)}
+          displayValue={(prop) => prop}
+          keyValue={(prop) => prop}
+          name="foundBuilding"
+          control={methods.control}
+          placeholder="Select building"
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.foundBuilding?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Location Found</span>
+        </label>
+        <input
+          placeholder="Type here"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('foundDescription')}
+        />
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Short Description</span>
+        </label>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('shortDescription')}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.shortDescription?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Categories</span>
+        </label>
+        <MyListbox
+          values={Object.values(Category)}
+          displayValue={(prop) => prop}
+          keyValue={(prop) => prop}
+          name="categories"
+          control={methods.control}
+          placeholder="Select categories"
+          multiple
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.categories?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Color</span>
+        </label>
+        <MyListbox
+          values={Object.values(Color)}
+          displayValue={(prop) => prop}
+          keyValue={(prop) => prop}
+          name="color"
+          control={methods.control}
+          placeholder="Select color"
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.color?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Value</span>
+        </label>
+        {Object.values(Value).map((value) => (
+          <label key={value} className="label cursor-pointer">
+            <input
+              type="radio"
+              className="radio radio-sm"
+              {...methods.register('value')}
+              value={value}
+            />
+            <span className="label-text-alt">{value}</span>
+          </label>
+        ))}
+        <label className="text-xs text-error">
+          {methods.formState.errors.value?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label cursor-pointer">
+          <span className="label-text">Identifiable?</span>
+          <input
+            type="checkbox"
+            className="checkbox"
+            {...methods.register('identifiable')}
+          />
+        </label>
+        <label className="text-xs text-error">
+          {methods.formState.errors.identifiable?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Retrieve From</span>
+        </label>
+        <MyListbox
+          values={Object.values(Building)}
+          displayValue={(prop) => prop}
+          keyValue={(prop) => prop}
+          name="retrieveBuilding"
+          control={methods.control}
+          placeholder="Select building"
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.retrieveBuilding?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Notes</span>
+        </label>
+        <textarea
+          className="textarea-bordered textarea h-24 w-full"
+          placeholder="Type here"
+          {...methods.register('longDescription')}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.longDescription?.message}
+        </label>
+      </div>
+      <div className="flex justify-end gap-4">
+        <button
+          type="button"
+          disabled={!methods.formState.isDirty}
+          onClick={() => router.push('/manage/items')}
+          className="btn-ghost btn"
+        >
+          Cancel
+        </button>
+        <button
+          type="submit"
+          disabled={!methods.formState.isDirty}
+          className="btn-primary btn"
+        >
+          Update
+        </button>
+      </div>
+    </form>
+  );
+}
+
+const EditItem: NextPageWithLayout = () => {
+  const router = useRouter();
+  const { itemId } = router.query;
+
+  const item = trpc.item.byId.useQuery(
+    { id: itemId as string },
+    {
+      enabled: typeof itemId === 'string',
+      refetchOnWindowFocus: false
+    }
+  );
+
   if (typeof itemId !== 'string') return <p>Invalid Item ID</p>;
   if (item.isLoading) return <p>Loading...</p>;
-  if (item.error) return <p>Error...</p>;
-  if (!item) return <p>Could not find item {itemId}</p>;
+  if (item.isError) return <p>Error</p>;
 
   return (
     <div className="mx-auto max-w-lg">
       <h3 className="text-2xl font-bold">Edit Item</h3>
       <div className="divider" />
-      <form
-        onSubmit={methods.handleSubmit(async (data) => {
-          await itemMutation.mutateAsync({ id: itemId, data });
-          methods.reset();
-        })}
-        className="form-control mx-auto w-full max-w-2xl gap-2"
-      >
-        <div>
-          <label className="label">
-            <span className="label-text">Item Name</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input-bordered input input-sm w-full"
-            {...methods.register('name')}
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.name?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Date Found</span>
-          </label>
-          <input
-            type="datetime-local"
-            placeholder="Type here"
-            className="input-bordered input input-sm w-full"
-            {...methods.register('foundDate', { valueAsDate: true })}
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.foundDate?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Building Found</span>
-          </label>
-          <MyListbox
-            values={Object.values(Building)}
-            displayValue={(prop) => prop}
-            keyValue={(prop) => prop}
-            name="foundBuilding"
-            control={methods.control}
-            placeholder="Select building"
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.foundBuilding?.message}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Location Found</span>
-          </label>
-          <input
-            placeholder="Type here"
-            className="input-bordered input input-sm w-full"
-            {...methods.register('foundDescription')}
-          />
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Short Description</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Type here"
-            className="input-bordered input input-sm w-full"
-            {...methods.register('shortDescription')}
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.shortDescription?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Categories</span>
-          </label>
-          <MyListbox
-            values={Object.values(Category)}
-            displayValue={(prop) => prop}
-            keyValue={(prop) => prop}
-            name="categories"
-            control={methods.control}
-            placeholder="Select categories"
-            multiple
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.categories?.message}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Color</span>
-          </label>
-          <MyListbox
-            values={Object.values(Color)}
-            displayValue={(prop) => prop}
-            keyValue={(prop) => prop}
-            name="color"
-            control={methods.control}
-            placeholder="Select color"
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.color?.message}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Value</span>
-          </label>
-          {Object.values(Value).map((value) => (
-            <label key={value} className="label cursor-pointer">
-              <input
-                type="radio"
-                className="radio radio-sm"
-                {...methods.register('value')}
-                value={value}
-              />
-              <span className="label-text-alt">{value}</span>
-            </label>
-          ))}
-          <label className="text-xs text-error">
-            {methods.formState.errors.value?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label cursor-pointer">
-            <span className="label-text">Identifiable?</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              {...methods.register('identifiable')}
-            />
-          </label>
-          <label className="text-xs text-error">
-            {methods.formState.errors.identifiable?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Retrieve From</span>
-          </label>
-          <select
-            className="select-bordered select select-sm w-full"
-            {...methods.register('retrieveBuilding')}
-          >
-            {Object.values(Building).map((building) => (
-              <option key={building}>{building}</option>
-            ))}
-          </select>
-          <label className="text-xs text-error">
-            {methods.formState.errors.retrieveBuilding?.message?.toString()}
-          </label>
-        </div>
-        <div>
-          <label className="label">
-            <span className="label-text">Notes</span>
-          </label>
-          <textarea
-            className="textarea-bordered textarea h-24 w-full"
-            placeholder="Type here"
-            {...methods.register('longDescription')}
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.longDescription?.message?.toString()}
-          </label>
-        </div>
-        <div className="flex justify-end gap-4">
-          <button
-            type="button"
-            disabled={!methods.formState.isDirty}
-            onClick={() => methods.reset()}
-            className="btn-outline btn"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            disabled={!methods.formState.isDirty}
-            className="btn-primary btn"
-          >
-            Update
-          </button>
-        </div>
-      </form>
+      <EditItemForm item={item.data} />
     </div>
   );
 };
