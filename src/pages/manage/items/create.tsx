@@ -186,14 +186,14 @@ const CreateItem: NextPageWithLayout = () => {
           <label className="label">
             <span className="label-text">Retrieve From</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full"
-            {...methods.register('retrieveBuilding')}
-          >
-            {Object.values(Building).map((building) => (
-              <option key={building}>{building}</option>
-            ))}
-          </select>
+          <MyListbox
+            values={Object.values(Building)}
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            name="retrieveBuilding"
+            control={methods.control}
+            placeholder="Select building"
+          />
           <label className="text-xs text-error">
             {methods.formState.errors.retrieveBuilding?.message}
           </label>
@@ -216,7 +216,7 @@ const CreateItem: NextPageWithLayout = () => {
             type="button"
             disabled={!methods.formState.isDirty}
             onClick={() => router.push('/manage/items')}
-            className="btn-outline btn"
+            className="btn-ghost btn"
           >
             Cancel
           </button>
