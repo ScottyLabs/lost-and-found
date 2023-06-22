@@ -2,7 +2,7 @@ import { Listbox, Transition } from '@headlessui/react';
 import clsx from 'clsx';
 import { Fragment } from 'react';
 import { Controller, FieldValues, UseControllerProps } from 'react-hook-form';
-import { FaCheck } from 'react-icons/fa';
+import { FaCheck, FaChevronDown } from 'react-icons/fa';
 
 type ListboxOptionType<T> = {
   values: T[];
@@ -21,7 +21,7 @@ function ListboxOptions<T>({
     <>
       {values.map((value) => (
         <Listbox.Option key={keyValue(value)} value={value}>
-          <div className="relative cursor-default select-none rounded-md py-2 pl-8 pr-4 hover:bg-primary">
+          <div className="relative cursor-default select-none rounded-md py-2 pl-8 pr-4 text-sm hover:bg-primary">
             <span
               className={clsx(
                 selected?.includes(value) ? 'font-bold' : 'font-normal',
@@ -67,7 +67,7 @@ export default function MyListbox<T, K extends FieldValues>({
       control={control}
       render={({ field }) => (
         <Listbox as="div" multiple={multiple} className="relative" {...field}>
-          <Listbox.Button className="input-bordered input input-sm w-full text-left">
+          <Listbox.Button className="input-bordered input input-sm flex w-full items-center justify-between text-left">
             {multiple
               ? field.value?.length > 0
                 ? field.value
@@ -77,6 +77,7 @@ export default function MyListbox<T, K extends FieldValues>({
               : field.value
               ? displayValue(field.value)
               : placeholder}
+            <FaChevronDown />
           </Listbox.Button>
           <Transition
             as={Fragment}
@@ -84,7 +85,7 @@ export default function MyListbox<T, K extends FieldValues>({
             leaveFrom="opacity-100"
             leaveTo="opacity-0"
           >
-            <Listbox.Options className="absolute z-40 max-h-40 w-full overflow-auto rounded-md border border-primary bg-white p-2 shadow-2xl">
+            <Listbox.Options className="absolute z-40 mt-2 max-h-40 w-full overflow-auto rounded-md border border-primary bg-white p-2 shadow-2xl">
               <ListboxOptions<T>
                 keyValue={keyValue}
                 displayValue={displayValue}
