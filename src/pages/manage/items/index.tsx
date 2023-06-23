@@ -25,9 +25,10 @@ import { toast } from 'react-toastify';
 import useDialogStore from 'stores/DialogStore';
 import useSelectedItemsStore from 'stores/SelectedItemStore';
 import { trpc } from 'utils/trpc';
+import { z } from 'zod';
 
 const ItemList: React.FC<{
-  search: { query?: string; status?: Status; color?: Color; value?: Value };
+  search: z.infer<typeof ItemSearchSchema>;
 }> = ({ search }) => {
   const items = trpc.item.search.useQuery(search);
   if (items.isLoading) return <FaCircleNotch className="animate-spin p-4" />;
@@ -49,27 +50,22 @@ const Manage: NextPageWithLayout = () => {
   const itemDownloadMutation = trpc.item.download.useMutation();
   const { selectedItems, setSelectedItems } = useSelectedItemsStore();
   const methods = useZodForm({
-    schema: ItemSearchSchema
+    schema: ItemSearchSchema,
+    defaultValues: {
+      query: '',
+      status: null,
+      color: null,
+      value: null
+    }
   });
-  const items = trpc.item.search.useQuery({
-    query: methods.watch('query'),
-    status: methods.watch('status'),
-    color: methods.watch('color'),
-    value: methods.watch('value')
-  });
+  const items = trpc.item.search.useQuery(methods.getValues());
   const itemMassUpdateMutation = trpc.item.massUpdate.useMutation({
     onSuccess: (res) => {
       context.item.search.invalidate();
       toast.success(`Updated ${res.count} Items`);
     }
   });
-  const { confirmDeletionDialog } = useDialogStore();
-
-  console.log(
-    methods.getValues(),
-    methods.formState.defaultValues,
-    methods.formState.isDirty
-  );
+  const { confirmDeletionDialog, massArchiveDialog } = useDialogStore();
 
   return (
     <>
@@ -78,7 +74,7 @@ const Manage: NextPageWithLayout = () => {
           className="w-full"
           onSubmit={methods.handleSubmit(console.log, console.error)}
         >
-          <div className="input-group">
+          <div className="flex gap-2">
             <input
               placeholder="Search..."
               className="input-bordered input w-full"
@@ -97,14 +93,17 @@ const Manage: NextPageWithLayout = () => {
                 leaveFrom="transform opacity-100 scale-100"
                 leaveTo="transform opacity-0 scale-95"
               >
-                <Popover.Panel className="absolute right-0 z-50 mt-2 w-96 origin-top-right rounded-md bg-base-100 shadow-2xl ring-1 ring-black ring-opacity-5">
+                <Popover.Panel
+                  unmount={false}
+                  className="absolute right-0 z-50 mt-2 w-96 origin-top-right rounded-md bg-base-100 shadow-2xl ring-1 ring-black ring-opacity-5"
+                >
                   <div className="flex w-full items-center justify-between p-4">
-                    <div className="font-bold">Category</div>
+                    <div className="font-bold">Status</div>
                     <div className="w-48">
                       <MyListbox
                         control={methods.control}
                         name="status"
-                        placeholder="Select Category"
+                        placeholder="Select Status"
                         displayValue={(item) => item}
                         keyValue={(item) => item}
                         values={Object.values(Status)}
@@ -236,6 +235,15 @@ const Manage: NextPageWithLayout = () => {
               onClick={confirmDeletionDialog}
             >
               <FaTrash />
+            </button>
+          </div>
+          <div className="tooltip" data-tip="Mass Archive">
+            <button
+              type="button"
+              className="btn-ghost btn-sm btn"
+              onClick={massArchiveDialog}
+            >
+              <FaArchive />
             </button>
           </div>
         </div>

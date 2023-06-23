@@ -1,3 +1,4 @@
+import { Status } from '@prisma/client';
 import {
   ItemCreateSchema,
   ItemSearchSchema,
@@ -31,9 +32,9 @@ export default router({
         name: {
           contains: input.query
         },
-        color: input.color,
-        status: input.status,
-        value: input.value
+        color: input.color ?? undefined,
+        status: input.status ?? undefined,
+        value: input.value ?? undefined
       }
     })
   ),
@@ -97,5 +98,17 @@ export default router({
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.deleteMany({ where: { id: { in: input } } })
+    ),
+  unarchivedOlderThan: publicProcedure
+    .input(z.object({ age: z.number() }))
+    .query(async ({ ctx, input }) =>
+      ctx.prisma.item.findMany({
+        where: {
+          status: { not: Status.ARCHIVED },
+          foundDate: {
+            lt: new Date(new Date().getTime() - input.age * 1000 * 60 * 24)
+          }
+        }
+      })
     )
 });
