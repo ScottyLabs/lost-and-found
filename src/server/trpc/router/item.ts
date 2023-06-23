@@ -1,4 +1,10 @@
-import { ItemCreateSchema, ItemUpdateSchema } from 'lib/schemas';
+import {
+  ItemCreateSchema,
+  ItemSearchSchema,
+  ItemsUpdateSchema,
+  ItemUpdateSchema
+} from 'lib/schemas';
+import { unparse } from 'papaparse';
 import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
@@ -19,6 +25,27 @@ export default router({
       }
     })
   ),
+  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) =>
+    ctx.prisma.item.findMany({
+      where: {
+        name: {
+          contains: input.query
+        },
+        color: input.color,
+        status: input.status,
+        value: input.value
+      }
+    })
+  ),
+  download: publicProcedure
+    .input(z.array(z.string()))
+    .mutation(async ({ ctx, input }) => {
+      const items = await ctx.prisma.item.findMany({
+        where: { id: { in: input } }
+      });
+      const csv = unparse(items, { header: true });
+      return csv;
+    }),
   infiniteItems: publicProcedure
     .input(
       z.object({
@@ -57,6 +84,14 @@ export default router({
     .input(ItemUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.update({ where: { id: input.id }, data: input.data })
+    ),
+  massUpdate: publicProcedure
+    .input(ItemsUpdateSchema)
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.item.updateMany({
+        where: { id: { in: input.ids } },
+        data: input.data
+      })
     ),
   delete: publicProcedure
     .input(z.array(z.string()))

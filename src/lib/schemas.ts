@@ -23,7 +23,20 @@ export const ItemSchema = z.object({
   status: z.nativeEnum(Status).default(Status.PENDING)
 });
 export const ItemCreateSchema = ItemSchema;
-export const ItemUpdateSchema = z.object({ id: z.string(), data: ItemSchema });
+export const ItemUpdateSchema = z.object({
+  id: z.string(),
+  data: ItemSchema.partial()
+});
+export const ItemsUpdateSchema = z.object({
+  ids: z.array(z.string()),
+  data: ItemSchema.partial()
+});
+export const ItemSearchSchema = z.object({
+  query: z.string().optional(),
+  color: z.nativeEnum(Color).optional(),
+  status: z.nativeEnum(Status).optional(),
+  value: z.nativeEnum(Value).optional()
+});
 
 export const UserSchema = z.object({
   name: z.string(),
