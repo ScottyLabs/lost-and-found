@@ -11,23 +11,79 @@ generator client {
 }
 
 enum Building {
+  TWOSC
+  THREESC
+  CA
+  FOURSC
+  CC
+  UT
+  GL
+  FRB
+  INI
+  PO
+  MC
+  OE
+  AH
+  AN
+  BH
+  BK
+  BR
   CUC
+  CIC
+  CFA
+  CYH
+  DH
+  FM
+  FR
   GHC
+  HOA
+  HBH
+  HH
+  HL
+  III
+  MM
+  MI
+  MEL
+  M19
+  NR
+  NSH
+  OSH
+  PTC
+  PH
+  PC
+  POS
+  PP
+  PCA
+  RA
+  REH
+  SCAIFE
+  SC
+  SKIBO
+  EDS
+  SEI
+  TCS
   TEP
+  WH
+  WEH
+  WWG
+  WF
+  WQ
+  OTHER
 }
 
 enum Category {
-  CHARGER
-  LAPTOP
-  PHONE
-  TABLET
-  HEADPHONE_CASE
-  EYEWARE_CASE
   CLOTHING
-  JEWELRY
-  WATCH
   UMBRELLA
+  GLASSES_CASES
+  JEWELRY
+  WATCHES
+  EARBUDS_HEADPHONES_CASES
+  PHONE
+  LAPTOP
+  TABLET
   BEVERAGE_CONTAINER
+  STATIONARY
+  KEYS
   OTHER
 }
 
