@@ -106,8 +106,9 @@ const Policies: NextPageWithLayout = () => {
         </li>
       </ul>
       <p>
-        *Water bottles and any such items which may carry bodily fluids will not
-        be accepted.
+        *Any items which contain food, or may carry bodily fluids will not be
+        accepted. The Cohon Center may refuse to take any lost items at the
+        discretion of it&apos; staff.
       </p>
     </div>
   );
