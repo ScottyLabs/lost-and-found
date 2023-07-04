@@ -2,6 +2,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'styles/globals.css';
 
 import ConfirmDeletionDialog from 'components/Dialogs/ConfirmDeletionDialog';
+import MassArchiveDialog from 'components/Dialogs/MassArchiveDialog';
 import SubscriptionDialog from 'components/Dialogs/SubscriptionDialog';
 import SubscriptionsDialog from 'components/Dialogs/SubscriptionsDialog';
 import FilterDrawer from 'components/Drawers/FilterDrawer';
@@ -64,6 +65,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayoutAndSession) => {
           <SubscriptionDialog />
           <SubscriptionsDialog />
           <ConfirmDeletionDialog />
+          <MassArchiveDialog />
           {getLayout(<Component {...pageProps} />)}
         </SessionProvider>
       </FontProvider>

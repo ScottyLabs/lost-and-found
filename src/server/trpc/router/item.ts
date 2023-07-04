@@ -100,13 +100,13 @@ export default router({
       ctx.prisma.item.deleteMany({ where: { id: { in: input } } })
     ),
   unarchivedOlderThan: publicProcedure
-    .input(z.object({ age: z.number() }))
+    .input(z.object({ age: z.coerce.number() }))
     .query(async ({ ctx, input }) =>
       ctx.prisma.item.findMany({
         where: {
           status: { not: Status.ARCHIVED },
           foundDate: {
-            lt: new Date(new Date().getTime() - input.age * 1000 * 60 * 24)
+            gt: new Date(new Date().getTime() - input.age * 1000 * 60 * 60 * 24)
           }
         }
       })
