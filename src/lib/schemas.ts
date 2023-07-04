@@ -32,10 +32,10 @@ export const ItemsUpdateSchema = z.object({
   data: ItemSchema.partial()
 });
 export const ItemSearchSchema = z.object({
-  query: z.string().optional(),
-  color: z.nativeEnum(Color).optional(),
-  status: z.nativeEnum(Status).optional(),
-  value: z.nativeEnum(Value).optional()
+  query: z.string(),
+  color: z.nativeEnum(Color).nullable(),
+  status: z.nativeEnum(Status).nullable(),
+  value: z.nativeEnum(Value).nullable()
 });
 
 export const UserSchema = z.object({
