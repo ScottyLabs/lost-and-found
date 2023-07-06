@@ -73,6 +73,7 @@ enum Building {
 
 enum Category {
   CLOTHING
+  CHARGER
   UMBRELLA
   GLASSES_CASES
   JEWELRY
@@ -199,6 +200,7 @@ model User {
   email         String?        @unique
   emailVerified DateTime?
   image         String?
+  notifications Boolean        @default(false)
   permission    Permission     @default(USER)
   accounts      Account[]
   sessions      Session[]

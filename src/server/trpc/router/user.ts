@@ -1,6 +1,7 @@
 import {
   UserCreateSchema,
   UserListSchema,
+  UserSearchSchema,
   UserUpdateSchema
 } from 'lib/schemas';
 import { z } from 'zod';
@@ -54,6 +55,15 @@ export default router({
         nextCursor
       };
     }),
+  search: publicProcedure.input(UserSearchSchema).query(({ ctx, input }) =>
+    ctx.prisma.user.findMany({
+      where: {
+        name: { contains: input.query },
+        permission: input.permissions ? { in: input.permissions } : undefined,
+        notifications: input.notifications ?? undefined
+      }
+    })
+  ),
   byId: publicProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
