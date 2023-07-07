@@ -6,43 +6,70 @@
 import { Menu, Transition } from '@headlessui/react';
 import { User } from '@prisma/client';
 import clsx from 'clsx';
+import Image from 'next/image';
 import { Fragment } from 'react';
 import {
+  FaBell,
+  FaBellSlash,
   FaEllipsisV,
-  FaEnvelopeOpen,
   FaTrash,
   FaUserLock
 } from 'react-icons/fa';
-import useSelectedUsersStore from 'stores/SelectedUserStore';
+import useDialogStore from 'stores/DialogStore';
+import useSelectedUserStore from 'stores/SelectedUserStore';
 
 type UserRowProps = { user: User };
-
 export default function UserRow({ user }: UserRowProps) {
-  const { selectedUsers, setSelectedUsers } = useSelectedUsersStore();
+  const { confirmUserDeletionDialog, editUserDialog } = useDialogStore();
+  const { setSelectedUser } = useSelectedUserStore();
 
   return (
-    <div className="flex items-center gap-2 rounded border p-3">
-      <div>
-        <input
-          type="checkbox"
-          className="checkbox checkbox-sm"
-          checked={selectedUsers.includes(user.id)}
-          onChange={(e) => {
-            if (e.target.checked) setSelectedUsers([...selectedUsers, user.id]);
-            else setSelectedUsers(selectedUsers.filter((i) => i !== user.id));
-          }}
-        />
+    <div className="flex items-center gap-4 rounded border p-4">
+      <div className="avatar">
+        <div className="w-12 rounded-full">
+          <Image
+            src={user.image ?? '/pfp.png'}
+            width={48}
+            height={48}
+            alt="img"
+          />
+        </div>
       </div>
       <div className="flex-1">
         <div>
-          <div className="text-xl font-bold leading-5">{user.name}</div>
+          <div className="text-lg font-bold leading-5">{user.name}</div>
           <div className="text-sm text-base-content/50">{user.email}</div>
         </div>
-        <span className="text-xs font-bold opacity-70">{user.permission}</span>
+      </div>
+      <div className="text-xs font-bold opacity-70">{user.permission}</div>
+      <div
+        className="tooltip"
+        data-tip={
+          user.notifications
+            ? 'Notifications Enabled'
+            : 'Notifications Disabled'
+        }
+      >
+        <button className="inline-flex h-8 w-6 cursor-default items-center justify-center">
+          <label className="swap swap-flip cursor-default">
+            <input
+              type="checkbox"
+              className="cursor-none"
+              checked={user.notifications}
+              readOnly
+            />
+            <div className="swap-on">
+              <FaBell />
+            </div>
+            <div className="swap-off">
+              <FaBellSlash />
+            </div>
+          </label>
+        </button>
       </div>
       <div>
         <Menu as="div" className="relative inline-block text-left">
-          <Menu.Button className="btn-ghost btn">
+          <Menu.Button className="btn-ghost btn-sm btn">
             <FaEllipsisV />
           </Menu.Button>
           <Transition
@@ -56,30 +83,19 @@ export default function UserRow({ user }: UserRowProps) {
           >
             <Menu.Items
               unmount={false}
-              className="absolute right-0 z-50 w-44 origin-top-right rounded-md bg-base-100 p-4 shadow-2xl ring-1 ring-black ring-opacity-5"
+              className="absolute right-0 z-50 w-56 origin-top-right rounded-md bg-base-100 p-4 shadow-2xl ring-1 ring-black ring-opacity-5"
             >
               <Menu.Item>
                 <button
                   className="group flex
                       w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    editUserDialog();
+                  }}
                 >
-                  <FaUserLock
-                    className={clsx('mr-2 h-4 w-4')}
-                    aria-hidden="true"
-                  />
+                  <FaUserLock className="mr-2 h-4 w-4" aria-hidden="true" />
                   Edit Permissions
-                </button>
-              </Menu.Item>
-              <Menu.Item>
-                <button
-                  className="group flex
-                      w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
-                >
-                  <FaEnvelopeOpen
-                    className={clsx('mr-2 h-4 w-4')}
-                    aria-hidden="true"
-                  />
-                  Notifications
                 </button>
               </Menu.Item>
               <div className="divider my-1" />
@@ -87,6 +103,10 @@ export default function UserRow({ user }: UserRowProps) {
                 <button
                   className="group flex
                       w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-error ui-active:text-accent-content"
+                  onClick={() => {
+                    setSelectedUser(user);
+                    confirmUserDeletionDialog();
+                  }}
                 >
                   <FaTrash
                     className={clsx('mr-2 h-4 w-4')}
