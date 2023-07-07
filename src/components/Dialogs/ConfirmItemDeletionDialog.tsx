@@ -4,7 +4,7 @@ import useSelectedItemsStore from 'stores/SelectedItemStore';
 import { trpc } from 'utils/trpc';
 import { Dialog } from './Dialog';
 
-export default function ConfirmDeletionDialog() {
+export default function ConfirmItemDeletionDialog() {
   const { dialog, clearDialog } = useDialogStore();
   const context = trpc.useContext();
   const itemDeleteMutation = trpc.item.delete.useMutation({
