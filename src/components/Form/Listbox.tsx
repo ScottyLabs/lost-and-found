@@ -58,16 +58,23 @@ export default function MyListbox<T, K extends FieldValues>({
       render={({ field }) => (
         <Listbox as="div" multiple={multiple} className="relative" {...field}>
           <Listbox.Button className="input-bordered input input-sm flex w-full items-center justify-between text-left">
-            {multiple
-              ? field.value?.length > 0
-                ? field.value
-                    .map((value: any) => displayValue(value))
-                    .join(', ')
-                : placeholder
-              : field.value
-              ? displayValue(field.value)
-              : placeholder}
-            <FaChevronDown />
+            <span className="block truncate">
+              {multiple
+                ? field.value?.length > 0
+                  ? field.value
+                      .map((value: T) => displayValue(value))
+                      .join(', ')
+                  : placeholder
+                : field.value
+                ? displayValue(field.value)
+                : placeholder}
+            </span>
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+              <FaChevronDown
+                className="h-3 w-3 text-base-content/50"
+                aria-hidden="true"
+              />
+            </span>
           </Listbox.Button>
           <Transition
             as={Fragment}
