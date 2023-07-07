@@ -18,7 +18,7 @@ export default function ItemRow({ item }: ItemRowProps) {
   const context = trpc.useContext();
   const auditCreateMutation = trpc.audit.create.useMutation();
   const itemMutation = trpc.item.update.useMutation({
-    onError: (e) => toast.error(e.data?.zodError?.message),
+    onError: (e) => toast.error(e.data?.zodError),
     onSuccess: async (change) => {
       await auditCreateMutation.mutateAsync({
         interaction: ItemInteraction.EDIT,
