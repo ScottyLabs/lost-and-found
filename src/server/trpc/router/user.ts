@@ -59,8 +59,10 @@ export default router({
     ctx.prisma.user.findMany({
       where: {
         name: { contains: input.query },
-        permission: input.permissions ? { in: input.permissions } : undefined,
-        notifications: input.notifications ?? undefined
+        permission: input.permissions.length
+          ? { in: input.permissions }
+          : undefined,
+        notifications: input.notifications || undefined
       }
     })
   ),
@@ -72,9 +74,16 @@ export default router({
   update: publicProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.user.update({ where: { id: input.id }, data: input })
+      ctx.prisma.user.update({ where: { id: input.id }, data: input.data })
     ),
   create: publicProcedure
     .input(UserCreateSchema)
-    .mutation(async ({ ctx, input }) => ctx.prisma.user.create({ data: input }))
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.user.create({ data: input })
+    ),
+  delete: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.user.delete({ where: { id: input } })
+    )
 });
