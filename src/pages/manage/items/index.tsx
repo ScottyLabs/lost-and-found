@@ -65,7 +65,7 @@ const Manage: NextPageWithLayout = () => {
       toast.success(`Updated ${res.count} Items`);
     }
   });
-  const { confirmDeletionDialog, massArchiveDialog } = useDialogStore();
+  const { confirmItemDeletionDialog, massArchiveDialog } = useDialogStore();
 
   return (
     <>
@@ -232,7 +232,7 @@ const Manage: NextPageWithLayout = () => {
               type="button"
               className="btn-ghost btn-sm btn"
               disabled={selectedItems.length === 0}
-              onClick={confirmDeletionDialog}
+              onClick={confirmItemDeletionDialog}
             >
               <FaTrash />
             </button>

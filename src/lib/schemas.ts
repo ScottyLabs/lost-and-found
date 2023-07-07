@@ -42,11 +42,14 @@ export const ItemSearchSchema = z.object({
 export const UserSchema = z.object({
   name: z.string(),
   email: z.string().email(),
-  permissions: z.array(z.nativeEnum(Permission)),
+  permission: z.nativeEnum(Permission),
   notifications: z.boolean()
 });
 export const UserCreateSchema = UserSchema;
-export const UserUpdateSchema = z.object({ id: z.string(), data: UserSchema });
+export const UserUpdateSchema = z.object({
+  id: z.string(),
+  data: UserSchema.partial()
+});
 export const UserListSchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(2),
@@ -54,7 +57,7 @@ export const UserListSchema = z.object({
 });
 export const UserSearchSchema = z.object({
   query: z.string(),
-  permissions: z.array(z.nativeEnum(Permission)).nullable(),
+  permissions: z.array(z.nativeEnum(Permission)),
   notifications: z.boolean().nullable()
 });
 
