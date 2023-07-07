@@ -47,7 +47,7 @@ function AuthWidget() {
       </label>
       <ul
         tabIndex={0}
-        className="dropdown-content menu rounded-box menu-compact bg-base-200 p-2 shadow"
+        className="dropdown-content menu rounded-box menu-compact bg-base-100 p-2 shadow-2xl ring-1 ring-black ring-opacity-5"
       >
         {session.user.permission === Permission.ADMIN && (
           <>
