@@ -1,12 +1,12 @@
+import { User } from '@prisma/client';
 import { create } from 'zustand';
 
-type SelectedUsersStore = {
-  selectedUsers: string[];
-  setSelectedUsers: (items: string[]) => void;
+type SelectedUserStore = {
+  selectedUser: User | null;
+  setSelectedUser: (user: User | null) => void;
 };
 
-export default create<SelectedUsersStore>((set) => ({
-  selectedUsers: [],
-  setSelectedUsers: (selectedUsers) =>
-    set(() => ({ selectedUsers: selectedUsers }))
+export default create<SelectedUserStore>((set) => ({
+  selectedUser: null,
+  setSelectedUser: (selectedUser) => set(() => ({ selectedUser }))
 }));

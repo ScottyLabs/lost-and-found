@@ -17,7 +17,7 @@ export default function ConfirmItemDeletionDialog() {
   const { selectedItems, setSelectedItems } = useSelectedItemsStore();
 
   return (
-    <Dialog isOpen={dialog === 'confirmDeletion'} onClose={clearDialog}>
+    <Dialog isOpen={dialog === 'confirmItemDeletion'} onClose={clearDialog}>
       <div className="flex h-full flex-col gap-4">
         <span className="text-2xl font-bold">Item Deletion</span>
         <p>
