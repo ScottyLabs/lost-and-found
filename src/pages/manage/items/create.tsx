@@ -214,7 +214,6 @@ const CreateItem: NextPageWithLayout = () => {
         <div className="flex justify-end gap-4">
           <button
             type="button"
-            disabled={!methods.formState.isDirty}
             onClick={() => router.push('/manage/items')}
             className="btn-ghost btn"
           >
