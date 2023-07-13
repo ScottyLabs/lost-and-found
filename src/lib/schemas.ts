@@ -1,46 +1,72 @@
-import { Building, Category, Status, Value } from '@prisma/client';
+import {
+  Building,
+  Category,
+  Color,
+  ItemInteraction,
+  Permission,
+  Status,
+  Value
+} from '@prisma/client';
 import { z } from 'zod';
 
-export const ItemCreateSchema = z.object({
+export const ItemSchema = z.object({
   name: z.string().min(3),
-  imageURL: z.string().nullish(),
-  shortDescription: z.string(),
-  longDescription: z.string().nullish(),
-  foundBuilding: z.nativeEnum(Building),
-  foundDescription: z.string().nullish(),
   foundDate: z.coerce.date(),
-  retrieveBuilding: z.nativeEnum(Building),
-  value: z.nativeEnum(Value),
+  foundBuilding: z.nativeEnum(Building),
+  foundDescription: z.string(),
+  shortDescription: z.string(),
   categories: z.array(z.nativeEnum(Category)),
-  status: z.nativeEnum(Status).default('AVAILABLE')
+  color: z.nativeEnum(Color),
+  value: z.nativeEnum(Value),
+  identifiable: z.boolean(),
+  retrieveBuilding: z.nativeEnum(Building),
+  longDescription: z.string().nullish(),
+  status: z.nativeEnum(Status).default(Status.PENDING)
 });
-
-export const ItemEditSchema = ItemCreateSchema;
-
+export const ItemCreateSchema = ItemSchema;
 export const ItemUpdateSchema = z.object({
   id: z.string(),
-  data: ItemCreateSchema
+  data: ItemSchema.partial()
+});
+export const ItemsUpdateSchema = z.object({
+  ids: z.array(z.string()),
+  data: ItemSchema.partial()
+});
+export const ItemSearchSchema = z.object({
+  query: z.string(),
+  color: z.nativeEnum(Color).nullable(),
+  status: z.nativeEnum(Status).nullable(),
+  value: z.nativeEnum(Value).nullable()
 });
 
-export const UserCreateSchema = z.object({
+export const UserSchema = z.object({
   name: z.string(),
-  email: z.string().email()
+  email: z.string().email(),
+  permission: z.nativeEnum(Permission),
+  notifications: z.boolean()
 });
-
+export const UserCreateSchema = UserSchema;
 export const UserUpdateSchema = z.object({
   id: z.string(),
-  data: UserCreateSchema
+  data: UserSchema.partial()
 });
-
-export const UserSchema = UserUpdateSchema.merge(UserCreateSchema);
-
 export const UserListSchema = z.object({
   page: z.number().min(1).default(1),
   limit: z.number().min(1).max(100).default(2),
-  user: z
-    .object({
-      email: z.string(),
-      name: z.string()
-    })
-    .optional()
+  user: UserSchema.optional()
+});
+export const UserSearchSchema = z.object({
+  query: z.string(),
+  permissions: z.array(z.nativeEnum(Permission)),
+  notifications: z.boolean().nullable()
+});
+
+export const AuditLogSchema = z.object({
+  interaction: z.nativeEnum(ItemInteraction),
+  itemId: z.string()
+});
+export const AuditLogCreateSchema = AuditLogSchema;
+export const AuditLogUpdateSchema = z.object({
+  id: z.string(),
+  data: AuditLogSchema
 });

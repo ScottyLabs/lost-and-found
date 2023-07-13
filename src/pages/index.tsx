@@ -1,10 +1,7 @@
-/* eslint-disable jsx-a11y/no-noninteractive-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/label-has-associated-control */
-
 import ItemGrid from 'components/ItemGrid';
-import MainLayout from 'components/layout/MainLayout';
+import MainLayout from 'components/Layouts/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
+import SortWidget from 'components/SortWidget';
 import Link from 'next/link';
 import { useState } from 'react';
 import {
@@ -15,15 +12,17 @@ import {
   FaSort,
   FaSquare
 } from 'react-icons/fa';
-import { Categories, Colors, Locations } from 'types';
-import useDrawerStore from '../stores/DrawerStore';
+import useDialogStore from 'stores/DialogStore';
+import useDrawerStore from 'stores/DrawerStore';
+import { NextPageWithLayout } from './_app';
 
-export default function HomePage() {
+const Home: NextPageWithLayout = () => {
   const { filterDrawer } = useDrawerStore();
+  const { subscribeDialog } = useDialogStore();
   const [query, setQuery] = useState('');
 
   return (
-    <MainLayout>
+    <>
       <ScrollToTop />
       <div className="mx-auto flex flex-col items-center gap-4">
         <div className="relative w-full max-w-3xl text-white">
@@ -92,69 +91,11 @@ export default function HomePage() {
         <div className="divider m-0 md:hidden" />
         <div className="flex w-full max-w-5xl gap-10">
           <div className="hidden md:block">
-            <div className="w-80 self-start rounded-lg bg-primary p-5 text-accent">
-              <span className="text-xl font-bold">Filters</span>
-              <form className="form-control gap-4">
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Date Lost</span>
-                  </label>
-                  <input
-                    type="date"
-                    placeholder="Type here"
-                    className="input-bordered input input-sm w-full max-w-xs font-bold"
-                  />
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Item Category</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Object.entries(Categories).map(([k, v]) => (
-                      <option key={k} value={k}>
-                        {v}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Location Lost</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Locations.map((location) => (
-                      <option key={location} value={location}>
-                        {location}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="form-control w-full max-w-xs">
-                  <label className="label">
-                    <span className="label-text">Color</span>
-                  </label>
-                  <select className="select-bordered select select-sm w-full max-w-xs">
-                    {Colors.map((color) => (
-                      <option key={color} value={color}>
-                        {color}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <button
-                    type="submit"
-                    className="btn-accent btn-sm btn rounded-full"
-                  >
-                    <span className="uppercase">Apply Filters</span>
-                  </button>
-                </div>
-              </form>
-            </div>
+            <SortWidget />
           </div>
           <div className="flex w-full flex-col gap-4">
             <ItemGrid query={query} />
-            <div className="hidden w-full rounded-lg border border-accent bg-secondary p-4 md:block">
+            <div className="hidden h-full w-full rounded-lg border border-accent p-4 md:block">
               <div className="prose">
                 <h3>Still can&apos;t find it?</h3>
                 <ul>
@@ -177,12 +118,13 @@ export default function HomePage() {
                       via email about items in your category that get added over
                       the next 7 days.
                     </p>
-                    <Link
-                      href="/subscribe"
+                    <button
+                      type="button"
+                      onClick={subscribeDialog}
                       className="btn-accent btn-sm btn shadow-lg"
                     >
                       <span className="uppercase">Subscribe</span>
-                    </Link>
+                    </button>
                   </li>
                 </ul>
               </div>
@@ -203,7 +145,7 @@ export default function HomePage() {
             <span className="uppercase">More Info</span>
           </Link>
         </div>
-        <div className="md:hidden">
+        <div className="w-full md:hidden">
           <div className="text-xl font-bold">Stay Updated</div>
           <div className="mt-2 text-sm">
             Items can show up at any time. Stay updated via email to see newly
@@ -211,14 +153,21 @@ export default function HomePage() {
           </div>
         </div>
         <div className="w-full md:hidden">
-          <Link
-            href="/subscribe"
+          <button
+            type="button"
+            onClick={subscribeDialog}
             className="btn-accent btn-sm btn w-full shadow-lg"
           >
             <span className="uppercase">Subscribe</span>
-          </Link>
+          </button>
         </div>
       </div>
-    </MainLayout>
+    </>
   );
-}
+};
+
+Home.getLayout = function getLayout(page: React.ReactElement) {
+  return <MainLayout>{page}</MainLayout>;
+};
+
+export default Home;

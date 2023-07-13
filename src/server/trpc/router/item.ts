@@ -1,4 +1,11 @@
-import { ItemCreateSchema, ItemUpdateSchema } from 'lib/schemas';
+import { Status } from '@prisma/client';
+import {
+  ItemCreateSchema,
+  ItemSearchSchema,
+  ItemsUpdateSchema,
+  ItemUpdateSchema
+} from 'lib/schemas';
+import { unparse } from 'papaparse';
 import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
@@ -12,13 +19,34 @@ export default router({
     .query(({ ctx, input }) =>
       ctx.prisma.item.findUniqueOrThrow({ where: input })
     ),
-  getAll: publicProcedure.query(({ ctx }) =>
+  list: publicProcedure.query(({ ctx }) =>
     ctx.prisma.item.findMany({
       orderBy: {
         foundDate: 'desc'
       }
     })
   ),
+  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) =>
+    ctx.prisma.item.findMany({
+      where: {
+        name: {
+          contains: input.query
+        },
+        color: input.color ?? undefined,
+        status: input.status ?? undefined,
+        value: input.value ?? undefined
+      }
+    })
+  ),
+  download: publicProcedure
+    .input(z.array(z.string()))
+    .mutation(async ({ ctx, input }) => {
+      const items = await ctx.prisma.item.findMany({
+        where: { id: { in: input } }
+      });
+      const csv = unparse(items, { header: true });
+      return csv;
+    }),
   infiniteItems: publicProcedure
     .input(
       z.object({
@@ -58,9 +86,29 @@ export default router({
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.update({ where: { id: input.id }, data: input.data })
     ),
+  massUpdate: publicProcedure
+    .input(ItemsUpdateSchema)
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.item.updateMany({
+        where: { id: { in: input.ids } },
+        data: input.data
+      })
+    ),
   delete: publicProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.deleteMany({ where: { id: { in: input } } })
+    ),
+  unarchivedOlderThan: publicProcedure
+    .input(z.object({ age: z.coerce.number() }))
+    .query(async ({ ctx, input }) =>
+      ctx.prisma.item.findMany({
+        where: {
+          status: { not: Status.ARCHIVED },
+          foundDate: {
+            gt: new Date(new Date().getTime() - input.age * 1000 * 60 * 60 * 24)
+          }
+        }
+      })
     )
 });

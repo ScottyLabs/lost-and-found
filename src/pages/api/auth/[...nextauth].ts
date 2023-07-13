@@ -5,14 +5,14 @@ import GoogleProvider from 'next-auth/providers/google';
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 import { User } from '@prisma/client';
 import env from 'env/server.mjs';
-import prisma from '../../../server/db/client';
+import prisma from 'server/db/client';
 
 export const authOptions: NextAuthOptions = {
   callbacks: {
     signIn: async ({ user }) => {
       const isAllowedToSignIn = user.email?.endsWith('cmu.edu');
       if (isAllowedToSignIn) return true;
-      return false; // TODO: return custom unauthorized page
+      return false;
     },
     session: async ({ session, token }) => {
       // Send properties to the client, like an access_token and user id from a provider.
@@ -43,9 +43,9 @@ export const authOptions: NextAuthOptions = {
     strategy: 'jwt'
   },
   pages: {
-    signIn: '/auth/signin'
+    signIn: '/auth/signin',
     // signOut: '/auth/signout',
-    // error: '/auth/error', // Error code passed in query string as ?error=
+    error: '/auth/error' // Error code passed in query string as ?error=
     // verifyRequest: '/auth/verify-request', // (used for check email message)
     // newUser: '/auth/new-user' // New users will be directed here on first sign in (leave the property out if not of interest)
   }

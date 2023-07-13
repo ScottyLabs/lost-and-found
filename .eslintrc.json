@@ -4,13 +4,7 @@
     "project": "./tsconfig.json"
   },
   "plugins": ["@typescript-eslint", "prettier"],
-  "extends": [
-    "next/core-web-vitals",
-    "plugin:react/jsx-runtime",
-    "airbnb",
-    "airbnb-typescript",
-    "prettier"
-  ],
+  "extends": ["next/core-web-vitals", "plugin:@typescript-eslint/recommended"],
   "rules": {
     "prettier/prettier": "error",
     "react/react-in-jsx-scope": "off"

@@ -1,9 +1,10 @@
-import { z } from 'zod';
 import {
   UserCreateSchema,
   UserListSchema,
+  UserSearchSchema,
   UserUpdateSchema
-} from '../../../lib/schemas';
+} from 'lib/schemas';
+import { z } from 'zod';
 import { publicProcedure, router } from '../trpc';
 
 export default router({
@@ -54,6 +55,17 @@ export default router({
         nextCursor
       };
     }),
+  search: publicProcedure.input(UserSearchSchema).query(({ ctx, input }) =>
+    ctx.prisma.user.findMany({
+      where: {
+        name: { contains: input.query },
+        permission: input.permissions.length
+          ? { in: input.permissions }
+          : undefined,
+        notifications: input.notifications || undefined
+      }
+    })
+  ),
   byId: publicProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
@@ -62,9 +74,16 @@ export default router({
   update: publicProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.user.update({ where: { id: input.id }, data: input })
+      ctx.prisma.user.update({ where: { id: input.id }, data: input.data })
     ),
   create: publicProcedure
     .input(UserCreateSchema)
-    .mutation(async ({ ctx, input }) => ctx.prisma.user.create({ data: input }))
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.user.create({ data: input })
+    ),
+  delete: publicProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) =>
+      ctx.prisma.user.delete({ where: { id: input } })
+    )
 });

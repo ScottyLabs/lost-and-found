@@ -15,7 +15,7 @@ export default function ScrollToTop() {
   };
 
   const handleScroll = () => {
-    if (window.parent.scrollY > 300) {
+    if (window.scrollY > 300) {
       setVisible(true);
     } else {
       setVisible(false);
@@ -33,7 +33,7 @@ export default function ScrollToTop() {
       type="button"
       className={clsx(
         'btn-primary btn-circle btn absolute bottom-5 right-5 z-50 md:hidden',
-        visible && 'hidden'
+        !visible && 'hidden'
       )}
       onClick={scrollToTop}
     >

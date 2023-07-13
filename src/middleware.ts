@@ -4,7 +4,7 @@ import { withAuth } from 'next-auth/middleware';
 export default withAuth({
   callbacks: {
     authorized({ req, token }) {
-      if (['/admin', '/accounts'].includes(req.nextUrl.pathname)) {
+      if (['/manage'].includes(req.nextUrl.pathname)) {
         return !!token?.user && token.user.permission === Permission.ADMIN;
       }
 
@@ -14,5 +14,5 @@ export default withAuth({
 });
 
 export const config = {
-  matcher: ['/', '/admin', '/accounts', '/subscribe', '/subscriptions']
+  matcher: ['/', '/manage']
 };

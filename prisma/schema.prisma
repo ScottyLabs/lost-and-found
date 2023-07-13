@@ -11,23 +11,80 @@ generator client {
 }
 
 enum Building {
+  TWOSC
+  THREESC
+  CA
+  FOURSC
+  CC
+  UT
+  GL
+  FRB
+  INI
+  PO
+  MC
+  OE
+  AH
+  AN
+  BH
+  BK
+  BR
   CUC
+  CIC
+  CFA
+  CYH
+  DH
+  FM
+  FR
   GHC
+  HOA
+  HBH
+  HH
+  HL
+  III
+  MM
+  MI
+  MEL
+  M19
+  NR
+  NSH
+  OSH
+  PTC
+  PH
+  PC
+  POS
+  PP
+  PCA
+  RA
+  REH
+  SCAIFE
+  SC
+  SKIBO
+  EDS
+  SEI
+  TCS
   TEP
+  WH
+  WEH
+  WWG
+  WF
+  WQ
+  OTHER
 }
 
 enum Category {
-  CHARGER
-  LAPTOP
-  PHONE
-  TABLET
-  HEADPHONE_CASE
-  EYEWARE_CASE
   CLOTHING
-  JEWELRY
-  WATCH
+  CHARGER
   UMBRELLA
+  GLASSES_CASES
+  JEWELRY
+  WATCHES
+  EARBUDS_HEADPHONES_CASES
+  PHONE
+  LAPTOP
+  TABLET
   BEVERAGE_CONTAINER
+  STATIONARY
+  KEYS
   OTHER
 }
 
@@ -35,19 +92,14 @@ enum ItemInteraction {
   CREATE
   APPROVE
   UNAPPROVE
-  PUBLISH
-  UNPUBLISH
-  MAKE_AVAILABLE
-  MAKE_UNAVAILABLE
-  EDIT
-  DELETE
   ARCHIVE
   UNARCHIVE
+  EDIT
+  DELETE
 }
 
 enum Status {
-  PUBLISHED
-  AVAILABLE
+  PENDING
   APPROVED
   ARCHIVED
 }
@@ -64,48 +116,48 @@ enum Permission {
   ADMIN
 }
 
+enum Color {
+  BLACK
+  BLUE
+  BROWN
+  GREEN
+  GREY
+  MULTICOLOR
+  METALLIC
+  ORANGE
+  PURPLE
+  RED
+  WHITE
+  YELLOW
+  OTHER
+}
+
 model Item {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
   name             String
-  imageURL         String?
-  shortDescription String
-  longDescription  String?
-  foundBuilding    Building
-  foundDescription String?
   foundDate        DateTime
-  retrieveBuilding Building
-  value            Value
-  categories       Category[]
-  status           Status
-  auditLog         AuditLog[]
-}
-
-model ItemInfoSnapshot {
-  id               String     @id @default(auto()) @map("_id") @db.ObjectId
-  name             String
-  imageURL         String?
-  shortDescription String
-  longDescription  String?
   foundBuilding    Building
-  foundDescription String?
-  foundDate        DateTime
-  retrieveBuilding Building
-  value            Value
+  foundDescription String
+  shortDescription String
   categories       Category[]
+  color            Color
+  value            Value
+  identifiable     Boolean
+  retrieveBuilding Building
+  longDescription  String?
+  auditLogs        AuditLog[]
   status           Status
-  auditLog         AuditLog   @relation(fields: [auditLogId], references: [id], onDelete: Cascade)
-  auditLogId       String     @unique @db.ObjectId
+  createdAt        DateTime   @default(now())
 }
 
 model AuditLog {
-  id          String            @id @default(auto()) @map("_id") @db.ObjectId
+  id          String          @id @default(auto()) @map("_id") @db.ObjectId
   interaction ItemInteraction
-  actor       User              @relation(fields: [actorId], references: [id], onDelete: Cascade)
-  actorId     String            @db.ObjectId
-  item        Item              @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  itemId      String            @db.ObjectId
-  change      ItemInfoSnapshot?
-  changeId    String?
+  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  actorId     String          @db.ObjectId
+  item        Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  itemId      String          @db.ObjectId
+  createdAt   DateTime        @default(now())
 }
 
 model Subscription {
@@ -148,6 +200,7 @@ model User {
   email         String?        @unique
   emailVerified DateTime?
   image         String?
+  notifications Boolean        @default(true)
   permission    Permission     @default(USER)
   accounts      Account[]
   sessions      Session[]

@@ -21,7 +21,7 @@ export default function ItemCard({ item }: Props) {
         <div>
           <div>
             <span className="font-bold">Color: </span>
-            <span>shrug</span>
+            <span>{item.color}</span>
           </div>
           <div>
             <span className="font-bold">Found: </span>
