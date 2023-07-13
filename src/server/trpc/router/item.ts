@@ -110,5 +110,17 @@ export default router({
           }
         }
       })
-    )
+    ),
+  autoArchive: publicProcedure.mutation(async ({ ctx }) =>
+    ctx.prisma.item.updateMany({
+      where: {
+        status: Status.APPROVED,
+        foundDate: {
+          // 30 days ago
+          lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
+        }
+      },
+      data: { status: Status.ARCHIVED }
+    })
+  )
 });
