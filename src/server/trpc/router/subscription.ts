@@ -21,5 +21,15 @@ export default router({
     .input(z.object({ id: z.string() }))
     .mutation(({ ctx, input }) =>
       ctx.prisma.subscription.delete({ where: input })
-    )
+    ),
+  removeExpired: publicProcedure.mutation(({ ctx }) => {
+    const weekTime = 604800000;
+    return ctx.prisma.subscription.deleteMany({
+      where: {
+        createdAt: {
+          lt: new Date(new Date().getTime() - weekTime)
+        }
+      }
+    });
+  })
 });
