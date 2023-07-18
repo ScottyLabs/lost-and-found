@@ -83,26 +83,24 @@ export default function UserRow({ user }: UserRowProps) {
           >
             <Menu.Items
               unmount={false}
-              className="absolute right-0 z-50 w-56 origin-top-right rounded-md bg-base-100 p-4 shadow-2xl ring-1 ring-black ring-opacity-5"
+              className="absolute right-0 z-50 w-40 origin-top-right rounded-md bg-base-100 p-4 shadow-2xl ring-1 ring-black ring-opacity-5"
             >
               <Menu.Item>
                 <button
-                  className="group flex
-                      w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
+                  className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
                   onClick={() => {
                     setSelectedUser(user);
                     editUserDialog();
                   }}
                 >
                   <FaUserLock className="mr-2 h-4 w-4" aria-hidden="true" />
-                  Edit Permissions
+                  <span>Edit Settings</span>
                 </button>
               </Menu.Item>
               <div className="divider my-1" />
               <Menu.Item>
                 <button
-                  className="group flex
-                      w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-error ui-active:text-accent-content"
+                  className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-error ui-active:text-accent-content"
                   onClick={() => {
                     setSelectedUser(user);
                     confirmUserDeletionDialog();
@@ -112,7 +110,7 @@ export default function UserRow({ user }: UserRowProps) {
                     className={clsx('mr-2 h-4 w-4')}
                     aria-hidden="true"
                   />
-                  Delete User
+                  <span>Delete User</span>
                 </button>
               </Menu.Item>
             </Menu.Items>
