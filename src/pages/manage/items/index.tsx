@@ -150,7 +150,7 @@ const Manage: NextPageWithLayout = () => {
             </Popover>
           </div>
         </form>
-        <div className="mt-2 flex gap-2">
+        <div className="mt-2 flex flex-wrap justify-end gap-2">
           <div className="ml-3 flex flex-1 items-center">
             <input
               type="checkbox"
@@ -173,6 +173,7 @@ const Manage: NextPageWithLayout = () => {
             <span>Add Item</span>
             <FaPlusCircle />
           </Link>
+          <div className="basis-full sm:basis-0" />
           <div className="tooltip" data-tip="Approve Items">
             <button
               type="button"
