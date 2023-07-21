@@ -5,11 +5,16 @@ import {
   UserUpdateSchema
 } from 'lib/schemas';
 import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import {
+  adminProcedure,
+  moderatorProcedure,
+  publicProcedure,
+  router
+} from '../trpc';
 
 export default router({
   count: publicProcedure.query(({ ctx }) => ctx.prisma.user.count()),
-  list: publicProcedure.input(UserListSchema).query(({ ctx, input }) =>
+  list: moderatorProcedure.input(UserListSchema).query(({ ctx, input }) =>
     ctx.prisma.user.findMany({
       take: input.limit,
       skip: (input.page - 1) * input.limit,
@@ -26,7 +31,7 @@ export default router({
       }
     })
   ),
-  infiniteItems: publicProcedure
+  infiniteItems: moderatorProcedure
     .input(
       z.object({
         limit: z.number().min(1).max(100).nullish(),
@@ -55,8 +60,9 @@ export default router({
         nextCursor
       };
     }),
-  search: publicProcedure.input(UserSearchSchema).query(({ ctx, input }) =>
-    ctx.prisma.user.findMany({
+  search: moderatorProcedure.input(UserSearchSchema).query(({ ctx, input }) => {
+    console.log(input);
+    return ctx.prisma.user.findMany({
       where: {
         name: { contains: input.query },
         permission: input.permissions.length
@@ -64,24 +70,24 @@ export default router({
           : undefined,
         notifications: input.notifications || undefined
       }
-    })
-  ),
-  byId: publicProcedure
+    });
+  }),
+  byId: moderatorProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
       ctx.prisma.user.findFirst({ where: { id: input } })
     ),
-  update: publicProcedure
+  update: moderatorProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.user.update({ where: { id: input.id }, data: input.data })
     ),
-  create: publicProcedure
+  create: adminProcedure
     .input(UserCreateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.user.create({ data: input })
     ),
-  delete: publicProcedure
+  delete: adminProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.user.delete({ where: { id: input } })

@@ -1,3 +1,4 @@
+import { Permission } from '@prisma/client';
 import { initTRPC, TRPCError } from '@trpc/server';
 import superjson from 'superjson';
 import { ZodError } from 'zod';
@@ -47,3 +48,43 @@ const isAuthed = t.middleware(({ ctx, next }) => {
  * Protected procedure
  * */
 export const protectedProcedure = t.procedure.use(isAuthed);
+
+const isModerator = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || ctx.session.user.permission === Permission.USER) {
+    throw new TRPCError({ code: 'FORBIDDEN' });
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user }
+    }
+  });
+});
+
+/**
+ * Moderator procedure
+ */
+export const moderatorProcedure = protectedProcedure.use(isModerator);
+
+/**
+ * Reusable middleware to ensure
+ * user is an admin
+ */
+const isAdmin = t.middleware(({ ctx, next }) => {
+  if (!ctx.session || ctx.session.user.permission !== Permission.ADMIN) {
+    throw new TRPCError({ code: 'FORBIDDEN' });
+  }
+
+  return next({
+    ctx: {
+      // infers the `session` as non-nullable
+      session: { ...ctx.session, user: ctx.session.user }
+    }
+  });
+});
+
+/**
+ * Admin procedure
+ */
+export const adminProcedure = protectedProcedure.use(isAdmin);

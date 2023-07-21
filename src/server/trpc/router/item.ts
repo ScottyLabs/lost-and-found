@@ -7,7 +7,12 @@ import {
 } from 'lib/schemas';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
-import { publicProcedure, router } from '../trpc';
+import {
+  adminProcedure,
+  moderatorProcedure,
+  publicProcedure,
+  router
+} from '../trpc';
 
 export default router({
   byId: publicProcedure
@@ -38,7 +43,7 @@ export default router({
       }
     })
   ),
-  download: publicProcedure
+  download: moderatorProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
       const items = await ctx.prisma.item.findMany({
@@ -76,17 +81,17 @@ export default router({
         nextCursor
       };
     }),
-  create: publicProcedure
+  create: moderatorProcedure
     .input(ItemCreateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.create({ data: input })
     ),
-  update: publicProcedure
+  update: moderatorProcedure
     .input(ItemUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.update({ where: { id: input.id }, data: input.data })
     ),
-  massUpdate: publicProcedure
+  massUpdate: moderatorProcedure
     .input(ItemsUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.updateMany({
@@ -94,12 +99,12 @@ export default router({
         data: input.data
       })
     ),
-  delete: publicProcedure
+  delete: adminProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.deleteMany({ where: { id: { in: input } } })
     ),
-  unarchivedOlderThan: publicProcedure
+  unarchivedOlderThan: adminProcedure
     .input(z.object({ age: z.coerce.number() }))
     .query(async ({ ctx, input }) =>
       ctx.prisma.item.findMany({
@@ -111,7 +116,7 @@ export default router({
         }
       })
     ),
-  autoArchive: publicProcedure.mutation(async ({ ctx }) =>
+  autoArchive: adminProcedure.mutation(async ({ ctx }) =>
     ctx.prisma.item.updateMany({
       where: {
         status: Status.APPROVED,

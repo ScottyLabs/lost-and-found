@@ -1,6 +1,6 @@
 import { Category } from '@prisma/client';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { adminProcedure, protectedProcedure, router } from '../trpc';
 
 export default router({
   list: protectedProcedure.query(({ ctx }) =>
@@ -17,12 +17,19 @@ export default router({
         data: { userId: ctx.session.user.id, ...input }
       })
     ),
-  delete: publicProcedure
-    .input(z.object({ id: z.string() }))
+  delete: protectedProcedure
+    .input(z.object({ category: z.nativeEnum(Category) }))
     .mutation(({ ctx, input }) =>
-      ctx.prisma.subscription.delete({ where: input })
+      ctx.prisma.subscription.delete({
+        where: {
+          userId_category: {
+            category: input.category,
+            userId: ctx.session.user.id
+          }
+        }
+      })
     ),
-  removeExpired: publicProcedure.mutation(({ ctx }) => {
+  removeExpired: adminProcedure.mutation(({ ctx }) => {
     const weekTime = 604800000;
     return ctx.prisma.subscription.deleteMany({
       where: {

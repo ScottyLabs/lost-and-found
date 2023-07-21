@@ -1,14 +1,14 @@
 import { AuditLogCreateSchema } from 'lib/schemas';
 import { z } from 'zod';
-import { protectedProcedure, publicProcedure, router } from '../trpc';
+import { moderatorProcedure, router } from '../trpc';
 
 export default router({
-  list: publicProcedure
+  list: moderatorProcedure
     .input(z.object({ itemId: z.string() }))
     .query(({ ctx, input }) =>
       ctx.prisma.auditLog.findMany({ include: { actor: true }, where: input })
     ),
-  create: protectedProcedure
+  create: moderatorProcedure
     .input(AuditLogCreateSchema)
     .mutation(({ ctx, input }) =>
       ctx.prisma.auditLog.create({
