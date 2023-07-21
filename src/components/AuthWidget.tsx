@@ -79,10 +79,10 @@ function AuthWidget() {
                   <span>Users</span>
                 </Link>
               </Menu.Item>
+              <div className="divider my-1" />
             </>
           )}
 
-          <div className="divider my-1" />
           <Menu.Item>
             <button
               type="button"
