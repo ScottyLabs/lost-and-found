@@ -12,7 +12,8 @@ import { z } from 'zod';
 export const ItemSchema = z.object({
   name: z.string().min(3),
   foundDate: z.coerce.date(),
-  foundLocation: z.string(),
+  foundLocation: z.nativeEnum(Location),
+  foundDescription: z.string(),
   shortDescription: z.string(),
   categories: z.array(z.nativeEnum(Category)),
   color: z.nativeEnum(Color),

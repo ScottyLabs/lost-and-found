@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Building, Category, Color } from '@prisma/client';
+import { Building, Category, Color, Location } from '@prisma/client';
 import MyDisclosure from 'components/Elements/Disclosure';
 import MyListbox from 'components/Form/Listbox';
 import useZodForm from 'hooks/useZodForm';
@@ -101,7 +101,7 @@ export default function FilterDrawer() {
                     displayValue={(prop) => prop}
                     keyValue={(prop) => prop}
                     placeholder="Select a Location"
-                    values={Object.keys(Building)}
+                    values={Object.keys(Location)}
                     multiple
                   />
                 </MyDisclosure>

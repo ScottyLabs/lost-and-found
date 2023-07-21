@@ -46,10 +46,7 @@ const Manage: NextPageWithLayout = () => {
   return (
     <>
       <div>
-        <form
-          className="w-full"
-          onSubmit={methods.handleSubmit(console.log, console.error)}
-        >
+        <form className="w-full">
           <div className="flex gap-2">
             <input
               placeholder="Search..."

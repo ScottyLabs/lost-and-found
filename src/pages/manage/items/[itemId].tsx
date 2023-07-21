@@ -78,12 +78,30 @@ function EditItemForm({ item }: EditItemFormProps) {
         <label className="label">
           <span className="label-text">Location Found</span>
         </label>
-        <input
-          className="input-bordered input input-sm w-full"
-          {...methods.register('foundLocation')}
+        <MyListbox
+          values={Object.values(Location)}
+          displayValue={(prop) => prop}
+          keyValue={(prop) => prop}
+          name="foundLocation"
+          control={methods.control}
+          placeholder="Select a location"
         />
         <label className="text-xs text-error">
           {methods.formState.errors.foundLocation?.message}
+        </label>
+      </div>
+      <div>
+        <label className="label">
+          <span className="label-text">Found Description</span>
+        </label>
+        <input
+          type="text"
+          placeholder="Type here"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('foundDescription')}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.foundDescription?.message}
         </label>
       </div>
       <div>

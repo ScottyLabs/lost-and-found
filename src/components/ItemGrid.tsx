@@ -32,26 +32,28 @@ export default function ItemGrid({ query }: Props) {
     return <p>Nothing to see here!</p>;
   }
 
+  const items = itemsQuery.data.filter(
+    (item) =>
+      item.status === Status.APPROVED &&
+      (item.name.toLowerCase().includes(query) ||
+        item.shortDescription.toLowerCase().includes(query) ||
+        item.foundDescription?.toLowerCase().includes(query)) &&
+      (!categories.length ||
+        item.categories.some((category) => categories.includes(category))) &&
+      (!colors.length || colors.includes(item.color)) &&
+      (!locations.length || locations.includes(item.retrieveLocation)) &&
+      (!date || item.foundDate.getTime() > date.getTime())
+  );
+
+  if (!items.length) {
+    return <p>No items found!</p>;
+  }
+
   return (
     <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      {itemsQuery.data
-        .filter(
-          (item) =>
-            item.status === Status.APPROVED &&
-            (item.name.toLowerCase().includes(query) ||
-              item.shortDescription.toLowerCase().includes(query) ||
-              item.foundDescription?.toLowerCase().includes(query)) &&
-            (!categories.length ||
-              item.categories.some((category) =>
-                categories.includes(category)
-              )) &&
-            (!colors.length || colors.includes(item.color)) &&
-            (!locations.length || locations.includes(item.retrieveBuilding)) &&
-            (!date || item.foundDate.getTime() > date.getTime())
-        )
-        .map((item) => (
-          <ItemCard key={item.id} item={item} />
-        ))}
+      {items.map((item) => (
+        <ItemCard key={item.id} item={item} />
+      ))}
     </div>
   );
 }

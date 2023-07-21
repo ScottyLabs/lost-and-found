@@ -82,7 +82,8 @@ model Item {
   id               String     @id @default(auto()) @map("_id") @db.ObjectId
   name             String
   foundDate        DateTime
-  foundLocation    String
+  foundLocation    Location
+  foundDescription String
   shortDescription String
   categories       Category[]
   color            Color
@@ -111,6 +112,7 @@ model Subscription {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category  Category
   createdAt DateTime @default(now())
+  @@unique([userId, category])
 }
 
 model Account {

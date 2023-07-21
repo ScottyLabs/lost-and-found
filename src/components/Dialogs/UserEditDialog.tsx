@@ -1,4 +1,5 @@
 import { Permission } from '@prisma/client';
+import MyListbox from 'components/Form/Listbox';
 import useZodForm from 'hooks/useZodForm';
 import { UserSchema } from 'lib/schemas';
 import { useEffect } from 'react';
@@ -48,16 +49,14 @@ export default function EditUserDialog() {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-2">
               <label>Permission</label>
-              <select
-                className="input-bordered input"
-                {...methods.register('permission')}
-              >
-                {Object.values(Permission).map((permission) => (
-                  <option key={permission} value={permission}>
-                    {permission}
-                  </option>
-                ))}
-              </select>
+              <MyListbox
+                control={methods.control}
+                name="permission"
+                displayValue={(prop) => prop}
+                keyValue={(prop) => prop}
+                placeholder="Select a permission"
+                values={Object.values(Permission)}
+              />
             </div>
             <div className="flex justify-between gap-2">
               <label>Notifications</label>
@@ -68,7 +67,7 @@ export default function EditUserDialog() {
               />
             </div>
 
-            <div className="flex justify-end gap-2">
+            <div className="mt-8 flex justify-end gap-2">
               <button
                 className="btn-ghost btn"
                 type="button"

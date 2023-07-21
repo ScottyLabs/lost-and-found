@@ -4,7 +4,7 @@
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import { Building, Category, Color } from '@prisma/client';
+import { Category, Color, Location } from '@prisma/client';
 import useZodForm from 'hooks/useZodForm';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { Categories } from 'types';
@@ -16,7 +16,7 @@ export default function FilterWidget() {
     schema: z.object({
       date: z.coerce.date().nullable(),
       categories: z.array(z.nativeEnum(Category)),
-      locations: z.array(z.nativeEnum(Building)),
+      locations: z.array(z.nativeEnum(Location)),
       colors: z.array(z.nativeEnum(Color))
     }),
     defaultValues: {
@@ -89,7 +89,7 @@ export default function FilterWidget() {
             displayValue={(prop) => prop}
             keyValue={(prop) => prop}
             placeholder="Select a Location"
-            values={Object.keys(Building)}
+            values={Object.keys(Location)}
             multiple
           />
           <span className="text-xs text-error">

@@ -38,7 +38,7 @@ const errors: Record<Lowercase<ErrorPageParam | 'default'>, ErrorView> = {
     heading: 'Access Denied',
     message: (
       <div>
-        <p>You do not have permission to sign in.</p>
+        <p>You do not have permission to access this page.</p>
       </div>
     )
   },
