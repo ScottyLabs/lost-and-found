@@ -53,7 +53,7 @@ const Questions: Record<string, () => ReactNode> = {
   },
   'How often are items added to the website?': () => (
     <div className="prose">
-      Items are added to the website at the end of the day they are received.
+      Items are added to the website within 24 hours of receipt.
     </div>
   ),
   'How long are items held for?': () => (
@@ -81,6 +81,18 @@ const Questions: Record<string, () => ReactNode> = {
     <div className="prose">
       To leave feedback, please fill out this{' '}
       <Link href="https://forms.gle/QDnNyjdzUBnFUkno8">form</Link>.
+    </div>
+  ),
+  'Want to learn more about the creators?': () => (
+    <div className="prose">
+      We’re a part of Scotty Labs, a student organization at Carnegie Mellon
+      University who develop applications and services for the campus community.
+      Learn more about us <Link href="https://scottylabs.org">here</Link>.
+    </div>
+  ),
+  'Still need more information?': () => (
+    <div className="prose">
+      Here&apos;s a link to our <Link href="/policy">Policy Page</Link>.
     </div>
   )
 };
