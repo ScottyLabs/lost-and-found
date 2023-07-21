@@ -71,15 +71,15 @@ const Manage: NextPageWithLayout = () => {
               >
                 <Popover.Panel
                   unmount={false}
-                  className="absolute right-0 z-50 mt-2 w-96 origin-top-right rounded-md bg-base-100 shadow-2xl ring-1 ring-black ring-opacity-5"
+                  className="absolute right-0 z-50 mt-2 w-72 origin-top-right rounded-md bg-base-100 shadow-2xl ring-1 ring-black ring-opacity-5"
                 >
                   <div className="flex w-full items-center justify-between p-4">
-                    <div className="font-bold">Permission</div>
-                    <div className="w-48">
+                    <div className="font-bold">Permissions</div>
+                    <div className="w-36">
                       <MyListbox
                         control={methods.control}
                         name="permissions"
-                        placeholder="Select Permissions"
+                        placeholder="Select"
                         displayValue={(permission) => permission}
                         keyValue={(permission) => permission}
                         values={Object.values(Permission)}

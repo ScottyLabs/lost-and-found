@@ -24,9 +24,9 @@ export default function UserRow({ user }: UserRowProps) {
   const { setSelectedUser } = useSelectedUserStore();
 
   return (
-    <div className="flex items-center gap-4 rounded border p-4">
+    <div className="flex items-center gap-2 rounded border p-4 sm:gap-4">
       <div className="avatar">
-        <div className="w-12 rounded-full">
+        <div className="w-8 rounded-full sm:w-12">
           <Image
             src={user.image ?? '/pfp.png'}
             width={48}
@@ -36,9 +36,13 @@ export default function UserRow({ user }: UserRowProps) {
         </div>
       </div>
       <div className="flex-1">
-        <div>
-          <div className="text-lg font-bold leading-5">{user.name}</div>
-          <div className="text-sm text-base-content/50">{user.email}</div>
+        <div className="w-24">
+          <div className="overflow-hidden text-ellipsis font-bold leading-5 sm:overflow-visible sm:text-lg">
+            {user.name}
+          </div>
+          <div className="overflow-hidden text-ellipsis text-sm text-base-content/50 sm:overflow-visible">
+            {user.email}
+          </div>
         </div>
       </div>
       <div className="text-xs font-bold opacity-70">{user.permission}</div>
