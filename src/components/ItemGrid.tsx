@@ -35,9 +35,9 @@ export default function ItemGrid({ query }: Props) {
   const items = itemsQuery.data.filter(
     (item) =>
       item.status === Status.APPROVED &&
-      (item.name.toLowerCase().includes(query) ||
-        item.shortDescription.toLowerCase().includes(query) ||
-        item.foundDescription?.toLowerCase().includes(query)) &&
+      (item.name.toLowerCase().includes(query.toLowerCase()) ||
+        item.shortDescription.toLowerCase().includes(query.toLowerCase()) ||
+        item.foundDescription?.toLowerCase().includes(query.toLowerCase())) &&
       (!categories.length ||
         item.categories.some((category) => categories.includes(category))) &&
       (!colors.length || colors.includes(item.color)) &&

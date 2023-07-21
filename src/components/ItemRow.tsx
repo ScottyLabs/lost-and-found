@@ -52,7 +52,7 @@ export default function ItemRow({ item }: ItemRowProps) {
           <span className="ml-2">{ValueIcons[item.value]}</span>
         </div>
         <span className="text-xs font-bold opacity-70">
-          Located {item.foundBuilding} on {item.foundDate.toLocaleDateString()}
+          Located {item.foundLocation} on {item.foundDate.toLocaleDateString()}
         </span>
       </div>
       <div>

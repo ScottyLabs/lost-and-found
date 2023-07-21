@@ -145,34 +145,39 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="divider m-0 md:hidden" />
-        <div className="md:hidden">
-          <div className="text-xl font-bold">Can&apos;t find it?</div>
-          <div className="mt-2 text-sm">
-            High value and identifiable items (e.g. student IDS) are not
-            published on our website. Please contact the CUC Information Desk
-            directly.
+        <div className="md-hidden my-4 flex w-full flex-col gap-4">
+          <div>
+            <div className="text-xl font-bold">Can&apos;t find it?</div>
+            <div className="mt-2 text-sm">
+              High value and identifiable items (e.g. student IDS) are not
+              published on our website. Please contact the CUC Information Desk
+              directly.
+            </div>
           </div>
-        </div>
-        <div className="w-full md:hidden">
-          <Link href="/faq" className="btn-outline btn-sm btn w-full shadow-lg">
-            <span className="uppercase">More Info</span>
-          </Link>
-        </div>
-        <div className="w-full md:hidden">
-          <div className="text-xl font-bold">Stay Updated</div>
-          <div className="mt-2 text-sm">
-            Items can show up at any time. Stay updated via email to see newly
-            added items.
+          <div>
+            <Link
+              href="/faq"
+              className="btn-outline btn-sm btn w-full shadow-lg"
+            >
+              <span className="uppercase">More Info</span>
+            </Link>
           </div>
-        </div>
-        <div className="w-full md:hidden">
-          <button
-            type="button"
-            onClick={subscribeDialog}
-            className="btn-accent btn-sm btn w-full shadow-lg"
-          >
-            <span className="uppercase">Subscribe</span>
-          </button>
+          <div>
+            <div className="text-xl font-bold">Stay Updated</div>
+            <div className="mt-2 text-sm">
+              Items can show up at any time. Stay updated via email to see newly
+              added items.
+            </div>
+          </div>
+          <div>
+            <button
+              type="button"
+              onClick={subscribeDialog}
+              className="btn-accent btn-sm btn w-full shadow-lg"
+            >
+              <span className="uppercase">Subscribe</span>
+            </button>
+          </div>
         </div>
       </div>
     </>

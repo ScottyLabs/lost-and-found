@@ -1,4 +1,5 @@
 import { Item } from '@prisma/client';
+import { Colors } from 'types';
 
 type Props = {
   item: Item;
@@ -21,15 +22,15 @@ export default function ItemCard({ item }: Props) {
         <div>
           <div>
             <span className="font-bold">Color: </span>
-            <span>{item.color}</span>
+            <span>{Colors[item.color]}</span>
           </div>
           <div>
             <span className="font-bold">Found: </span>
-            <span>{item.foundBuilding}</span>
+            <span>{item.foundLocation}</span>
           </div>
           <div>
             <span className="font-bold">Retrieve From: </span>
-            <span>{item.retrieveBuilding}</span>
+            <span>{item.retrieveLocation}</span>
           </div>
         </div>
       </div>
