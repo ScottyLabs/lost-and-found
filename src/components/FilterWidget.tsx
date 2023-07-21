@@ -7,7 +7,7 @@
 import { Category, Color, Location } from '@prisma/client';
 import useZodForm from 'hooks/useZodForm';
 import useItemFilterStore from 'stores/ItemFilterStore';
-import { Categories } from 'types';
+import { Categories, Colors, Locations } from 'types';
 import { z } from 'zod';
 import MyListbox from './Form/Listbox';
 
@@ -86,10 +86,10 @@ export default function FilterWidget() {
           <MyListbox
             control={methods.control}
             name="locations"
-            displayValue={(prop) => prop}
+            values={Object.keys(Location)}
+            displayValue={(prop) => Locations[prop]}
             keyValue={(prop) => prop}
             placeholder="Select a Location"
-            values={Object.keys(Location)}
             multiple
           />
           <span className="text-xs text-error">
@@ -103,7 +103,7 @@ export default function FilterWidget() {
           <MyListbox
             control={methods.control}
             name="colors"
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Colors[prop]}
             keyValue={(prop) => prop}
             placeholder="Select a Color"
             values={Object.keys(Color)}

@@ -1,4 +1,11 @@
-import { Category, Color, Item, ItemInteraction, Value } from '@prisma/client';
+import {
+  Category,
+  Color,
+  Item,
+  ItemInteraction,
+  Location,
+  Value
+} from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
 import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
@@ -6,6 +13,7 @@ import { ItemSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
+import { Categories, Colors, Locations } from 'types';
 import { trpc } from 'utils/trpc';
 
 type EditItemFormProps = {
@@ -80,7 +88,7 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
         <MyListbox
           values={Object.values(Location)}
-          displayValue={(prop) => prop}
+          displayValue={(prop) => Locations[prop]}
           keyValue={(prop) => prop}
           name="foundLocation"
           control={methods.control}
@@ -124,7 +132,7 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
         <MyListbox
           values={Object.values(Category)}
-          displayValue={(prop) => prop}
+          displayValue={(prop) => Categories[prop]}
           keyValue={(prop) => prop}
           name="categories"
           control={methods.control}
@@ -141,7 +149,7 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
         <MyListbox
           values={Object.values(Color)}
-          displayValue={(prop) => prop}
+          displayValue={(prop) => Colors[prop]}
           keyValue={(prop) => prop}
           name="color"
           control={methods.control}
@@ -189,11 +197,11 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
         <MyListbox
           values={Object.values(Location)}
-          displayValue={(prop) => prop}
+          displayValue={(prop) => Locations[prop]}
           keyValue={(prop) => prop}
           name="retrieveLocation"
           control={methods.control}
-          placeholder="Select building"
+          placeholder="Select a location"
         />
         <label className="text-xs text-error">
           {methods.formState.errors.retrieveLocation?.message}

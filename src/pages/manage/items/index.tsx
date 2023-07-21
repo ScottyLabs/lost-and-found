@@ -24,6 +24,7 @@ import {
 import { toast } from 'react-toastify';
 import useDialogStore from 'stores/DialogStore';
 import useSelectedItemsStore from 'stores/SelectedItemStore';
+import { Colors } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
@@ -117,7 +118,7 @@ const Manage: NextPageWithLayout = () => {
                         control={methods.control}
                         name="color"
                         placeholder="Select Color"
-                        displayValue={(item) => item}
+                        displayValue={(item) => Colors[item]}
                         keyValue={(item) => item}
                         values={Object.values(Color)}
                       />

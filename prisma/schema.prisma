@@ -11,10 +11,27 @@ generator client {
 }
 
 enum Location {
+  AN
+  BH
+  BK
   CUC
+  CIC
+  CFA
+  DH
+  GHC
+  HOA
+  HBH
+  HH
+  HL
+  III
+  MM
+  MI
+  NSH
+  PH
+  POS
+  PCA
   TEP
-  CC
-  OC
+  OTHER
 }
 
 enum Category {

@@ -6,7 +6,7 @@ import useZodForm from 'hooks/useZodForm';
 import { Fragment } from 'react';
 import useDrawerStore from 'stores/DrawerStore';
 import useItemFilterStore from 'stores/ItemFilterStore';
-import { Categories } from 'types';
+import { Categories, Locations } from 'types';
 
 import { z } from 'zod';
 
@@ -87,7 +87,7 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="categories"
-                    displayValue={(prop) => prop}
+                    displayValue={(prop) => Categories[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Category"
                     values={Object.keys(Categories)}
@@ -98,7 +98,7 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="locations"
-                    displayValue={(prop) => prop}
+                    displayValue={(prop) => Locations[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Location"
                     values={Object.keys(Location)}

@@ -1,10 +1,27 @@
 import { Category, Color, Location } from '@prisma/client';
 
 export const Locations: Record<Location, string> = {
+  AN: 'Ansys Hall',
+  BH: 'Baker Hall',
+  BK: 'Bakery Square',
   CUC: 'Cohon University Center',
+  CIC: 'Collaborative Innovation Center',
+  CFA: 'College of Fine Arts',
+  DH: 'Donner House',
+  GHC: 'Gates and Hillman Centers',
+  HOA: 'Hall of Arts',
+  HBH: 'Hamburg Hall',
+  HH: 'Hamerschlag Hall',
+  HL: 'Hunt Library',
+  III: 'Integrative Innovation Institute',
+  MM: 'Margaret Morrison Carnegie Hall',
+  MI: 'Mellon Institute',
+  NSH: 'Newell-Simon Hall',
+  PH: 'Porter Hall',
+  POS: 'Posner Hall',
+  PCA: 'Purnell Center for the Arts',
   TEP: 'Tepper Quad',
-  CC: 'Collaborative Commons',
-  OC: 'Off Campus'
+  OTHER: 'Other'
 };
 export const Colors: Record<Color, string> = {
   BLACK: 'Black',

@@ -17,6 +17,7 @@ import { ItemCreateSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
+import { Categories, Colors, Locations } from 'types';
 import { trpc } from 'utils/trpc';
 
 const CreateItem: NextPageWithLayout = () => {
@@ -83,7 +84,7 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Location)}
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Locations[prop]}
             keyValue={(prop) => prop}
             name="foundLocation"
             control={methods.control}
@@ -127,7 +128,7 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Category)}
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Categories[prop]}
             keyValue={(prop) => prop}
             name="categories"
             control={methods.control}
@@ -144,7 +145,7 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Color)}
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Colors[prop]}
             keyValue={(prop) => prop}
             name="color"
             control={methods.control}
@@ -192,11 +193,11 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Location)}
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Locations[prop]}
             keyValue={(prop) => prop}
             name="retrieveLocation"
             control={methods.control}
-            placeholder="Select building"
+            placeholder="Select a location"
           />
           <label className="text-xs text-error">
             {methods.formState.errors.retrieveLocation?.message}
