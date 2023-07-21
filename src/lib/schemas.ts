@@ -1,8 +1,8 @@
 import {
-  Building,
   Category,
   Color,
   ItemInteraction,
+  Location,
   Permission,
   Status,
   Value
@@ -12,14 +12,13 @@ import { z } from 'zod';
 export const ItemSchema = z.object({
   name: z.string().min(3),
   foundDate: z.coerce.date(),
-  foundBuilding: z.nativeEnum(Building),
-  foundDescription: z.string(),
+  foundLocation: z.string(),
   shortDescription: z.string(),
   categories: z.array(z.nativeEnum(Category)),
   color: z.nativeEnum(Color),
   value: z.nativeEnum(Value),
   identifiable: z.boolean(),
-  retrieveBuilding: z.nativeEnum(Building),
+  retrieveLocation: z.nativeEnum(Location),
   longDescription: z.string().nullish(),
   status: z.nativeEnum(Status).default(Status.PENDING)
 });

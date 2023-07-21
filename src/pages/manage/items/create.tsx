@@ -3,13 +3,7 @@
 /* eslint-disable no-nested-ternary */
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
-import {
-  Building,
-  Category,
-  Color,
-  ItemInteraction,
-  Value
-} from '@prisma/client';
+import { Category, Color, ItemInteraction, Value } from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
 import ManageLayout from 'components/Layouts/ManageLayout';
 import useZodForm from 'hooks/useZodForm';
@@ -79,29 +73,15 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Building Found</span>
-          </label>
-          <MyListbox
-            values={Object.values(Building)}
-            displayValue={(prop) => prop}
-            keyValue={(prop) => prop}
-            name="foundBuilding"
-            control={methods.control}
-            placeholder="Select building"
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.foundBuilding?.message}
-          </label>
-        </div>
-        <div>
-          <label className="label">
             <span className="label-text">Location Found</span>
           </label>
           <input
-            placeholder="Type here"
             className="input-bordered input input-sm w-full"
-            {...methods.register('foundDescription')}
+            {...methods.register('foundLocation')}
           />
+          <label className="text-xs text-error">
+            {methods.formState.errors.foundLocation?.message}
+          </label>
         </div>
         <div>
           <label className="label">
@@ -187,15 +167,15 @@ const CreateItem: NextPageWithLayout = () => {
             <span className="label-text">Retrieve From</span>
           </label>
           <MyListbox
-            values={Object.values(Building)}
+            values={Object.values(Location)}
             displayValue={(prop) => prop}
             keyValue={(prop) => prop}
-            name="retrieveBuilding"
+            name="retrieveLocation"
             control={methods.control}
             placeholder="Select building"
           />
           <label className="text-xs text-error">
-            {methods.formState.errors.retrieveBuilding?.message}
+            {methods.formState.errors.retrieveLocation?.message}
           </label>
         </div>
         <div>
