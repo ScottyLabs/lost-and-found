@@ -1,10 +1,20 @@
 import { Dialog, Transition } from '@headlessui/react';
 import Link from 'next/link';
-import { Fragment } from 'react';
+import { useRouter } from 'next/router';
+import { Fragment, useEffect } from 'react';
 import useDrawerStore from 'stores/DrawerStore';
 
 export default function NavigationDrawer() {
   const { drawer, clearDrawer } = useDrawerStore();
+  const router = useRouter();
+
+  useEffect(() => {
+    const handleRouteChange = () => clearDrawer();
+    router.events.on('routeChangeComplete', handleRouteChange);
+    return () => {
+      router.events.off('routeChangeComplete', handleRouteChange);
+    };
+  }, [clearDrawer, router]);
 
   return (
     <Transition appear show={drawer === 'navigate'} as={Fragment}>
