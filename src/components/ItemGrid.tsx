@@ -10,7 +10,7 @@ type Props = {
 
 export default function ItemGrid({ query }: Props) {
   const itemsQuery = trpc.item.list.useQuery();
-  const { category, color, date, location } = useItemFilterStore();
+  const { categories, colors, date, locations } = useItemFilterStore();
 
   if (itemsQuery.status === 'loading')
     return (
@@ -41,10 +41,13 @@ export default function ItemGrid({ query }: Props) {
             (item.name.toLowerCase().includes(query) ||
               item.shortDescription.toLowerCase().includes(query) ||
               item.foundDescription?.toLowerCase().includes(query)) &&
-            (!category || item.categories.includes(category)) &&
-            (!color || item.color === color) &&
-            (!date || item.foundDate.getTime() > date.getTime()) &&
-            (!location || item.retrieveBuilding === location)
+            (!categories.length ||
+              item.categories.some((category) =>
+                categories.includes(category)
+              )) &&
+            (!colors.length || colors.includes(item.color)) &&
+            (!locations.length || locations.includes(item.retrieveBuilding)) &&
+            (!date || item.foundDate.getTime() > date.getTime())
         )
         .map((item) => (
           <ItemCard key={item.id} item={item} />

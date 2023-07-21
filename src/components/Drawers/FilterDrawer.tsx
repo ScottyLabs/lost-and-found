@@ -1,10 +1,32 @@
 import { Dialog, Transition } from '@headlessui/react';
+import { Building, Category, Color } from '@prisma/client';
+import MyDisclosure from 'components/Elements/Disclosure';
+import MyListbox from 'components/Form/Listbox';
+import useZodForm from 'hooks/useZodForm';
 import { Fragment } from 'react';
 import useDrawerStore from 'stores/DrawerStore';
-import { Categories, Colors, Locations } from 'types';
+import useItemFilterStore from 'stores/ItemFilterStore';
+import { Categories } from 'types';
+
+import { z } from 'zod';
 
 export default function FilterDrawer() {
   const { drawer, clearDrawer } = useDrawerStore();
+  const methods = useZodForm({
+    schema: z.object({
+      date: z.coerce.date().nullable(),
+      categories: z.array(z.nativeEnum(Category)),
+      locations: z.array(z.nativeEnum(Building)),
+      colors: z.array(z.nativeEnum(Color))
+    }),
+    defaultValues: {
+      date: null,
+      categories: [],
+      locations: [],
+      colors: []
+    }
+  });
+  const { setFilter, resetFilter } = useItemFilterStore();
 
   return (
     <Transition appear show={drawer === 'filter'} as={Fragment}>
@@ -28,6 +50,7 @@ export default function FilterDrawer() {
           </Transition.Child>
           <Transition.Child
             as={Fragment}
+            unmount={false}
             enter="transition ease-in-out duration-300 transform"
             enterFrom="-translate-x-full"
             enterTo="translate-x-0"
@@ -35,115 +58,73 @@ export default function FilterDrawer() {
             leaveFrom="translate-x-0"
             leaveTo="-translate-x-full"
           >
-            <div className="z-50 h-screen w-full max-w-sm bg-primary font-bold shadow-xl">
+            <div className="z-50 h-screen w-full max-w-sm overflow-y-auto bg-primary font-bold shadow-xl">
               <div className="inline-flex w-full items-center justify-between bg-accent p-4 text-accent-content">
                 <h1 className="text-xl uppercase">Filter</h1>
-                <button type="button" className="btn-ghost btn font-thin">
+                <button
+                  type="button"
+                  className="btn-ghost btn font-thin"
+                  onClick={() => {
+                    resetFilter();
+                    methods.reset();
+                  }}
+                >
                   Clear
                 </button>
               </div>
-              <ul className="menu w-full flex-1 flex-nowrap overflow-auto p-4 text-accent">
-                <li>
-                  <div>
-                    <div className="collapse-arrow collapse w-full">
-                      <input type="checkbox" className="peer" />
-                      <div className="collapse-title">Date Lost</div>
-                      <div className="collapse-content">
-                        <input
-                          type="datetime-local"
-                          className="input-ghost input w-full"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li />
-                <li>
-                  <div>
-                    <div className="collapse-arrow collapse w-full">
-                      <input type="checkbox" className="peer" />
-                      <div className="collapse-title">Item Category</div>
-                      <div className="collapse-content">
-                        <div>
-                          {Object.values(Categories).map((category) => (
-                            <div
-                              key={category}
-                              className="flex items-center gap-2 p-1"
-                            >
-                              <input type="checkbox" className="checkbox" />
-                              <label className="label">
-                                <span className="label-text">{category}</span>
-                              </label>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li />
-                <li>
-                  <div>
-                    <div className="collapse-arrow collapse w-full">
-                      <input type="checkbox" className="peer" />
-                      <div className="collapse-title">Location Found</div>
-                      <div className="collapse-content">
-                        <div className="flex flex-col gap-3">
-                          <input
-                            type="text"
-                            placeholder="Search location found..."
-                            className="input-primary input w-full rounded-full"
-                          />
-                          <div>
-                            {Locations.map((location) => (
-                              <div
-                                key={location}
-                                className="flex items-center gap-2 p-1"
-                              >
-                                <input type="checkbox" className="checkbox" />
-                                <label className="label">
-                                  <span className="label-text">{location}</span>
-                                </label>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </li>
-                <li />
-                <li>
-                  <div>
-                    <div className="collapse-arrow collapse w-full">
-                      <input type="checkbox" className="peer" />
-                      <div className="collapse-title">Color</div>
-                      <div className="collapse-content">
-                        {Colors.map((color) => (
-                          <div
-                            key={color}
-                            className="flex items-center gap-2 p-1"
-                          >
-                            <input type="checkbox" className="checkbox" />
-                            <label className="label">
-                              <span className="label-text">{color}</span>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-                </li>
-              </ul>
-              <div className="p-4">
-                <button
-                  type="button"
-                  onClick={clearDrawer}
-                  className="btn-accent btn-sm btn w-full"
-                >
-                  View Items
-                </button>
-              </div>
+              <form
+                className="m-4"
+                onSubmit={methods.handleSubmit(async (data) => setFilter(data))}
+              >
+                <MyDisclosure title="Date Lost">
+                  <input
+                    type="date"
+                    className="input input-sm w-full"
+                    {...methods.register('date')}
+                  />
+                </MyDisclosure>
+                <MyDisclosure title="Item Category">
+                  <MyListbox
+                    control={methods.control}
+                    name="categories"
+                    displayValue={(prop) => prop}
+                    keyValue={(prop) => prop}
+                    placeholder="Select a Category"
+                    values={Object.keys(Categories)}
+                    multiple
+                  />
+                </MyDisclosure>
+                <MyDisclosure title="Item Location">
+                  <MyListbox
+                    control={methods.control}
+                    name="locations"
+                    displayValue={(prop) => prop}
+                    keyValue={(prop) => prop}
+                    placeholder="Select a Location"
+                    values={Object.keys(Building)}
+                    multiple
+                  />
+                </MyDisclosure>
+                <MyDisclosure title="Item Color">
+                  <MyListbox
+                    control={methods.control}
+                    name="colors"
+                    displayValue={(prop) => prop}
+                    keyValue={(prop) => prop}
+                    placeholder="Select a Color"
+                    values={Object.keys(Color)}
+                    multiple
+                  />
+                </MyDisclosure>
+                <div className="p-4">
+                  <button
+                    onClick={clearDrawer}
+                    className="btn-accent btn-sm btn w-full"
+                  >
+                    View Items
+                  </button>
+                </div>
+              </form>
             </div>
           </Transition.Child>
         </div>

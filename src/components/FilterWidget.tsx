@@ -9,20 +9,21 @@ import useZodForm from 'hooks/useZodForm';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { Categories } from 'types';
 import { z } from 'zod';
+import MyListbox from './Form/Listbox';
 
-export default function SortWidget() {
+export default function FilterWidget() {
   const methods = useZodForm({
     schema: z.object({
       date: z.coerce.date().nullable(),
-      category: z.nativeEnum(Category).nullable(),
-      location: z.nativeEnum(Building).nullable(),
-      color: z.nativeEnum(Color).nullable()
+      categories: z.array(z.nativeEnum(Category)),
+      locations: z.array(z.nativeEnum(Building)),
+      colors: z.array(z.nativeEnum(Color))
     }),
     defaultValues: {
       date: null,
-      category: null,
-      location: null,
-      color: null
+      categories: [],
+      locations: [],
+      colors: []
     }
   });
 
@@ -65,54 +66,51 @@ export default function SortWidget() {
           <label className="label">
             <span className="label-text">Item Category</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full max-w-xs"
-            {...methods.register('category')}
-          >
-            {Object.entries(Categories).map(([k, v]) => (
-              <option key={k} value={k}>
-                {v}
-              </option>
-            ))}
-          </select>
+          <MyListbox
+            control={methods.control}
+            name="categories"
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            placeholder="Select a Category"
+            values={Object.keys(Categories)}
+            multiple
+          />
           <span className="text-xs text-error">
-            {methods.formState.errors.category?.message}
+            {methods.formState.errors.categories?.message}
           </span>
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Location Lost</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full max-w-xs"
-            {...methods.register('location')}
-          >
-            {Object.values(Building).map((location) => (
-              <option key={location} value={location}>
-                {location}
-              </option>
-            ))}
-          </select>
+          <MyListbox
+            control={methods.control}
+            name="locations"
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            placeholder="Select a Location"
+            values={Object.keys(Building)}
+            multiple
+          />
           <span className="text-xs text-error">
-            {methods.formState.errors.location?.message}
+            {methods.formState.errors.locations?.message}
           </span>
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
             <span className="label-text">Color</span>
           </label>
-          <select
-            className="select-bordered select select-sm w-full max-w-xs"
-            {...methods.register('color')}
-          >
-            {Object.values(Color).map((color) => (
-              <option key={color} value={color}>
-                {color}
-              </option>
-            ))}
-          </select>
+          <MyListbox
+            control={methods.control}
+            name="colors"
+            displayValue={(prop) => prop}
+            keyValue={(prop) => prop}
+            placeholder="Select a Color"
+            values={Object.keys(Color)}
+            multiple
+          />
           <span className="text-xs text-error">
-            {methods.formState.errors.color?.message}
+            {methods.formState.errors.colors?.message}
           </span>
         </div>
         <div>

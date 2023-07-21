@@ -1,7 +1,7 @@
+import FilterWidget from 'components/FilterWidget';
 import ItemGrid from 'components/ItemGrid';
 import MainLayout from 'components/Layouts/MainLayout';
 import ScrollToTop from 'components/ScrollToTop';
-import SortWidget from 'components/SortWidget';
 import Link from 'next/link';
 import { useState } from 'react';
 import {
@@ -9,9 +9,10 @@ import {
   FaColumns,
   FaSearch,
   FaSearchLocation,
-  FaSort,
+  FaSlidersH,
   FaSquare
 } from 'react-icons/fa';
+import useActiveFilterStore from 'stores/ActiveFilterStore';
 import useDialogStore from 'stores/DialogStore';
 import useDrawerStore from 'stores/DrawerStore';
 import { NextPageWithLayout } from './_app';
@@ -19,6 +20,7 @@ import { NextPageWithLayout } from './_app';
 const Home: NextPageWithLayout = () => {
   const { filterDrawer } = useDrawerStore();
   const { subscribeDialog } = useDialogStore();
+  const { setFilter } = useActiveFilterStore();
   const [query, setQuery] = useState('');
 
   return (
@@ -46,6 +48,9 @@ const Home: NextPageWithLayout = () => {
             <button
               type="button"
               className="flex w-full flex-col items-center gap-1"
+              onClick={() => {
+                filterDrawer();
+              }}
             >
               <FaSearchLocation className="h-6 w-6" />
               <span className="text-xs leading-none">Location</span>
@@ -55,6 +60,9 @@ const Home: NextPageWithLayout = () => {
             <button
               type="button"
               className="flex w-full flex-col items-center gap-1"
+              onClick={() => {
+                filterDrawer();
+              }}
             >
               <FaColumns className="h-6 w-6" />
               <span className="text-xs leading-none">Color</span>
@@ -64,6 +72,9 @@ const Home: NextPageWithLayout = () => {
             <button
               type="button"
               className="flex w-full flex-col items-center gap-1"
+              onClick={() => {
+                filterDrawer();
+              }}
             >
               <FaCalendar className="h-6 w-6" />
               <span className="text-xs leading-none">Date</span>
@@ -73,25 +84,27 @@ const Home: NextPageWithLayout = () => {
             <button
               type="button"
               className="flex w-full flex-col items-center gap-1"
+              onClick={() => {
+                filterDrawer();
+              }}
             >
               <FaSquare className="h-6 w-6" />
               <span className="text-xs leading-none">Category</span>
             </button>
           </li>
           <li className="flex-1">
-            <label
-              htmlFor="my-drawer"
-              onClick={() => filterDrawer()}
+            <button
               className="flex w-full flex-col items-center"
+              onClick={() => filterDrawer()}
             >
-              <FaSort className="h-8 w-8" />
-            </label>
+              <FaSlidersH className="h-6 w-6" />
+            </button>
           </li>
         </ul>
         <div className="divider m-0 md:hidden" />
         <div className="flex w-full max-w-5xl gap-10">
           <div className="hidden md:block">
-            <SortWidget />
+            <FilterWidget />
           </div>
           <div className="flex w-full flex-col gap-4">
             <ItemGrid query={query} />

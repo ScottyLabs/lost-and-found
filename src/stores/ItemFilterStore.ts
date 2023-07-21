@@ -3,34 +3,30 @@ import { create } from 'zustand';
 
 type ItemFilterStore = {
   date: Date | null;
-  category: Category | null;
-  location: Building | null;
-  color: Color | null;
+  categories: Category[];
+  locations: Building[];
+  colors: Color[];
   setFilter: ({
     date,
-    category,
-    location,
-    color
+    categories,
+    locations,
+    colors
   }: {
     date: Date | null;
-    category: Category | null;
-    location: Building | null;
-    color: Color | null;
+    categories: Category[];
+    locations: Building[];
+    colors: Color[];
   }) => void;
   resetFilter: () => void;
 };
 
 export default create<ItemFilterStore>((set) => ({
   date: null,
-  category: null,
-  location: null,
-  color: null,
-  setFilter: ({
-    date = null,
-    category = null,
-    location = null,
-    color = null
-  }) => set(() => ({ date, category, location, color })),
+  categories: [],
+  locations: [],
+  colors: [],
+  setFilter: ({ date = null, categories = [], locations = [], colors = [] }) =>
+    set(() => ({ date, categories, locations, colors })),
   resetFilter: () =>
-    set(() => ({ date: null, category: null, location: null, color: null }))
+    set(() => ({ date: null, categories: [], locations: [], colors: [] }))
 }));
