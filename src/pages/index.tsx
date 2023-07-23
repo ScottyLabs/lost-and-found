@@ -145,7 +145,7 @@ const Home: NextPageWithLayout = () => {
           </div>
         </div>
         <div className="divider m-0 md:hidden" />
-        <div className="md-hidden my-4 flex w-full flex-col gap-4">
+        <div className="my-4 flex w-full flex-col gap-4 md:hidden">
           <div>
             <div className="text-xl font-bold">Can&apos;t find it?</div>
             <div className="mt-2 text-sm">
