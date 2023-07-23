@@ -1,12 +1,8 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'styles/globals.css';
 
-import ConfirmItemDeletionDialog from 'components/Dialogs/ConfirmItemDeletionDialog';
-import ConfirmUserDeletionDialog from 'components/Dialogs/ConfirmUserDeletionDIalog';
-import MassArchiveDialog from 'components/Dialogs/MassArchiveDialog';
 import SubscriptionDialog from 'components/Dialogs/SubscriptionDialog';
 import SubscriptionsDialog from 'components/Dialogs/SubscriptionsDialog';
-import EditUserDialog from 'components/Dialogs/UserEditDialog';
 import FilterDrawer from 'components/Drawers/FilterDrawer';
 import NavigationDrawer from 'components/Drawers/NavigationDrawer';
 import { NextPage } from 'next';
@@ -66,10 +62,6 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayoutAndSession) => {
           <FilterDrawer />
           <SubscriptionDialog />
           <SubscriptionsDialog />
-          <ConfirmItemDeletionDialog />
-          <MassArchiveDialog />
-          <ConfirmUserDeletionDialog />
-          <EditUserDialog />
           {getLayout(<Component {...pageProps} />)}
         </SessionProvider>
       </FontProvider>
