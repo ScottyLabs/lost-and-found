@@ -69,10 +69,10 @@ export default function FilterWidget() {
           <MyListbox
             control={methods.control}
             name="categories"
-            displayValue={(prop) => prop}
+            displayValue={(prop) => Categories[prop]}
             keyValue={(prop) => prop}
             placeholder="Select a Category"
-            values={Object.keys(Categories)}
+            values={Object.keys(Categories) as (keyof typeof Categories)[]}
             multiple
           />
           <span className="text-xs text-error">
