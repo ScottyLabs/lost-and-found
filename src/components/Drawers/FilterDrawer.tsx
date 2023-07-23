@@ -87,7 +87,9 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="categories"
-                    values={Object.keys(Categories)}
+                    values={
+                      Object.keys(Categories) as (keyof typeof Categories)[]
+                    }
                     displayValue={(prop) => Categories[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Category"
@@ -98,7 +100,7 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="locations"
-                    values={Object.keys(Location)}
+                    values={Object.keys(Location) as (keyof typeof Location)[]}
                     displayValue={(prop) => Locations[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Location"

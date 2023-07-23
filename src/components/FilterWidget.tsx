@@ -86,7 +86,7 @@ export default function FilterWidget() {
           <MyListbox
             control={methods.control}
             name="locations"
-            values={Object.keys(Location)}
+            values={Object.keys(Location) as (keyof typeof Location)[]}
             displayValue={(prop) => Locations[prop]}
             keyValue={(prop) => prop}
             placeholder="Select a Location"
@@ -106,7 +106,7 @@ export default function FilterWidget() {
             displayValue={(prop) => Colors[prop]}
             keyValue={(prop) => prop}
             placeholder="Select a Color"
-            values={Object.keys(Color)}
+            values={Object.keys(Color) as (keyof typeof Color)[]}
             multiple
           />
           <span className="text-xs text-error">
