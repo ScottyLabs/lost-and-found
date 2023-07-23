@@ -86,12 +86,12 @@ export default router({
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.create({ data: input })
     ),
-  update: moderatorProcedure
+  update: adminProcedure
     .input(ItemUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.update({ where: { id: input.id }, data: input.data })
     ),
-  massUpdate: moderatorProcedure
+  massUpdate: adminProcedure
     .input(ItemsUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.updateMany({

@@ -11,7 +11,11 @@ export default function ConfirmUserDeletionDialog() {
     onSuccess: (res) => {
       context.user.search.invalidate();
       setSelectedUser(null);
+      clearDialog();
       toast.success(`Removed ${res.user.name}'s Account`);
+    },
+    onError: (err) => {
+      toast.error(err.message);
     }
   });
   const { selectedUser, setSelectedUser } = useSelectedUserStore();
@@ -35,7 +39,6 @@ export default function ConfirmUserDeletionDialog() {
           <button
             className="btn-error btn"
             onClick={() => {
-              clearDialog();
               userDeleteMutation.mutate(selectedUser.id);
             }}
           >

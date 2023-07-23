@@ -61,7 +61,6 @@ export default router({
       };
     }),
   search: moderatorProcedure.input(UserSearchSchema).query(({ ctx, input }) => {
-    console.log(input);
     return ctx.prisma.user.findMany({
       where: {
         name: { contains: input.query },
@@ -77,7 +76,7 @@ export default router({
     .query(({ ctx, input }) =>
       ctx.prisma.user.findFirst({ where: { id: input } })
     ),
-  update: moderatorProcedure
+  update: adminProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.user.update({ where: { id: input.id }, data: input.data })
