@@ -1,10 +1,10 @@
-import { Building, Category, Color } from '@prisma/client';
+import { Category, Color, Location } from '@prisma/client';
 import { create } from 'zustand';
 
 type ItemFilterStore = {
   date: Date | null;
   categories: Category[];
-  locations: Building[];
+  locations: Location[];
   colors: Color[];
   setFilter: ({
     date,
@@ -14,7 +14,7 @@ type ItemFilterStore = {
   }: {
     date: Date | null;
     categories: Category[];
-    locations: Building[];
+    locations: Location[];
     colors: Color[];
   }) => void;
   resetFilter: () => void;

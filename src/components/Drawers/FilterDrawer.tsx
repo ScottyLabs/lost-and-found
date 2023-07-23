@@ -1,5 +1,5 @@
 import { Dialog, Transition } from '@headlessui/react';
-import { Building, Category, Color, Location } from '@prisma/client';
+import { Category, Color, Location } from '@prisma/client';
 import MyDisclosure from 'components/Elements/Disclosure';
 import MyListbox from 'components/Form/Listbox';
 import useZodForm from 'hooks/useZodForm';
@@ -16,7 +16,7 @@ export default function FilterDrawer() {
     schema: z.object({
       date: z.coerce.date().nullable(),
       categories: z.array(z.nativeEnum(Category)),
-      locations: z.array(z.nativeEnum(Building)),
+      locations: z.array(z.nativeEnum(Location)),
       colors: z.array(z.nativeEnum(Color))
     }),
     defaultValues: {
@@ -87,10 +87,10 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="categories"
+                    values={Object.keys(Categories)}
                     displayValue={(prop) => Categories[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Category"
-                    values={Object.keys(Categories)}
                     multiple
                   />
                 </MyDisclosure>
@@ -98,10 +98,10 @@ export default function FilterDrawer() {
                   <MyListbox
                     control={methods.control}
                     name="locations"
+                    values={Object.keys(Location)}
                     displayValue={(prop) => Locations[prop]}
                     keyValue={(prop) => prop}
                     placeholder="Select a Location"
-                    values={Object.keys(Location)}
                     multiple
                   />
                 </MyDisclosure>

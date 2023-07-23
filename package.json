@@ -8,8 +8,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
-    "format": "yarn prettier . --write --ignore-path ./.gitignore",
-    "prepare": "husky install"
+    "format": "yarn prettier . --write --ignore-path ./.gitignore"
   },
   "dependencies": {
     "@headlessui/react": "^1.7.13",
@@ -59,7 +58,6 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.28.0",
     "eslint-plugin-react-hooks": "^4.3.0",
-    "husky": "^8.0.0",
     "postcss": "^8.4.14",
     "prettier": "^2.7.1",
     "prettier-plugin-organize-imports": "^3.2.2",
