@@ -32,7 +32,7 @@ function AuthWidget() {
       <button
         type="button"
         className="btn-ghost btn-sm btn gap-2 md:btn-primary"
-        onClick={() => signIn()}
+        onClick={() => signIn('google')}
       >
         <FaSignInAlt />
         <span>Sign in</span>
