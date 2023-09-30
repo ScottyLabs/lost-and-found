@@ -21,5 +21,8 @@ Populate `.env`. Then run
 If `yarn` doesn't work
 
 ```
-npm install --global yarn
+For Windows: `npm install --global yarn`
+For Mac:
+ - Install brew: https://brew.sh/
+ - Install yarn: `brew install yarn` in terminal
 ```
