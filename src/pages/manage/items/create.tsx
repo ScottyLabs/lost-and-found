@@ -157,6 +157,20 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
+            <span className="label-text">Other Color:</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Type here"
+            className="input-bordered input input-sm w-full"
+            {...methods.register('name')}
+          />
+          <label className="text-xs text-error">
+            {methods.formState.errors.color?.message}
+          </label>
+        </div>
+        <div>
+          <label className="label">
             <span className="label-text">Value</span>
           </label>
           {Object.values(Value).map((value) => (
