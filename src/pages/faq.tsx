@@ -41,8 +41,13 @@ const Questions: Record<string, () => ReactNode> = {
         <ul>
           <li>
             Items are added at the end of the day, check back on the site to see
-            if it has been added or {' '} 
-            <button type="button" onClick={subscribeDialog} className="link" style={{margin:0 + 'em'}}>
+            if it has been added or{' '}
+            <button
+              type="button"
+              onClick={subscribeDialog}
+              className="link"
+              style={{ margin: 0 + 'em' }}
+            >
               subscribe
             </button>{' '}
             for daily updates.
