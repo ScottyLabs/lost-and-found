@@ -114,7 +114,7 @@ function EditItemForm({ item }: EditItemFormProps) {
       </div>
       <div>
         <label className="label">
-          <span className="label-text">Short Description</span>
+          <span className="label-text">Short Item Description</span>
         </label>
         <input
           type="text"
