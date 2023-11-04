@@ -100,7 +100,7 @@ function EditItemForm({ item }: EditItemFormProps) {
       </div>
       <div>
         <label className="label">
-          <span className="label-text">Found Description</span>
+          <span className="label-text">Location Found Details</span>
         </label>
         <input
           type="text"
