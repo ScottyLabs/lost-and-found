@@ -21,10 +21,6 @@ export default function ItemCard({ item }: Props) {
         <div className="divider divider-horizontal md:divider-vertical" />
         <div>
           <div>
-            <span className="font-bold">Color: </span>
-            <span>{Colors[item.color]}</span>
-          </div>
-          <div>
             <span className="font-bold">Found: </span>
             <span>{item.foundLocation}</span>
           </div>
