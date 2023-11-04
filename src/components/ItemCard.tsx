@@ -1,5 +1,4 @@
 import { Item } from '@prisma/client';
-import { Colors } from 'types';
 
 type Props = {
   item: Item;
