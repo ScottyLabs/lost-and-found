@@ -80,7 +80,7 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Location Found</span>
+            <span className="label-text">Building Found</span>
           </label>
           <MyListbox
             values={Object.values(Location)}
