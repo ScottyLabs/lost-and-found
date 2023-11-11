@@ -1,4 +1,5 @@
 import { Item } from '@prisma/client';
+import { Locations } from 'types';
 
 type Props = {
   item: Item;
@@ -21,7 +22,7 @@ export default function ItemCard({ item }: Props) {
         <div>
           <div>
             <span className="font-bold">Found: </span>
-            <span>{item.foundLocation}</span>
+            <span>{Locations[item.foundLocation]}</span>
           </div>
           <div>
             <span className="font-bold">Retrieve From: </span>

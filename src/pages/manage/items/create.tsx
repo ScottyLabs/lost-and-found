@@ -80,7 +80,7 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Location Found</span>
+            <span className="label-text">Building Found</span>
           </label>
           <MyListbox
             values={Object.values(Location)}
@@ -96,7 +96,7 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Found Description</span>
+            <span className="label-text">Location Found Details</span>
           </label>
           <input
             type="text"
@@ -110,7 +110,7 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Short Description</span>
+            <span className="label-text">Short Item Description</span>
           </label>
           <input
             type="text"

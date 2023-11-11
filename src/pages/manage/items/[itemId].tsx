@@ -84,7 +84,7 @@ function EditItemForm({ item }: EditItemFormProps) {
       </div>
       <div>
         <label className="label">
-          <span className="label-text">Location Found</span>
+          <span className="label-text">Building Found</span>
         </label>
         <MyListbox
           values={Object.values(Location)}
@@ -100,7 +100,7 @@ function EditItemForm({ item }: EditItemFormProps) {
       </div>
       <div>
         <label className="label">
-          <span className="label-text">Found Description</span>
+          <span className="label-text">Location Found Details</span>
         </label>
         <input
           type="text"
@@ -114,7 +114,7 @@ function EditItemForm({ item }: EditItemFormProps) {
       </div>
       <div>
         <label className="label">
-          <span className="label-text">Short Description</span>
+          <span className="label-text">Short Item Description</span>
         </label>
         <input
           type="text"
