@@ -19,6 +19,7 @@ export const ItemSchema = z.object({
   color: z.nativeEnum(Color),
   value: z.nativeEnum(Value),
   identifiable: z.boolean(),
+  itemLocation: z.string().min(3),
   retrieveLocation: z.nativeEnum(Location),
   longDescription: z.string().nullish(),
   status: z.nativeEnum(Status).default(Status.PENDING)
