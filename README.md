@@ -26,3 +26,8 @@ For Mac:
  - Install brew: https://brew.sh/
  - Install yarn: `brew install yarn` in terminal
 ```
+
+If you encounter linting errors when building the project, run
+```
+yarn lint -- --fix
+```
