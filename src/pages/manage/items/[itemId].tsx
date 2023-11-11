@@ -208,18 +208,18 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
       </div>
       <div>
-          <label className="label">
-            <span className="label-text">Item Storage Location</span>
-          </label>
-          <input
-            type="text"
-            placeholder="Ex. Closet or Vault"
-            className="input-bordered input input-sm w-full"
-            {...methods.register('itemLocation')}
-          />
-          <label className="text-xs text-error">
-            {methods.formState.errors.itemLocation?.message}
-          </label>
+        <label className="label">
+          <span className="label-text">Item Storage Location</span>
+        </label>
+        <input
+          type="text"
+          placeholder="Ex. Closet or Vault"
+          className="input-bordered input input-sm w-full"
+          {...methods.register('itemLocation')}
+        />
+        <label className="text-xs text-error">
+          {methods.formState.errors.itemLocation?.message}
+        </label>
       </div>
       <div>
         <label className="label">
