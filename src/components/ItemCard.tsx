@@ -1,5 +1,5 @@
 import { Item } from '@prisma/client';
-import { Colors, Locations } from 'types';
+import { Locations } from 'types';
 
 type Props = {
   item: Item;
@@ -20,10 +20,6 @@ export default function ItemCard({ item }: Props) {
         </div>
         <div className="divider divider-horizontal md:divider-vertical" />
         <div>
-          <div>
-            <span className="font-bold">Color: </span>
-            <span>{Colors[item.color]}</span>
-          </div>
           <div>
             <span className="font-bold">Found: </span>
             <span>{Locations[item.foundLocation]}</span>
