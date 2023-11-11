@@ -106,6 +106,7 @@ model Item {
   value            Value
   identifiable     Boolean
   retrieveLocation Location
+  itemLocation     String
   longDescription  String?
   auditLogs        AuditLog[]
   status           Status
