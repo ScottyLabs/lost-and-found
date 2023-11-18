@@ -37,7 +37,7 @@ function SubscriptionsForm() {
       .superRefine((data, ctx) => {
         if (
           subscriptions &&
-          data.categories.length + subscriptions.length > 2 
+          data.categories.length + subscriptions.length > 2
         ) {
           ctx.addIssue({
             code: 'custom',
