@@ -45,7 +45,7 @@ export const Categories: Record<Category, string> = {
   GLASSES_CASES: 'Glasses/Sunglasses/Cases',
   JEWELRY_WATCHES: 'Jewelry/Watches',
   EARBUDS_HEADPHONES_CASES: 'Earbuds/Headphones/Case',
-  PHONE_LAPTOP_TABLET: 'Phones/Laptops/Tablets',
+  PHONES_LAPTOPS_TABLETS: 'Phones/Laptops/Tablets',
   BEVERAGE_CONTAINER: 'Beverage Container',
   STATIONARY: 'Stationary',
   KEYS: 'Keys',
