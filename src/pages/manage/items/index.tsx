@@ -169,7 +169,8 @@ const Manage: NextPageWithLayout = () => {
           </div>
           <Link
             href="/manage/items/create"
-            className="btn-primary btn-sm btn gap-1">
+            className="btn-primary btn-sm btn gap-1"
+          >
             <span>Add Item</span>
             <FaPlusCircle />
           </Link>
