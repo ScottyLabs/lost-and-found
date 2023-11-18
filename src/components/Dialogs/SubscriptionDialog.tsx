@@ -32,12 +32,12 @@ function SubscriptionsForm() {
   const methods = useZodForm({
     schema: z
       .object({
-        categories: z.array(z.nativeEnum(Category)).max(2)
+        categories: z.array(z.nativeEnum(Category)).max(13)
       })
       .superRefine((data, ctx) => {
         if (
           subscriptions &&
-          data.categories.length + subscriptions.length > 2
+          data.categories.length + subscriptions.length > 2 
         ) {
           ctx.addIssue({
             code: 'custom',
