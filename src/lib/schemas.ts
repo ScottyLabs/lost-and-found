@@ -14,7 +14,7 @@ export const ItemSchema = z.object({
   foundDate: z.coerce.date(),
   foundLocation: z.nativeEnum(Location),
   foundDescription: z.string(),
-  shortDescription: z.string(),
+  shortDescription: z.string().min(3),
   categories: z.array(z.nativeEnum(Category)),
   color: z.nativeEnum(Color),
   value: z.nativeEnum(Value),
