@@ -52,7 +52,9 @@ const CreateItem: NextPageWithLayout = () => {
       >
         <div>
           <label className="label">
-            <span className="label-text">Item Name</span>
+            <span className="label-text">
+              Item Name<label className="text-error"> *</label>
+            </span>
           </label>
           <input
             type="text"
@@ -66,7 +68,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Date Found</span>
+            <span className="label-text">
+              Date Found<label className="text-error"> *</label>
+            </span>
           </label>
           <input
             type="datetime-local"
@@ -80,7 +84,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Building Found</span>
+            <span className="label-text">
+              Building Found<label className="text-error"> *</label>
+            </span>
           </label>
           <MyListbox
             values={Object.values(Location)}
@@ -110,7 +116,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Short Item Description</span>
+            <span className="label-text">
+              Short Item Description<label className="text-error"> *</label>
+            </span>
           </label>
           <input
             type="text"
@@ -124,7 +132,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Categories</span>
+            <span className="label-text">
+              Categories<label className="text-error"> *</label>
+            </span>
           </label>
           <MyListbox
             values={Object.values(Category)}
@@ -141,7 +151,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Color</span>
+            <span className="label-text">
+              Color<label className="text-error"> *</label>
+            </span>
           </label>
           <MyListbox
             values={Object.values(Color)}
@@ -157,7 +169,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Value</span>
+            <span className="label-text">
+              Value<label className="text-error"> *</label>
+            </span>
           </label>
           {Object.values(Value).map((value) => (
             <label key={value} className="label cursor-pointer">
@@ -189,7 +203,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Retrieve From</span>
+            <span className="label-text">
+              Retrieve From<label className="text-error"> *</label>
+            </span>
           </label>
           <MyListbox
             values={Object.values(Location)}
@@ -205,7 +221,9 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Item Storage Location</span>
+            <span className="label-text">
+              Item Storage Location<label className="text-error"> *</label>
+            </span>
           </label>
           <input
             type="text"
