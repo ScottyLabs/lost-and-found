@@ -110,7 +110,7 @@ const CreateItem: NextPageWithLayout = () => {
         </div>
         <div>
           <label className="label">
-            <span className="label-text">Short Item Description</span>
+            <span className="label-text">Short Item Description<label className="text-error">  *</label></span>
           </label>
           <input
             type="text"
