@@ -58,8 +58,7 @@ function AuthWidget() {
           unmount={false}
           className="absolute right-0 z-50 w-40 origin-top-right rounded-md bg-base-100 p-4 text-base-content shadow-2xl ring-1 ring-black ring-opacity-5"
         >
-          {(session.user.permission === Permission.ADMIN ||
-            session.user.permission === Permission.MODERATOR) && (
+          {session.user.permission === Permission.ADMIN && (
             <>
               <Menu.Item>
                 <Link
@@ -77,6 +76,21 @@ function AuthWidget() {
                 >
                   <FaUserGraduate className="mr-2 h-4 w-4" aria-hidden="true" />
                   <span>Users</span>
+                </Link>
+              </Menu.Item>
+              <div className="divider my-1" />
+            </>
+          )}
+
+          {session.user.permission === Permission.MODERATOR && (
+            <>
+              <Menu.Item>
+                <Link
+                  className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
+                  href="/manage/items"
+                >
+                  <FaList className="mr-2 h-4 w-4" aria-hidden="true" />
+                  <span>Items</span>
                 </Link>
               </Menu.Item>
               <div className="divider my-1" />
