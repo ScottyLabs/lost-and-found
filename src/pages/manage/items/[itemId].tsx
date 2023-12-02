@@ -164,7 +164,10 @@ function EditItemForm({ item }: EditItemFormProps) {
           <span className="label-text">Value</span>
         </label>
         {Object.values(Value).map((value) => (
-          <label key={value} className="label cursor-pointer">
+          <label
+            key={value}
+            className="label cursor-pointer justify-start gap-3"
+          >
             <input
               type="radio"
               className="radio radio-sm"
