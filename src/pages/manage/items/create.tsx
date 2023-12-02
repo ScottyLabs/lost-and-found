@@ -137,7 +137,15 @@ const CreateItem: NextPageWithLayout = () => {
             </span>
           </label>
           <MyListbox
-            values={Object.values(Category)}
+            values={Object.values(Category).sort((a, b) => {
+              if (a === 'OTHER') {
+                return 1;
+              }
+              if (b === 'OTHER') {
+                return -1;
+              }
+              return a.localeCompare(b);
+            })}
             displayValue={(prop) => Categories[prop]}
             keyValue={(prop) => prop}
             name="categories"
