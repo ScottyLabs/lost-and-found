@@ -32,7 +32,7 @@ function SubscriptionsForm() {
   const methods = useZodForm({
     schema: z
       .object({
-        categories: z.array(z.nativeEnum(Category)).max(2)
+        categories: z.array(z.nativeEnum(Category)).max(13)
       })
       .superRefine((data, ctx) => {
         if (
