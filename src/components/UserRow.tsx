@@ -4,7 +4,6 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 
 import { Menu, Transition } from '@headlessui/react';
-import { User } from '@prisma/client';
 import clsx from 'clsx';
 import Image from 'next/image';
 import { Fragment } from 'react';
@@ -15,11 +14,15 @@ import {
   FaTrash,
   FaUserLock
 } from 'react-icons/fa';
+import { RouterOutputs } from 'server/trpc/router/_app';
 import useDialogStore from 'stores/DialogStore';
 import useSelectedUserStore from 'stores/SelectedUserStore';
 
-type UserRowProps = { user: User };
-export default function UserRow({ user }: UserRowProps) {
+export default function UserRow({
+  data
+}: {
+  data: RouterOutputs['user']['search'][number];
+}) {
   const { confirmUserDeletionDialog, editUserDialog } = useDialogStore();
   const { setSelectedUser } = useSelectedUserStore();
 
@@ -28,7 +31,7 @@ export default function UserRow({ user }: UserRowProps) {
       <div className="avatar">
         <div className="w-8 rounded-full sm:w-12">
           <Image
-            src={user.image ?? '/pfp.png'}
+            src={data.user.imageUrl ?? '/pfp.png'}
             width={48}
             height={48}
             alt="img"
@@ -38,18 +41,20 @@ export default function UserRow({ user }: UserRowProps) {
       <div className="flex-1">
         <div className="w-24">
           <div className="overflow-hidden text-ellipsis font-bold leading-5 sm:overflow-visible sm:text-lg">
-            {user.name}
+            {data.user.firstName} {data.user.lastName}
           </div>
           <div className="overflow-hidden text-ellipsis text-sm text-base-content/50 sm:overflow-visible">
-            {user.email}
+            {data.user.emailAddresses[0]?.emailAddress ?? 'No Email'}
           </div>
         </div>
       </div>
-      <div className="text-xs font-bold opacity-70">{user.permission}</div>
+      <div className="text-xs font-bold opacity-70">
+        {data.account.permission}
+      </div>
       <div
         className="tooltip"
         data-tip={
-          user.notifications
+          data.account.notifications
             ? 'Notifications Enabled'
             : 'Notifications Disabled'
         }
@@ -59,7 +64,7 @@ export default function UserRow({ user }: UserRowProps) {
             <input
               type="checkbox"
               className="cursor-none"
-              checked={user.notifications}
+              checked={data.account.notifications}
               readOnly
             />
             <div className="swap-on">
@@ -93,7 +98,7 @@ export default function UserRow({ user }: UserRowProps) {
                 <button
                   className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
                   onClick={() => {
-                    setSelectedUser(user);
+                    setSelectedUser(data);
                     editUserDialog();
                   }}
                 >
@@ -106,7 +111,7 @@ export default function UserRow({ user }: UserRowProps) {
                 <button
                   className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-error ui-active:text-accent-content"
                   onClick={() => {
-                    setSelectedUser(user);
+                    setSelectedUser(data);
                     confirmUserDeletionDialog();
                   }}
                 >

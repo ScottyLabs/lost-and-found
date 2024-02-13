@@ -1,9 +1,11 @@
-import { User } from '@prisma/client';
+import { RouterOutputs } from 'server/trpc/router/_app';
 import { create } from 'zustand';
 
 type SelectedUserStore = {
-  selectedUser: User | null;
-  setSelectedUser: (user: User | null) => void;
+  selectedUser: RouterOutputs['user']['search'][number] | null;
+  setSelectedUser: (
+    user: RouterOutputs['user']['search'][number] | null
+  ) => void;
 };
 
 export default create<SelectedUserStore>((set) => ({

@@ -1,19 +1,19 @@
 import 'react-toastify/dist/ReactToastify.css';
 import 'styles/globals.css';
 
+import { ClerkProvider } from '@clerk/nextjs';
 import SubscriptionDialog from 'components/Dialogs/SubscriptionDialog';
 import SubscriptionsDialog from 'components/Dialogs/SubscriptionsDialog';
 import FilterDrawer from 'components/Drawers/FilterDrawer';
 import NavigationDrawer from 'components/Drawers/NavigationDrawer';
 import { NextPage } from 'next';
-import type { Session } from 'next-auth';
-import { SessionProvider } from 'next-auth/react';
 import { ThemeProvider } from 'next-themes';
-import type { AppProps } from 'next/app';
 import { Lato } from 'next/font/google';
 import Head from 'next/head';
 import React, { PropsWithChildren } from 'react';
 import { ToastContainer } from 'react-toastify';
+
+import { AppProps } from 'next/app';
 import { trpc } from 'utils/trpc';
 
 const lato = Lato({
@@ -41,18 +41,16 @@ export type NextPageWithLayout<P = unknown, IP = P> = NextPage<P, IP> & {
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
 
-type AppPropsWithLayoutAndSession = AppProps<{
-  session: Session;
-}> & {
-  Component: NextPageWithLayout;
-};
-const MyApp = ({ Component, pageProps }: AppPropsWithLayoutAndSession) => {
+const MyApp = ({
+  Component,
+  pageProps
+}: AppProps & { Component: NextPageWithLayout }) => {
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <ThemeProvider>
       <FontProvider>
-        <SessionProvider session={pageProps.session}>
+        <ClerkProvider>
           <Head>
             <title>CMU Lost & Found</title>
             <link rel="shortcut icon" href="/logo.svg" />
@@ -63,7 +61,7 @@ const MyApp = ({ Component, pageProps }: AppPropsWithLayoutAndSession) => {
           <SubscriptionDialog />
           <SubscriptionsDialog />
           {getLayout(<Component {...pageProps} />)}
-        </SessionProvider>
+        </ClerkProvider>
       </FontProvider>
     </ThemeProvider>
   );

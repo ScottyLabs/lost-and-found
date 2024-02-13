@@ -41,14 +41,13 @@ export const ItemSearchSchema = z.object({
 });
 
 export const UserSchema = z.object({
-  name: z.string(),
-  email: z.string().email(),
+  clerkId: z.string(),
   permission: z.nativeEnum(Permission),
   notifications: z.boolean()
 });
 export const UserCreateSchema = UserSchema;
 export const UserUpdateSchema = z.object({
-  id: z.string(),
+  clerkId: z.string(),
   data: UserSchema.partial()
 });
 export const UserListSchema = z.object({

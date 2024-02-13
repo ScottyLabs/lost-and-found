@@ -16,21 +16,20 @@ function EditUserForm() {
     onSuccess: (res) => {
       context.user.search.invalidate();
       setSelectedUser(null);
-      toast.success(`Updated ${res.name}`);
-      // clearDialog();
+      toast.success(`Updated account`);
     },
     onError: (err) => {
       toast.error(err.message);
     }
   });
   const methods = useZodForm({
-    schema: UserSchema.partial().omit({ email: true, name: true })
+    schema: UserSchema.partial()
   });
   useEffect(() => {
     if (!selectedUser) return;
     methods.reset({
-      permission: selectedUser.permission,
-      notifications: selectedUser.notifications
+      permission: selectedUser.account.permission,
+      notifications: selectedUser.account.notifications
     });
   }, [selectedUser]);
   const { clearDialog } = useDialogStore();
@@ -41,7 +40,7 @@ function EditUserForm() {
     <form
       onSubmit={methods.handleSubmit((data) => {
         userUpdateMutation.mutate({
-          id: selectedUser.id,
+          clerkId: selectedUser.account.clerkId,
           data
         });
       }, console.error)}

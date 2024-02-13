@@ -12,17 +12,14 @@ function defineNextConfig(config) {
 export default defineNextConfig({
   reactStrictMode: true,
   swcMinify: true,
-  // Next.js i18n docs: https://nextjs.org/docs/advanced-features/i18n-routing
-  i18n: {
-    locales: ['en'],
-    defaultLocale: 'en'
-  },
   images: {
-    domains: [
-      'drive.google.com',
-      'www.google.com',
-      'www.cs.cmu.edu',
-      'lh3.googleusercontent.com'
+    remotePatterns: [
+      {
+        protocol: 'https',
+        hostname: '**',
+        port: '',
+        pathname: '**'
+      }
     ]
   }
 });

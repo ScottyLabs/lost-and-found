@@ -32,32 +32,40 @@ export const publicProcedure = t.procedure;
  * Reusable middleware to ensure
  * users are logged in
  */
-const isAuthed = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || !ctx.session.user) {
+export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
+  if (!ctx.session?.userId) {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
+
+  const account = await ctx.prisma.account.findUniqueOrThrow({
+    where: { clerkId: ctx.session.userId }
+  });
+
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user }
+      session: ctx.session,
+      account
     }
   });
 });
 
-/**
- * Protected procedure
- * */
-export const protectedProcedure = t.procedure.use(isAuthed);
+const isModerator = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session?.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
 
-const isModerator = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || ctx.session.user.permission === Permission.USER) {
+  const account = await ctx.prisma.account.findUniqueOrThrow({
+    where: { clerkId: ctx.session.userId }
+  });
+
+  if (account.permission === Permission.USER) {
     throw new TRPCError({ code: 'FORBIDDEN' });
   }
 
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user }
+      session: ctx.session,
+      account
     }
   });
 });
@@ -71,15 +79,23 @@ export const moderatorProcedure = protectedProcedure.use(isModerator);
  * Reusable middleware to ensure
  * user is an admin
  */
-const isAdmin = t.middleware(({ ctx, next }) => {
-  if (!ctx.session || ctx.session.user.permission !== Permission.ADMIN) {
+const isAdmin = t.middleware(async ({ ctx, next }) => {
+  if (!ctx.session?.userId) {
+    throw new TRPCError({ code: 'UNAUTHORIZED' });
+  }
+
+  const account = await ctx.prisma.account.findUniqueOrThrow({
+    where: { clerkId: ctx.session.userId }
+  });
+
+  if (account.permission !== Permission.ADMIN) {
     throw new TRPCError({ code: 'FORBIDDEN' });
   }
 
   return next({
     ctx: {
-      // infers the `session` as non-nullable
-      session: { ...ctx.session, user: ctx.session.user }
+      session: ctx.session,
+      account
     }
   });
 });

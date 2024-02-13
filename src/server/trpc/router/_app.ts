@@ -1,3 +1,4 @@
+import { inferRouterInputs, inferRouterOutputs } from '@trpc/server';
 import { router } from '../trpc';
 import account from './account';
 import audit from './audit';
@@ -14,3 +15,6 @@ export const appRouter = router({
 });
 
 export type AppRouter = typeof appRouter;
+
+export type RouterOutputs = inferRouterOutputs<AppRouter>;
+export type RouterInputs = inferRouterInputs<AppRouter>;

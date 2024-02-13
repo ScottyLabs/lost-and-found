@@ -114,7 +114,7 @@ model Item {
 model AuditLog {
   id          String          @id @default(cuid())
   interaction ItemInteraction
-  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
+  actor       Account            @relation(fields: [actorId], references: [clerkId], onDelete: Cascade)
   actorId     String
   item        Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId      String
@@ -124,7 +124,7 @@ model AuditLog {
 model Subscription {
   id        String   @id @default(cuid())
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      Account     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
   category  Category
   createdAt DateTime @default(now())
 
@@ -132,43 +132,13 @@ model Subscription {
 }
 
 model Account {
-  id                String  @id @default(cuid())
-  userId            String
-  type              String
-  provider          String
-  providerAccountId String
-  refresh_token     String?
-  access_token      String?
-  expires_at        Int?
-  token_type        String?
-  scope             String?
-  id_token          String?
-  session_state     String?
-  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@unique([provider, providerAccountId])
-}
-
-model Session {
-  id           String   @id @default(cuid())
-  sessionToken String   @unique
-  userId       String
-  expires      DateTime
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-model User {
-  id            String         @id @default(cuid())
-  name          String?
-  email         String?        @unique
-  emailVerified DateTime?
-  image         String?
+  clerkId       String         @id @unique
   notifications Boolean        @default(true)
   permission    Permission     @default(USER)
-  accounts      Account[]
-  sessions      Session[]
   auditLogs     AuditLog[]
   subscriptions Subscription[]
+
+  @@index([clerkId])
 }
 
 model VerificationToken {

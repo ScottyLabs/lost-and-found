@@ -1,6 +1,6 @@
+import { clerkClient } from '@clerk/nextjs/server';
 import {
   UserCreateSchema,
-  UserListSchema,
   UserSearchSchema,
   UserUpdateSchema
 } from 'lib/schemas';
@@ -13,82 +13,58 @@ import {
 } from '../trpc';
 
 export default router({
-  count: publicProcedure.query(({ ctx }) => ctx.prisma.user.count()),
-  list: moderatorProcedure.input(UserListSchema).query(({ ctx, input }) =>
-    ctx.prisma.user.findMany({
-      take: input.limit,
-      skip: (input.page - 1) * input.limit,
-      orderBy: { email: 'asc' },
-      where: {
-        name: {
-          contains: input.user?.name,
-          mode: 'insensitive'
-        },
-        email: {
-          contains: input.user?.email,
-          mode: 'insensitive'
-        }
-      }
-    })
-  ),
-  infiniteItems: moderatorProcedure
-    .input(
-      z.object({
-        limit: z.number().min(1).max(100).nullish(),
-        cursor: z.string().nullish()
-      })
-    )
-    .query(async ({ ctx, input }) => {
-      const limit = input.limit ?? 10;
-      const { cursor } = input;
-      const users = await ctx.prisma.user.findMany({
-        take: limit + 1,
-        cursor: cursor ? { id: cursor } : undefined,
-        orderBy: {
-          email: 'asc'
-        }
+  me: publicProcedure.query(({ ctx }) => {
+    if (ctx.session.userId) {
+      return ctx.prisma.account.upsert({
+        where: { clerkId: ctx.session.userId },
+        update: {},
+        create: { clerkId: ctx.session.userId }
       });
+    }
 
-      let nextCursor: typeof cursor | undefined;
-      if (users.length > limit) {
-        const nextUser = users.pop();
-        nextCursor = nextUser!.id;
-      }
-
-      return {
-        users,
-        nextCursor
-      };
-    }),
-  search: moderatorProcedure.input(UserSearchSchema).query(({ ctx, input }) => {
-    return ctx.prisma.user.findMany({
-      where: {
-        name: { contains: input.query },
-        permission: input.permissions.length
-          ? { in: input.permissions }
-          : undefined,
-        notifications: input.notifications || undefined
-      }
-    });
+    return null;
   }),
+  count: publicProcedure.query(({ ctx }) => ctx.prisma.account.count()),
+  search: moderatorProcedure
+    .input(UserSearchSchema)
+    .query(async ({ ctx, input }) => {
+      const accounts = await ctx.prisma.account.findMany();
+      const data = await Promise.all(
+        accounts.map(async (account) => {
+          const user = await clerkClient.users.getUser(account.clerkId);
+          return { account, user };
+        })
+      );
+      return data.filter(({ user, account }) => {
+        if (user.username) {
+          return user.username
+            .toLowerCase()
+            .includes(input.query.toLowerCase());
+        }
+        return true;
+      });
+    }),
   byId: moderatorProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
-      ctx.prisma.user.findFirst({ where: { id: input } })
+      ctx.prisma.account.findFirst({ where: { clerkId: input } })
     ),
   update: adminProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.user.update({ where: { id: input.id }, data: input.data })
+      ctx.prisma.account.update({
+        where: { clerkId: input.clerkId },
+        data: input.data
+      })
     ),
   create: adminProcedure
     .input(UserCreateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.user.create({ data: input })
+      ctx.prisma.account.create({ data: input })
     ),
   delete: adminProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.user.delete({ where: { id: input } })
+      ctx.prisma.account.delete({ where: { clerkId: input } })
     )
 });

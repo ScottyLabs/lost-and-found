@@ -1,6 +1,6 @@
+import { SignInButton, SignOutButton, useSignIn, useUser } from '@clerk/nextjs';
 import { Menu, Transition } from '@headlessui/react';
 import { Permission } from '@prisma/client';
-import { signIn, signOut, useSession } from 'next-auth/react';
 import Link from 'next/link';
 import { Fragment } from 'react';
 import {
@@ -14,12 +14,15 @@ import {
   FaUserGraduate
 } from 'react-icons/fa';
 import useDialogStore from 'stores/DialogStore';
+import { trpc } from 'utils/trpc';
 
 function AuthWidget() {
-  const { data: session, status } = useSession();
+  const { isLoaded: isUserLoaded, isSignedIn, user } = useUser();
+  const { isLoaded: isSignInLoaded } = useSignIn();
   const { subscribeDialog, manageSubscriptionsDialog } = useDialogStore();
+  const { data, isSuccess } = trpc.user.me.useQuery();
 
-  if (status === 'loading') {
+  if (!isUserLoaded || !isSignInLoaded || !isSuccess) {
     return (
       <div className="btn-disabled btn-ghost btn-circle btn">
         <FaCircleNotch className="animate-spin text-white md:text-black" />;
@@ -27,17 +30,22 @@ function AuthWidget() {
     );
   }
 
-  if (!session) {
+  if (!isSignedIn) {
     return (
-      <button
-        type="button"
-        className="btn-ghost btn-sm btn gap-2 md:btn-primary"
-        onClick={() => signIn('google')}
-      >
-        <FaSignInAlt />
-        <span>Sign in</span>
-      </button>
+      <SignInButton>
+        <button
+          type="button"
+          className="btn-ghost btn-sm btn gap-2 md:btn-primary"
+        >
+          <FaSignInAlt />
+          <span>Sign in</span>
+        </button>
+      </SignInButton>
     );
+  }
+
+  if (!data) {
+    return <FaCircleNotch className="animate-spin text-white md:text-black" />;
   }
 
   return (
@@ -58,7 +66,7 @@ function AuthWidget() {
           unmount={false}
           className="absolute right-0 z-50 w-40 origin-top-right rounded-md bg-base-100 p-4 text-base-content shadow-2xl ring-1 ring-black ring-opacity-5"
         >
-          {session.user.permission === Permission.ADMIN && (
+          {data.permission === Permission.ADMIN && (
             <>
               <Menu.Item>
                 <Link
@@ -82,7 +90,7 @@ function AuthWidget() {
             </>
           )}
 
-          {session.user.permission === Permission.MODERATOR && (
+          {data.permission === Permission.MODERATOR && (
             <>
               <Menu.Item>
                 <Link
@@ -119,14 +127,15 @@ function AuthWidget() {
           </Menu.Item>
           <div className="divider my-1" />
           <Menu.Item>
-            <button
-              type="button"
-              className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
-              onClick={() => signOut()}
-            >
-              <FaSignOutAlt className="mr-2 h-4 w-4" aria-hidden="true" />
-              <span>Sign out</span>
-            </button>
+            <SignOutButton>
+              <button
+                type="button"
+                className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-accent ui-active:text-accent-content"
+              >
+                <FaSignOutAlt className="mr-2 h-4 w-4" aria-hidden="true" />
+                <span>Sign out</span>
+              </button>
+            </SignOutButton>
           </Menu.Item>
         </Menu.Items>
       </Transition>

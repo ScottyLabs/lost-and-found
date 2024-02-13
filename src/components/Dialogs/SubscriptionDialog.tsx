@@ -1,6 +1,6 @@
+import { useUser } from '@clerk/nextjs';
 import { Category } from '@prisma/client';
 import useZodForm from 'hooks/useZodForm';
-import { useSession } from 'next-auth/react';
 import Image from 'next/image';
 import { FaTimes } from 'react-icons/fa';
 import { toast } from 'react-toastify';
@@ -15,9 +15,8 @@ function SubscriptionsForm() {
   const context = trpc.useContext();
 
   const { data: subscriptions, status } = trpc.subscription.list.useQuery();
-  const { data: session, status: sessionStatus } = useSession({
-    required: true
-  });
+
+  const { isLoaded, isSignedIn, user } = useUser();
 
   const subscriptionCreate = trpc.subscription.create.useMutation({
     onSuccess: () => {
@@ -48,9 +47,8 @@ function SubscriptionsForm() {
       })
   });
 
-  if (status === 'error' || sessionStatus === 'loading')
-    return <div>Failed to load</div>;
-  if (status === 'loading') return <div>Loading...</div>;
+  if (status === 'error' || !isSignedIn) return <div>Failed to load</div>;
+  if (status === 'loading' || !isLoaded) return <div>Loading...</div>;
 
   return (
     <form
@@ -69,7 +67,7 @@ function SubscriptionsForm() {
           type="email"
           className="input-bordered input-primary input w-full"
           disabled
-          value={session.user.email ?? ''}
+          value={user.emailAddresses[0]?.emailAddress}
         />
       </div>
       <div className="form-control gap-1">

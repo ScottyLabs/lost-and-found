@@ -26,8 +26,8 @@ const UserList: React.FC<{
 
   return (
     <div className="mt-4 flex flex-col gap-2">
-      {users.data.map((user) => (
-        <UserRow key={user.id} user={user} />
+      {users.data.map((data) => (
+        <UserRow key={data.user.id} data={data} />
       ))}
     </div>
   );
