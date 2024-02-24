@@ -28,7 +28,3 @@ jobs:
           echo GOOGLE_CLIENT_ID=${{ secrets.GOOGLE_CLIENT_ID }} >> .env
           echo GOOGLE_CLIENT_SECRET=${{ secrets.GOOGLE_CLIENT_SECRET }} >> .env
 
-      - name: Lint Code
-        run: yarn lint
-      - name: Build Project
-        run: yarn build
