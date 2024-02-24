@@ -6,5 +6,5 @@ export default router({
     ctx.prisma.account.delete({
       where: { clerkId: input }
     })
-  ),
+  )
 });

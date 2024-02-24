@@ -28,5 +28,6 @@ export const clientSchema = z.object({
  */
 export const clientEnv = {
   // NEXT_PUBLIC_BAR: process.env.NEXT_PUBLIC_BAR,
-  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
+  NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY:
+    process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
 };
