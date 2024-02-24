@@ -81,8 +81,7 @@ enum Status {
 }
 
 enum Value {
-  LOW
-  MEDIUM
+  GENERAL
   HIGH
 }
 
