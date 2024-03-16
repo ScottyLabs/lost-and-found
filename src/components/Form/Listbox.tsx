@@ -63,6 +63,7 @@ export default function MyListbox<T, K extends FieldValues>({
                 ? field.value?.length > 0
                   ? field.value
                       .map((value: T) => displayValue(value))
+                      .sort()
                       .join(', ')
                   : placeholder
                 : field.value

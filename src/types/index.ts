@@ -39,15 +39,15 @@ export const Colors: Record<Color, string> = {
   OTHER: 'Other'
 };
 export const Categories: Record<Category, string> = {
-  CLOTHING: 'Clothing',
+  BEVERAGE_CONTAINER: 'Beverage Container',
   CHARGER: 'Charger',
-  UMBRELLA: 'Umbrellas',
+  CLOTHING: 'Clothing',
+  EARBUDS_HEADPHONES_CASES: 'Earbuds/Headphones/Case',
   GLASSES_CASES: 'Glasses/Sunglasses/Cases',
   JEWELRY_WATCHES: 'Jewelry/Watches',
-  EARBUDS_HEADPHONES_CASES: 'Earbuds/Headphones/Case',
-  PHONES_LAPTOPS_TABLETS: 'Phones/Laptops/Tablets',
-  BEVERAGE_CONTAINER: 'Beverage Container',
-  STATIONARY: 'Stationary',
   KEYS: 'Keys',
+  PHONES_LAPTOPS_TABLETS: 'Phones/Laptops/Tablets',
+  STATIONARY: 'Stationary',
+  UMBRELLA: 'Umbrellas',
   OTHER: 'Other'
 };
