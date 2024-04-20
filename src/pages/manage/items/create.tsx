@@ -8,6 +8,7 @@ import {
   Color,
   ItemInteraction,
   Location,
+  RetrieveLocation,
   Value
 } from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
@@ -17,7 +18,7 @@ import { ItemCreateSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
-import { Categories, Colors, Locations } from 'types';
+import { Categories, Colors, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
 
 const CreateItem: NextPageWithLayout = () => {
@@ -219,8 +220,8 @@ const CreateItem: NextPageWithLayout = () => {
             </span>
           </label>
           <MyListbox
-            values={Object.values(Location)}
-            displayValue={(prop) => Locations[prop]}
+            values={Object.values(RetrieveLocation)}
+            displayValue={(prop) => RetrieveLocations[prop]}
             keyValue={(prop) => prop}
             name="retrieveLocation"
             control={methods.control}

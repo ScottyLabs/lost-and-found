@@ -1,4 +1,4 @@
-import { Category, Color, Location } from '@prisma/client';
+import { Category, Color, Location, RetrieveLocation } from '@prisma/client';
 
 export const Locations: Record<Location, string> = {
   AN: 'Ansys Hall',
@@ -23,6 +23,12 @@ export const Locations: Record<Location, string> = {
   TEP: 'Tepper Quad',
   OTHER: 'Other'
 };
+
+export const RetrieveLocations: Record<RetrieveLocation, string> = {
+  CUC: 'Cohon University Center',
+  GHC: 'Gates and Hillman Centers'
+};
+
 export const Colors: Record<Color, string> = {
   BLACK: 'Black',
   BLUE: 'Blue',
