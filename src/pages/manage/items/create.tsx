@@ -8,7 +8,6 @@ import {
   Color,
   ItemInteraction,
   Location,
-  RetrieveLocation,
   Value
 } from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
@@ -209,8 +208,8 @@ const CreateItem: NextPageWithLayout = () => {
             </span>
           </label>
           <MyListbox
-            values={Object.values(RetrieveLocation)}
-            displayValue={(prop) => RetrieveLocation[prop]}
+            values={Object.values(Location)}
+            displayValue={(prop) => Location[prop]}
             keyValue={(prop) => prop}
             name="retrieveLocation"
             control={methods.control}
