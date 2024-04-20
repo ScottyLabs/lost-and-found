@@ -209,7 +209,7 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Location)}
-            displayValue={(prop) => Location[prop]}
+            displayValue={(prop) => Locations[prop]}
             keyValue={(prop) => prop}
             name="retrieveLocation"
             control={methods.control}
