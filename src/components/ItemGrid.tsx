@@ -41,7 +41,7 @@ export default function ItemGrid({ query }: Props) {
       (!categories.length ||
         item.categories.some((category) => categories.includes(category))) &&
       (!colors.length || colors.includes(item.color)) &&
-      (!locations.length || locations.includes(item.retrieveLocation)) &&
+      (!locations.length || locations.includes(item.foundLocation)) &&
       (!date || item.foundDate.getTime() > date.getTime())
   );
 
