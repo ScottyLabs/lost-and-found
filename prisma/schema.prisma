@@ -34,6 +34,11 @@ enum Location {
   OTHER
 }
 
+enum RetrieveLocation {
+  CUC
+  GHC
+}
+
 enum Category {
   CLOTHING
   CHARGER
@@ -102,7 +107,7 @@ model Item {
   color            Color
   value            Value
   identifiable     Boolean
-  retrieveLocation Location
+  retrieveLocation RetrieveLocation
   itemLocation     String
   longDescription  String?
   auditLogs        AuditLog[]
