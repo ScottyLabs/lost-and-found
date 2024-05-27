@@ -4,16 +4,9 @@
 /* eslint-disable jsx-a11y/no-noninteractive-tabindex */
 
 import { Menu, Transition } from '@headlessui/react';
-import clsx from 'clsx';
 import Image from 'next/image';
 import { Fragment } from 'react';
-import {
-  FaBell,
-  FaBellSlash,
-  FaEllipsisV,
-  FaTrash,
-  FaUserLock
-} from 'react-icons/fa';
+import { FaBell, FaBellSlash, FaEllipsisV, FaUserLock } from 'react-icons/fa';
 import { RouterOutputs } from 'server/trpc/router/_app';
 import useDialogStore from 'stores/DialogStore';
 import useSelectedUserStore from 'stores/SelectedUserStore';
@@ -23,7 +16,7 @@ export default function UserRow({
 }: {
   data: RouterOutputs['user']['search'][number];
 }) {
-  const { confirmUserDeletionDialog, editUserDialog } = useDialogStore();
+  const { editUserDialog } = useDialogStore();
   const { setSelectedUser } = useSelectedUserStore();
 
   return (
@@ -107,21 +100,6 @@ export default function UserRow({
                 </button>
               </Menu.Item>
               <div className="divider my-1" />
-              <Menu.Item>
-                <button
-                  className="flex w-full items-center rounded-md px-2 py-2 text-sm ui-active:bg-error ui-active:text-accent-content"
-                  onClick={() => {
-                    setSelectedUser(data);
-                    confirmUserDeletionDialog();
-                  }}
-                >
-                  <FaTrash
-                    className={clsx('mr-2 h-4 w-4')}
-                    aria-hidden="true"
-                  />
-                  <span>Delete User</span>
-                </button>
-              </Menu.Item>
             </Menu.Items>
           </Transition>
         </Menu>

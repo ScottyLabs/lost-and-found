@@ -4,6 +4,7 @@ import {
   ItemInteraction,
   Location,
   Permission,
+  RetrieveLocation,
   Status,
   Value
 } from '@prisma/client';
@@ -23,7 +24,7 @@ export const ItemSchema = z.object({
   }),
   identifiable: z.boolean(),
   itemLocation: z.string().min(3),
-  retrieveLocation: z.nativeEnum(Location),
+  retrieveLocation: z.nativeEnum(RetrieveLocation),
   longDescription: z.string().nullish(),
   status: z.nativeEnum(Status).default(Status.PENDING)
 });

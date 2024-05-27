@@ -21,7 +21,7 @@ export function ItemHistory({ item }: ItemHistoryProps) {
         </div>
         <div className="collapse-content whitespace-normal  text-xs">
           <p>
-            {auditLogQuery.data.map((audit) => audit.actor.name).join('\n')}
+            {auditLogQuery.data.map((audit) => audit.actor.clerkId).join('\n')}
           </p>
         </div>
       </button>

@@ -1,5 +1,4 @@
 import ConfirmItemDeletionDialog from 'components/Dialogs/ConfirmItemDeletionDialog';
-import ConfirmUserDeletionDialog from 'components/Dialogs/ConfirmUserDeletionDIalog';
 import MassArchiveDialog from 'components/Dialogs/MassArchiveDialog';
 import EditUserDialog from 'components/Dialogs/UserEditDialog';
 import Link from 'next/link';
@@ -12,7 +11,6 @@ export default function ManageLayout({ children }: PropsWithChildren) {
     <>
       <ConfirmItemDeletionDialog />
       <MassArchiveDialog />
-      <ConfirmUserDeletionDialog />
       <EditUserDialog />
 
       <div>

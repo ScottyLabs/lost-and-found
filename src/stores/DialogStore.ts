@@ -13,7 +13,6 @@ type DialogStore = {
   manageSubscriptionsDialog: () => void;
   confirmItemDeletionDialog: () => void;
   massArchiveDialog: () => void;
-  confirmUserDeletionDialog: () => void;
   editUserDialog: () => void;
   clearDialog: () => void;
 };
@@ -26,8 +25,6 @@ export default create<DialogStore>((set) => ({
   confirmItemDeletionDialog: () =>
     set(() => ({ dialog: 'confirmItemDeletion' })),
   massArchiveDialog: () => set(() => ({ dialog: 'massArchive' })),
-  confirmUserDeletionDialog: () =>
-    set(() => ({ dialog: 'confirmUserDeletion' })),
   editUserDialog: () => set(() => ({ dialog: 'editUser' })),
   clearDialog: () => set(() => ({ dialog: null }))
 }));
