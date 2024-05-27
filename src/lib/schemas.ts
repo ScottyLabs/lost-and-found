@@ -17,7 +17,10 @@ export const ItemSchema = z.object({
   shortDescription: z.string().min(3),
   categories: z.array(z.nativeEnum(Category)),
   color: z.nativeEnum(Color),
-  value: z.nativeEnum(Value),
+  value: z.nativeEnum(Value, {
+    required_error: 'Required',
+    invalid_type_error: 'Required'
+  }),
   identifiable: z.boolean(),
   itemLocation: z.string().min(3),
   retrieveLocation: z.nativeEnum(Location),
