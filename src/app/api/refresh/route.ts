@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export default function GET(req: NextRequest) {
-  return NextResponse.next({
+export async function GET(req: NextRequest) {
+  return NextResponse.json({
     status: 200,
     statusText: 'Hello, World!'
   });
