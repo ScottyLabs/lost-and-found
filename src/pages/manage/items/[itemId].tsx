@@ -4,6 +4,7 @@ import {
   Item,
   ItemInteraction,
   Location,
+  RetrieveLocation,
   Value
 } from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
@@ -13,7 +14,7 @@ import { ItemSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
-import { Categories, Colors, Locations } from 'types';
+import { Categories, Colors, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
 
 type EditItemFormProps = {
@@ -30,6 +31,7 @@ function EditItemForm({ item }: EditItemFormProps) {
         .substring(0, 16) as unknown as Date
     }
   });
+  const selectedColor = methods.watch('color');
   const auditCreateMutation = trpc.audit.create.useMutation();
   const context = trpc.useContext();
   const itemMutation = trpc.item.update.useMutation({
@@ -159,6 +161,22 @@ function EditItemForm({ item }: EditItemFormProps) {
           {methods.formState.errors.color?.message}
         </label>
       </div>
+      {selectedColor === 'OTHER' ? (
+        <div>
+          <label className="label">
+            <span className="label-text">Color Details</span>
+          </label>
+          <input
+            type="text"
+            placeholder="Type here"
+            className="input-bordered input input-sm w-full"
+            {...methods.register('otherColorDescription')}
+          />
+          <label className="text-xs text-error">
+            {methods.formState.errors.otherColorDescription?.message}
+          </label>
+        </div>
+      ) : null}
       <div>
         <label className="label">
           <span className="label-text">Value</span>
@@ -199,8 +217,8 @@ function EditItemForm({ item }: EditItemFormProps) {
           <span className="label-text">Retrieve From</span>
         </label>
         <MyListbox
-          values={Object.values(Location)}
-          displayValue={(prop) => Locations[prop]}
+          values={Object.values(RetrieveLocation)}
+          displayValue={(prop) => RetrieveLocations[prop]}
           keyValue={(prop) => prop}
           name="retrieveLocation"
           control={methods.control}

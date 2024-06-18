@@ -18,7 +18,7 @@ import { ItemCreateSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
-import { Categories, Colors, Locations, RetrieveLocations } from 'types';
+import { Categories, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
 
 const CreateItem: NextPageWithLayout = () => {
@@ -39,6 +39,9 @@ const CreateItem: NextPageWithLayout = () => {
   });
 
   const methods = useZodForm({ schema: ItemCreateSchema });
+
+  // const [otherColor, setOtherColor] = useState(false);
+  const selectedColor = methods.watch('color');
 
   return (
     <div className="mx-auto max-w-lg">
@@ -166,7 +169,7 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
           <MyListbox
             values={Object.values(Color)}
-            displayValue={(prop) => Colors[prop]}
+            displayValue={(prop) => Color[prop]}
             keyValue={(prop) => prop}
             name="color"
             control={methods.control}
@@ -176,6 +179,22 @@ const CreateItem: NextPageWithLayout = () => {
             {methods.formState.errors.color?.message}
           </label>
         </div>
+        {selectedColor === 'OTHER' ? (
+          <div>
+            <label className="label">
+              <span className="label-text">Color Details</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('otherColorDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.otherColorDescription?.message}
+            </label>
+          </div>
+        ) : null}
         <div>
           <label className="label">
             <span className="label-text">
