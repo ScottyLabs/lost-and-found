@@ -97,22 +97,25 @@ enum Permission {
 }
 
 model Item {
-  id               String     @id @default(cuid())
-  name             String
-  foundDate        DateTime
-  foundLocation    Location
-  foundDescription String
-  shortDescription String
-  categories       Category[]
-  color            Color
-  value            Value
-  identifiable     Boolean
-  retrieveLocation RetrieveLocation
-  itemLocation     String
-  longDescription  String?
-  auditLogs        AuditLog[]
-  status           Status
-  createdAt        DateTime   @default(now())
+  id                       String     @id @default(cuid())
+  name                     String
+  foundDate                DateTime
+  foundLocation            Location
+  foundDescription         String
+  shortDescription         String
+  categories               Category[]
+  color                    Color
+  otherColorDescription    String?
+  value                    Value
+  identifiable             Boolean
+  identification           String?
+  ownerNotified            String?
+  retrieveLocation         RetrieveLocation
+  itemLocation             String
+  longDescription          String?
+  auditLogs                AuditLog[]
+  status                   Status
+  createdAt                DateTime   @default(now())
 }
 
 model AuditLog {
