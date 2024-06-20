@@ -40,6 +40,9 @@ const CreateItem: NextPageWithLayout = () => {
 
   const methods = useZodForm({ schema: ItemCreateSchema });
 
+  const idDetails = methods.watch('identifiable');
+  const selectedColor = methods.watch('color');
+
   return (
     <div className="mx-auto max-w-lg">
       <h3 className="text-2xl font-bold">Add Item</h3>
@@ -176,6 +179,22 @@ const CreateItem: NextPageWithLayout = () => {
             {methods.formState.errors.color?.message}
           </label>
         </div>
+        {selectedColor === 'OTHER' ? (
+          <div>
+            <label className="label">
+              <span className="label-text">Color Details</span>
+            </label>
+            <input
+              type="text"
+              placeholder="Type here"
+              className="input-bordered input input-sm w-full"
+              {...methods.register('otherColorDescription')}
+            />
+            <label className="text-xs text-error">
+              {methods.formState.errors.otherColorDescription?.message}
+            </label>
+          </div>
+        ) : null}
         <div>
           <label className="label">
             <span className="label-text">
@@ -213,6 +232,38 @@ const CreateItem: NextPageWithLayout = () => {
             {methods.formState.errors.identifiable?.message}
           </label>
         </div>
+        {idDetails ? (
+          <div>
+            <div>
+              <label className="label">
+                <span className="label-text">Identification</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Andrew ID or driver's license number"
+                className="input-bordered input input-sm w-full"
+                {...methods.register('identification')}
+              />
+              <label className="text-xs text-error">
+                {methods.formState.errors.identification?.message}
+              </label>
+            </div>
+            <div>
+              <label className="label">
+                <span className="label-text">Owner Notified?</span>
+              </label>
+              <input
+                type="text"
+                placeholder="Ex. Yes-emailed, No, N/A, etc."
+                className="input-bordered input input-sm w-full"
+                {...methods.register('ownerNotified')}
+              />
+              <label className="text-xs text-error">
+                {methods.formState.errors.ownerNotified?.message}
+              </label>
+            </div>
+          </div>
+        ) : null}
         <div>
           <label className="label">
             <span className="label-text">
