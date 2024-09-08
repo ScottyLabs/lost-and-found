@@ -15,56 +15,58 @@ import {
 export default router({
   me: publicProcedure.query(({ ctx }) => {
     if (ctx.session.userId) {
-      return ctx.prisma.account.upsert({
-        where: { clerkId: ctx.session.userId },
+      return ctx.prisma.user.upsert({
+        where: { externalId: ctx.session.userId },
         update: {},
-        create: { clerkId: ctx.session.userId }
+        create: { externalId: ctx.session.userId }
       });
     }
 
     return null;
   }),
-  count: publicProcedure.query(({ ctx }) => ctx.prisma.account.count()),
+  count: publicProcedure.query(({ ctx }) => ctx.prisma.user.count()),
   search: moderatorProcedure
     .input(UserSearchSchema)
     .query(async ({ ctx, input }) => {
-      const accounts = await ctx.prisma.account.findMany();
+      const users = await ctx.prisma.user.findMany();
       const data = await Promise.all(
-        accounts.map(async (account) => {
-          const user = await clerkClient.users.getUser(account.clerkId);
-          return { account, user };
+        users.map(async (user) => {
+          const clerkUser = await clerkClient.users.getUser(user.externalId);
+          return { clerkUser, user };
         })
       );
-      return data.filter(({ user, account }) => {
-        if (user.username) {
-          return user.username
+
+      return data.filter(({ clerkUser, user }) => {
+        if (clerkUser.username) {
+          return clerkUser.username
             .toLowerCase()
             .includes(input.query.toLowerCase());
         }
+
         return true;
       });
     }),
   byId: moderatorProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
-      ctx.prisma.account.findFirst({ where: { clerkId: input } })
+      ctx.prisma.user.findFirst({ where: { externalId: input } })
     ),
   update: adminProcedure
     .input(UserUpdateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.account.update({
-        where: { clerkId: input.clerkId },
+      ctx.prisma.user.update({
+        where: { externalId: input.externalId },
         data: input.data
       })
     ),
   create: adminProcedure
     .input(UserCreateSchema)
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.account.create({ data: input })
+      ctx.prisma.user.create({ data: input })
     ),
   delete: adminProcedure
     .input(z.string())
     .mutation(async ({ ctx, input }) =>
-      ctx.prisma.account.delete({ where: { clerkId: input } })
+      ctx.prisma.user.delete({ where: { externalId: input } })
     )
 });
