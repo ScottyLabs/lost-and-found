@@ -14,12 +14,12 @@ export const createTRPCContext = async (opts: {
 
   console.log('>>> tRPC Request from', source, 'by', session.userId);
 
-  let account = null;
+  let user = null;
 
   if (session.userId) {
-    account = await prisma.account.findUnique({
+    user = await prisma.user.findUnique({
       where: {
-        clerkId: session.userId
+        externalId: session.userId
       }
     });
   }
@@ -27,7 +27,7 @@ export const createTRPCContext = async (opts: {
   return {
     session,
     prisma,
-    account
+    user
   };
 };
 

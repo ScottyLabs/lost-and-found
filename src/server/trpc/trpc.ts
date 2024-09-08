@@ -37,14 +37,14 @@ export const protectedProcedure = t.procedure.use(async ({ ctx, next }) => {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 
-  const account = await ctx.prisma.account.findUniqueOrThrow({
-    where: { clerkId: ctx.session.userId }
+  const user = await ctx.prisma.user.findUniqueOrThrow({
+    where: { externalId: ctx.session.userId }
   });
 
   return next({
     ctx: {
       session: ctx.session,
-      account
+      user
     }
   });
 });
@@ -54,18 +54,18 @@ const isModerator = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 
-  const account = await ctx.prisma.account.findUniqueOrThrow({
-    where: { clerkId: ctx.session.userId }
+  const user = await ctx.prisma.user.findUniqueOrThrow({
+    where: { externalId: ctx.session.userId }
   });
 
-  if (account.permission === Permission.USER) {
+  if (user.permission === Permission.USER) {
     throw new TRPCError({ code: 'FORBIDDEN' });
   }
 
   return next({
     ctx: {
       session: ctx.session,
-      account
+      user
     }
   });
 });
@@ -84,18 +84,18 @@ const isAdmin = t.middleware(async ({ ctx, next }) => {
     throw new TRPCError({ code: 'UNAUTHORIZED' });
   }
 
-  const account = await ctx.prisma.account.findUniqueOrThrow({
-    where: { clerkId: ctx.session.userId }
+  const user = await ctx.prisma.user.findUniqueOrThrow({
+    where: { externalId: ctx.session.userId }
   });
 
-  if (account.permission !== Permission.ADMIN) {
+  if (user.permission !== Permission.ADMIN) {
     throw new TRPCError({ code: 'FORBIDDEN' });
   }
 
   return next({
     ctx: {
       session: ctx.session,
-      account
+      user
     }
   });
 });

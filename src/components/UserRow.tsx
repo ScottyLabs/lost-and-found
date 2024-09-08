@@ -24,7 +24,7 @@ export default function UserRow({
       <div className="avatar">
         <div className="w-8 rounded-full sm:w-12">
           <Image
-            src={data.user.imageUrl ?? '/pfp.png'}
+            src={data.clerkUser.imageUrl ?? '/pfp.png'}
             width={48}
             height={48}
             alt="img"
@@ -34,20 +34,18 @@ export default function UserRow({
       <div className="flex-1">
         <div className="w-24">
           <div className="overflow-hidden text-ellipsis font-bold leading-5 sm:overflow-visible sm:text-lg">
-            {data.user.firstName} {data.user.lastName}
+            {data.clerkUser.firstName} {data.clerkUser.lastName}
           </div>
           <div className="overflow-hidden text-ellipsis text-sm text-base-content/50 sm:overflow-visible">
-            {data.user.emailAddresses[0]?.emailAddress ?? 'No Email'}
+            {data.clerkUser.emailAddresses[0]?.emailAddress ?? 'No Email'}
           </div>
         </div>
       </div>
-      <div className="text-xs font-bold opacity-70">
-        {data.account.permission}
-      </div>
+      <div className="text-xs font-bold opacity-70">{data.user.permission}</div>
       <div
         className="tooltip"
         data-tip={
-          data.account.notifications
+          data.user.notifications
             ? 'Notifications Enabled'
             : 'Notifications Disabled'
         }
@@ -57,7 +55,7 @@ export default function UserRow({
             <input
               type="checkbox"
               className="cursor-none"
-              checked={data.account.notifications}
+              checked={data.user.notifications}
               readOnly
             />
             <div className="swap-on">
