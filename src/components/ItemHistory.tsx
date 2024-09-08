@@ -20,9 +20,7 @@ export function ItemHistory({ item }: ItemHistoryProps) {
           Modified By
         </div>
         <div className="collapse-content whitespace-normal  text-xs">
-          <p>
-            {auditLogQuery.data.map((audit) => audit.actor.clerkId).join('\n')}
-          </p>
+          <p>{auditLogQuery.data.map((audit) => audit.actor.id).join('\n')}</p>
         </div>
       </button>
       <button type="button" tabIndex={0} className="collapse-arrow collapse">
