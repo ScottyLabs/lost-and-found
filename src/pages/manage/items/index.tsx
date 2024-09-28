@@ -14,6 +14,7 @@ import { NextPageWithLayout } from 'pages/_app';
 import { Fragment } from 'react';
 import {
   FaArchive,
+  FaBox,
   FaCheck,
   FaCircleNotch,
   FaDownload,
@@ -245,7 +246,7 @@ const Manage: NextPageWithLayout = () => {
               className="btn-ghost btn-sm btn"
               onClick={massArchiveDialog}
             >
-              <FaArchive />
+              <FaBox />
             </button>
           </div>
         </div>
