@@ -56,7 +56,8 @@ const Manage: NextPageWithLayout = () => {
       query: '',
       status: null,
       color: null,
-      value: null
+      value: null,
+      days: ''
     }
   });
   const items = trpc.item.search.useQuery(methods.getValues());
@@ -137,6 +138,22 @@ const Manage: NextPageWithLayout = () => {
                       />
                     </div>
                   </div>
+
+                  <div className="flex w-full items-center justify-between p-4">
+                    <div className="font-bold">Date</div>
+                    <div className="w-48">
+                      <input
+                        type="text"
+                        placeholder="90"
+                        className="input-bordered input input-sm w-full"
+                        {...methods.register('days')}
+                      />
+                      <label className="text-xs text-error">
+                        {methods.formState.errors.days?.message}
+                      </label>
+                    </div>
+                  </div>
+
                   <div className="flex w-full items-center justify-end gap-2 p-4">
                     <button
                       className="btn-ghost btn-sm btn"
@@ -255,7 +272,8 @@ const Manage: NextPageWithLayout = () => {
           query: methods.watch('query'),
           status: methods.watch('status'),
           color: methods.watch('color'),
-          value: methods.watch('value')
+          value: methods.watch('value'),
+          days: methods.watch('days')
         }}
       />
     </>
