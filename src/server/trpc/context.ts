@@ -16,6 +16,8 @@ export const createTRPCContext = async (opts: {
 
   let account = null;
 
+  console.log(session);
+
   if (session.userId) {
     account = await prisma.account.findUnique({
       where: {

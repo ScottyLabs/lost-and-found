@@ -116,8 +116,20 @@ export default router({
         }
       })
     ),
-  autoArchive: adminProcedure.mutation(async ({ ctx }) =>
-    ctx.prisma.item.updateMany({
+  autoArchive: adminProcedure.mutation(async ({ ctx }) => {
+    const archivedItems = ctx.prisma.item.findMany({
+      where: {
+        status: Status.APPROVED,
+        foundDate: {
+          // 30 days ago
+          lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
+        }
+      }
+    });
+
+    // await send_email(archivedItems);
+
+    return ctx.prisma.item.updateMany({
       where: {
         status: Status.APPROVED,
         foundDate: {
@@ -126,6 +138,6 @@ export default router({
         }
       },
       data: { status: Status.ARCHIVED }
-    })
-  )
+    });
+  })
 });
