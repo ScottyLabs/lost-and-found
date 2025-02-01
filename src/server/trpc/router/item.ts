@@ -7,6 +7,7 @@ import {
 } from 'lib/schemas';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
+import { archived_items } from '../../../emails/mailgun';
 import {
   adminProcedure,
   moderatorProcedure,
@@ -117,24 +118,26 @@ export default router({
       })
     ),
   autoArchive: adminProcedure.mutation(async ({ ctx }) => {
-    const archivedItems = ctx.prisma.item.findMany({
+    console.log('HELLO\n');
+    const archivedItems = await ctx.prisma.item.findMany({
       where: {
         status: Status.APPROVED,
         foundDate: {
           // 30 days ago
-          lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
+          lt: new Date(new Date().getTime() - 30000)
         }
       }
     });
 
-    // await send_email(archivedItems);
+    console.log('ITEMS\n');
+    await archived_items(archivedItems);
 
     return ctx.prisma.item.updateMany({
       where: {
         status: Status.APPROVED,
         foundDate: {
           // 30 days ago
-          lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
+          lt: new Date(new Date().getTime() - 30000)
         }
       },
       data: { status: Status.ARCHIVED }

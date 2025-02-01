@@ -1,3 +1,4 @@
+import { Item } from '@prisma/client';
 import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
 
@@ -24,4 +25,10 @@ export const send_email = async (
     })
     .then((msg) => console.log(msg)) // logs response data
     .catch((err) => console.error(err)); // logs any error
+};
+
+export const archived_items = async (archivedItems: Item[]) => {
+  const email_body = `<h1>Archvied Items Count: ${archivedItems.length}</h1>`;
+
+  await send_email(['annagu@andrew.cmu.edu'], 'TEST!', 'HELLO', email_body);
 };
