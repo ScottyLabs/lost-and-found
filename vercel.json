@@ -4,6 +4,10 @@
     {
       "path": "/api/refresh",
       "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/autoArchive",
+      "schedule": "5 * * * *"
     }
   ]
 }
