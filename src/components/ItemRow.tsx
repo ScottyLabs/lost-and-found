@@ -31,7 +31,12 @@ export default function ItemRow({ item }: ItemRowProps) {
   });
 
   return (
-    <div className={"flex items-center gap-2 rounded border p-3" + (item.status == Status.ARCHIVED ? " border-red-300":"")}>
+    <div
+      className={
+        'flex items-center gap-2 rounded border p-3' +
+        (item.status == Status.ARCHIVED ? 'border-[#c41230]' : '')
+      }
+    >
       <div>
         <input
           type="checkbox"
@@ -58,7 +63,7 @@ export default function ItemRow({ item }: ItemRowProps) {
       <div>
         <div className="input-group-xs input-group">
           <select
-            className="select-bordered select select-xs" 
+            className="select-bordered select select-xs"
             value={item.status}
             onChange={(e) =>
               itemMutation.mutateAsync({
