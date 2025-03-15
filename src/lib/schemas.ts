@@ -18,14 +18,14 @@ export const ItemSchema = z.object({
   shortDescription: z.string().min(3),
   categories: z.array(z.nativeEnum(Category)),
   color: z.nativeEnum(Color),
-  otherColorDescription: z.string().optional(),
+  otherColorDescription: z.string().nullish(),
   value: z.nativeEnum(Value, {
     required_error: 'Required',
     invalid_type_error: 'Required'
   }),
   identifiable: z.boolean(),
-  identification: z.string().optional(),
-  ownerNotified: z.string().optional(),
+  identification: z.string().nullish(),
+  ownerNotified: z.string().nullish(),
   itemLocation: z.string().min(3),
   retrieveLocation: z.nativeEnum(RetrieveLocation),
   longDescription: z.string().nullish(),
