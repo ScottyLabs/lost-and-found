@@ -28,8 +28,8 @@ function EditUserForm() {
   useEffect(() => {
     if (!selectedUser) return;
     methods.reset({
-      permission: selectedUser.account.permission,
-      notifications: selectedUser.account.notifications
+      permission: selectedUser.user.permission,
+      notifications: selectedUser.user.notifications
     });
   }, [selectedUser]);
   const { clearDialog } = useDialogStore();
@@ -40,7 +40,7 @@ function EditUserForm() {
     <form
       onSubmit={methods.handleSubmit((data) => {
         userUpdateMutation.mutate({
-          clerkId: selectedUser.account.clerkId,
+          externalId: selectedUser.user.externalId,
           data
         });
       }, console.error)}

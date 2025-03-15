@@ -121,7 +121,7 @@ model Item {
 model AuditLog {
   id          String          @id @default(cuid())
   interaction ItemInteraction
-  actor       Account            @relation(fields: [actorId], references: [clerkId], onDelete: Cascade)
+  actor       User            @relation(fields: [actorId], references: [id], onDelete: Cascade)
   actorId     String
   item        Item            @relation(fields: [itemId], references: [id], onDelete: Cascade)
   itemId      String
@@ -131,21 +131,20 @@ model AuditLog {
 model Subscription {
   id        String   @id @default(cuid())
   userId    String
-  user      Account     @relation(fields: [userId], references: [clerkId], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category  Category
   createdAt DateTime @default(now())
 
   @@unique([userId, category])
 }
 
-model Account {
-  clerkId       String         @id @unique
+model User {
+  id            String         @id @default(cuid())
+  externalId    String         @unique
   notifications Boolean        @default(true)
   permission    Permission     @default(USER)
   auditLogs     AuditLog[]
   subscriptions Subscription[]
-
-  @@index([clerkId])
 }
 
 model VerificationToken {

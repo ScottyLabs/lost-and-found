@@ -2,11 +2,10 @@
   "compilerOptions": {
     "baseUrl": "src",
     "target": "ESNext",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "paths": {
+      "~/*": ["*"]
+    },
     "allowJs": true,
     "skipLibCheck": true,
     "strict": true,
@@ -34,7 +33,5 @@
     "**/*.mjs",
     ".next/types/**/*.ts"
   ],
-  "exclude": [
-    "node_modules"
-  ]
+  "exclude": ["node_modules"]
 }
