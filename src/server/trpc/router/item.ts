@@ -39,7 +39,13 @@ export default router({
         },
         color: input.color ?? undefined,
         status: input.status ?? undefined,
-        value: input.value ?? undefined
+        value: input.value ?? undefined,
+
+        createdAt: {
+          lte: input.days
+            ? new Date(Date.now() - parseInt(input.days) * 24 * 60 * 60 * 1000)
+            : new Date(Date.now())
+        }
       }
     })
   ),
