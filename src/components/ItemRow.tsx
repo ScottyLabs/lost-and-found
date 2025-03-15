@@ -31,7 +31,12 @@ export default function ItemRow({ item }: ItemRowProps) {
   });
 
   return (
-    <div className="flex items-center gap-2 rounded border p-3">
+    <div
+      className={
+        'flex items-center gap-2 rounded border p-3' +
+        (item.status == Status.ARCHIVED ? ' border-[#c41230]' : '')
+      }
+    >
       <div>
         <input
           type="checkbox"
