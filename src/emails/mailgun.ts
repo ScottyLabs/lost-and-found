@@ -9,6 +9,12 @@ const mg = mailgun.client({
   key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere'
 });
 
+// To gracefully exit the process on SIGINT (Ctrl+C)
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Exiting gracefully...');
+  process.exit(0); // Use a numeric exit code
+});
+
 export const send_email = async (
   to: string[],
   subject: string,
