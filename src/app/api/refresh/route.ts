@@ -12,8 +12,6 @@ const mg = mailgun.client({
   username: 'api',
   key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere'
 });
-console.log('MAILGUN_API_KEY:', process.env.MAILGUN_API_KEY);
-console.log('MAILGUN_DOMAIN:', process.env.MAILGUN_DOMAIN);
 
 export async function GET(req: NextRequest) {
   try {
