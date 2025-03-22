@@ -12,7 +12,7 @@ export default router({
     .input(AuditLogCreateSchema)
     .mutation(({ ctx, input }) =>
       ctx.prisma.auditLog.create({
-        data: { actorId: ctx.session.userId, ...input }
+        data: { actorId: ctx.user.id, ...input }
       })
     )
 });
