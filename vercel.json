@@ -7,11 +7,7 @@
     },
     {
       "path": "/api/autoArchive",
-      "schedule": "5 * * * *"
-    },
-    {
-      "path": "/api/email",
-      "schedule": "0 6 * * *" 
+      "schedule": "0 0 * * *"
     }
   ]
 }
