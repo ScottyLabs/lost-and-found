@@ -1,5 +1,5 @@
 import { Status } from '@prisma/client';
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'server/db/client';
 import { archived_items } from '~/emails/mailgun';
 
@@ -11,15 +11,13 @@ process.on('SIGINT', () => {
   });
 });
 
-export async function GET() {
-  // const authHeader = request.headers.get('authorization');
-  // console.log(authHeader);
-  // console.log(`Bearer ${process.env.CRON_SECRET}`);
-  // if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
-  //   return new Response('Unauthorized', {
-  //     status: 401
-  //   });
-  // }
+export async function GET(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response('Unauthorized', {
+      status: 401
+    });
+  }
 
   const archivedItems = await prisma.item.findMany({
     where: {
