@@ -129,11 +129,12 @@ model AuditLog {
 }
 
 model Subscription {
-  id        String   @id @default(cuid())
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  category  Category
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  category      Category
+  emailAddress  String
+  createdAt     DateTime @default(now())
 
   @@unique([userId, category])
 }
