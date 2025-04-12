@@ -1,32 +1,27 @@
-import { Category, Item } from '@prisma/client';
+import { Item } from '@prisma/client';
 import {
   Body,
   Column,
   Container,
   Head,
-  Heading,
   Hr,
   Html,
   Img,
-  Preview,
   Row,
   Section,
   Tailwind,
   Text
 } from '@react-email/components';
+import { renderToString } from 'react-dom/server';
 
-export type Props = {
-  previewText?: string;
-  category?: Category;
-  items?: Item[];
-  username?: string;
+type Props = {
+  items: Item[];
 };
 
-export function Email({ previewText = '', category, username, items }: Props) {
+export function ArchiveEmail({ items }: Props) {
   return (
     <Html>
       <Head />
-      <Preview>{previewText}</Preview>
       <Tailwind>
         <Body className="my-auto mx-auto bg-white px-2 font-sans">
           <Container className="my-[40px] mx-auto max-w-[465px] rounded border border-solid border-[#eaeaea] p-[20px]">
@@ -43,23 +38,11 @@ export function Email({ previewText = '', category, username, items }: Props) {
                 </Column>
               </Row>
             </Section>
-            <Section className="mt-[32px]">
-              <Img
-                src="LostandFoundHeader.png"
-                alt="Lost and Found"
-                height={225}
-                className="my-0 mx-auto"
-              />
-            </Section>
-            <Heading className="my-[30px] mx-0 p-0 text-center text-[24px] font-normal text-black">
-              Subscription Update
-            </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              Hello {username},
+              Hello,
             </Text>
             <Text className="text-[14px] leading-[24px] text-black">
-              Daily updates for the category{' '}
-              <span className="font-semibold">{category}</span> are ready.
+              The following items have been in inventory for over 30 days.
             </Text>
 
             <Section>
@@ -95,4 +78,9 @@ export function Email({ previewText = '', category, username, items }: Props) {
       </Tailwind>
     </Html>
   );
+}
+
+export function makeEmailString(archivedItems: Item[]) {
+  const email_string = renderToString(<ArchiveEmail items={archivedItems} />);
+  return email_string;
 }

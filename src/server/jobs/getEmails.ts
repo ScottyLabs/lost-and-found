@@ -19,9 +19,9 @@ export async function sendDailyUpdateEmails() {
       where: {
         category,
         createdAt: {
-          gte: validSince,
-        },
-      },
+          gte: validSince
+        }
+      }
     });
 
     // Extract email addresses (ensure they are not null)
@@ -35,7 +35,7 @@ export async function sendDailyUpdateEmails() {
     }
 
     // Compose email content – you can adjust this to include dynamic updates if needed
-    const subject = `Daily Update: ${category} – Lost & Found Updates`;
+    const subject = `Daily Update: ${category} - Lost & Found Updates`;
     const textMessage = `Hello,
 
 Here are the latest updates for ${category}. Please check our app for more details.
@@ -60,13 +60,13 @@ Lost & Found Team`;
     const deleteResult = await prisma.subscription.deleteMany({
       where: {
         createdAt: {
-          lt: validSince,
-        },
-      },
+          lt: validSince
+        }
+      }
     });
     console.log(`Expired subscriptions removed: ${deleteResult.count}`);
   } catch (error) {
-    console.error("Error deleting expired subscriptions:", error);
+    console.error('Error deleting expired subscriptions:', error);
   }
 }
 
