@@ -1,6 +1,6 @@
 import { Category } from '@prisma/client';
+import { send_email } from '~/emails/mailgun';
 import prisma from '~/server/db/client';
-import { send_email } from '~/server/lib/mailgun';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
 
@@ -27,7 +27,7 @@ export async function sendDailyUpdateEmails() {
     // Extract email addresses (ensure they are not null)
     const emails = subscriptions
       .map((sub) => sub.emailAddress)
-      .filter((email) => Boolean(email));
+      .filter((email) => Boolean(email)) as string[];
 
     if (emails.length === 0) {
       console.log(`No valid subscriptions for category: ${category}`);

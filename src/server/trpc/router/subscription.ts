@@ -14,7 +14,11 @@ export default router({
     .input(z.object({ category: z.nativeEnum(Category) }))
     .mutation(({ ctx, input }) =>
       ctx.prisma.subscription.create({
-        data: { userId: ctx.session.userId, ...input }
+        data: {
+          userId: ctx.session.userId,
+          ...input,
+          emailAddress: ctx.session.user?.emailAddresses[0]?.emailAddress
+        }
       })
     ),
   delete: protectedProcedure

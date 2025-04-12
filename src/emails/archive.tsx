@@ -12,7 +12,6 @@ import {
   Tailwind,
   Text
 } from '@react-email/components';
-import { renderToString } from 'react-dom/server';
 
 type Props = {
   items: Item[];
@@ -78,9 +77,4 @@ export function ArchiveEmail({ items }: Props) {
       </Tailwind>
     </Html>
   );
-}
-
-export function makeEmailString(archivedItems: Item[]) {
-  const email_string = renderToString(<ArchiveEmail items={archivedItems} />);
-  return email_string;
 }
