@@ -1,6 +1,7 @@
 import { Item } from '@prisma/client';
 import FormData from 'form-data';
 import Mailgun from 'mailgun.js';
+import { makeEmailString } from './archive';
 
 const mailgun = new Mailgun(FormData);
 
@@ -34,7 +35,12 @@ export const send_email = async (
 };
 
 export const archived_items = async (archivedItems: Item[]) => {
-  const email_body = `<h1>Archvied Items Count: ${archivedItems.length}</h1>`;
+  const email_body = makeEmailString(archivedItems);
 
-  await send_email(['annagu@andrew.cmu.edu'], 'TEST!', 'HELLO', email_body);
+  await send_email(
+    ['annagu@andrew.cmu.edu'],
+    '30 day items',
+    'HELLO',
+    email_body
+  );
 };
