@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'server/db/client';
-import { sendDailyUpdateEmails } from '~/emails/getSubEmails';
+import { sendDailyUpdateEmails } from '~/emails/notifysubs';
 
 process.on('SIGINT', () => {
   console.log('Received SIGINT. Exiting gracefully...');

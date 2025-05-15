@@ -133,7 +133,6 @@ model Subscription {
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   category      Category
-  emailAddress  String?
   createdAt     DateTime @default(now())
 
   @@unique([userId, category])
