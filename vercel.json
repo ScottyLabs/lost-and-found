@@ -8,6 +8,10 @@
     {
       "path": "/api/autoArchive",
       "schedule": "0 0 * * *"
+    },
+    {
+      "path": "/api/subscriptions",
+      "schedule": "0 0 * * *"
     }
   ]
 }
