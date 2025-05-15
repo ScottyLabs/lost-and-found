@@ -69,18 +69,3 @@ Lost & Found Team`;
     console.error('Error deleting expired subscriptions:', error);
   }
 }
-
-// If you want to run this file directly (e.g., via node), you can add:
-/*
-if (require.main === module) {
-  sendDailyUpdateEmails()
-    .then(() => {
-      console.log("Daily update emails job completed.");
-      process.exit(0);
-    })
-    .catch((error) => {
-      console.error("Error in daily update emails job:", error);
-      process.exit(1);
-    });
-}
-*/
