@@ -31,7 +31,7 @@ export async function sendDailyUpdateEmails() {
 
     if (emails.length === 0) {
       console.log(`No valid subscriptions for category: ${category}`);
-      continue;
+      // continue;
     }
 
     // Compose email content – you can adjust this to include dynamic updates if needed
@@ -48,7 +48,12 @@ Lost & Found Team`;
 
     // Send email via Mailgun
     try {
-      await send_email(emails, subject, textMessage, htmlMessage);
+      await send_email(
+        ['annagu@andrew.cmu.edu'],
+        subject,
+        textMessage,
+        htmlMessage
+      );
       console.log(`Emails sent for category: ${category}`);
     } catch (error) {
       console.error(`Error sending emails for category ${category}:`, error);
