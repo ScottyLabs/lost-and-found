@@ -1,20 +1,23 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { sendDailyUpdateEmails } from '~/server/jobs/getEmails';
+import { NextRequest, NextResponse } from 'next/server';
+import prisma from 'server/db/client';
+import { sendDailyUpdateEmails } from '~/emails/getSubEmails';
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method !== 'GET') {
-    return res.status(405).json({ error: 'Method Not Allowed' });
+process.on('SIGINT', () => {
+  console.log('Received SIGINT. Exiting gracefully...');
+  prisma.$disconnect().then(() => {
+    process.exit(0); // Use a numeric exit code
+  });
+});
+
+export async function GET(request: NextRequest) {
+  const authHeader = request.headers.get('authorization');
+  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+    return new Response('Unauthorized', {
+      status: 401
+    });
   }
-  try {
-    await sendDailyUpdateEmails();
-    return res
-      .status(200)
-      .json({ success: true, message: 'Daily update emails sent.' });
-  } catch (error: any) {
-    console.error('Error in API route:', error);
-    return res.status(500).json({ error: error.message });
-  }
+
+  await sendDailyUpdateEmails();
+
+  return NextResponse.json({ success: true });
 }
