@@ -1,3 +1,4 @@
+import { clerkClient } from '@clerk/nextjs/server';
 import { Category } from '@prisma/client';
 import { send_email } from '~/emails/mailgun';
 import prisma from '~/server/db/client';
@@ -12,9 +13,7 @@ export async function sendDailyUpdateEmails() {
   const now = new Date();
   const validSince = new Date(now.getTime() - WEEK_IN_MS);
 
-  // Loop through every category defined in your enum
   for (const category of Object.values(Category)) {
-    // Fetch subscriptions for the category that are still valid (not older than a week)
     const subscriptions = await prisma.subscription.findMany({
       where: {
         category,
@@ -24,14 +23,27 @@ export async function sendDailyUpdateEmails() {
       }
     });
 
-    // Extract email addresses (ensure they are not null)
-    const emails = subscriptions
-      .map((sub) => sub.emailAddress)
-      .filter((email) => Boolean(email)) as string[];
+    const users = await Promise.all(
+      subscriptions.map((sub) =>
+        prisma.user.findUniqueOrThrow({
+          where: { id: sub.userId }
+        })
+      )
+    );
+
+    const clerkUsers = await Promise.all(
+      users.map((user) => clerkClient.users.getUser(user.externalId))
+    );
+
+    const emails = clerkUsers.map(
+      (clerkUser) => clerkUser.emailAddresses[0]!.emailAddress
+    );
+
+    console.log(emails);
 
     if (emails.length === 0) {
       console.log(`No valid subscriptions for category: ${category}`);
-      // continue;
+      continue;
     }
 
     // Compose email content – you can adjust this to include dynamic updates if needed
@@ -48,12 +60,7 @@ Lost & Found Team`;
 
     // Send email via Mailgun
     try {
-      await send_email(
-        ['annagu@andrew.cmu.edu'],
-        subject,
-        textMessage,
-        htmlMessage
-      );
+      await send_email(emails, subject, textMessage, htmlMessage);
       console.log(`Emails sent for category: ${category}`);
     } catch (error) {
       console.error(`Error sending emails for category ${category}:`, error);

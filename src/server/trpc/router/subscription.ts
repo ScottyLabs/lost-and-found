@@ -16,7 +16,6 @@ export default router({
       ctx.prisma.subscription.create({
         data: {
           userId: ctx.user.id,
-          emailAddress: ctx.session.user?.emailAddresses[0]?.emailAddress,
           ...input
         }
       })
