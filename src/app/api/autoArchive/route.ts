@@ -29,7 +29,9 @@ export async function GET(request: NextRequest) {
     }
   });
 
-  await archived_items(archivedItems);
+  if (archivedItems.length > 0) {
+    await archived_items(archivedItems);
+  }
 
   /*
   await prisma.item.updateMany({

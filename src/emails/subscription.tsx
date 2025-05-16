@@ -14,15 +14,15 @@ import {
   Tailwind,
   Text
 } from '@react-email/components';
+import { Categories, Locations } from 'types';
 
 export type Props = {
   previewText?: string;
-  category?: Category;
-  items?: Item[];
-  username?: string;
+  category: Category;
+  items: Item[];
 };
 
-export function Email({ previewText = '', category, username, items }: Props) {
+export function Email({ previewText = '', category, items }: Props) {
   return (
     <Html>
       <Head />
@@ -55,11 +55,9 @@ export function Email({ previewText = '', category, username, items }: Props) {
               Subscription Update
             </Heading>
             <Text className="text-[14px] leading-[24px] text-black">
-              Hello {username},
-            </Text>
-            <Text className="text-[14px] leading-[24px] text-black">
               Daily updates for the category{' '}
-              <span className="font-semibold">{category}</span> are ready.
+              <span className="font-semibold">{Categories[category]}</span> are
+              ready.
             </Text>
 
             <Section>
@@ -74,14 +72,16 @@ export function Email({ previewText = '', category, username, items }: Props) {
                   <Column align="right" className="w-1/3 px-[8px]">
                     <Text>
                       Description:{' '}
-                      <span className="font-semibold">{item.itemLocation}</span>
+                      <span className="font-semibold">
+                        {item.shortDescription}
+                      </span>
                     </Text>
                   </Column>
                   <Column align="right" className="w-1/3 pr-[8px]">
                     <Text>
-                      Location:{' '}
+                      Location Found:{' '}
                       <span className="font-semibold">
-                        {item.shortDescription}
+                        {Locations[item.foundLocation]}
                       </span>
                     </Text>
                   </Column>

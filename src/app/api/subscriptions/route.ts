@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'server/db/client';
-import { sendDailyUpdateEmails } from '~/emails/notifysubs';
+import {
+  removeExpiredSubscriptions,
+  sendDailyUpdateEmails
+} from '~/emails/notifysubs';
 
 process.on('SIGINT', () => {
   console.log('Received SIGINT. Exiting gracefully...');
@@ -17,6 +20,7 @@ export async function GET(request: NextRequest) {
     });
   }
 
+  await removeExpiredSubscriptions();
   await sendDailyUpdateEmails();
 
   return NextResponse.json({ success: true });

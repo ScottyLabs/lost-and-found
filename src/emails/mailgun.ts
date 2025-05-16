@@ -7,7 +7,7 @@ const mailgun = new Mailgun(FormData);
 
 const mg = mailgun.client({
   username: 'api',
-  key: process.env.MAILGUN_API_KEY || 'key-yourkeyhere'
+  key: process.env.MAILGUN_API_KEY || ''
 });
 
 // To gracefully exit the process on SIGINT (Ctrl+C)
