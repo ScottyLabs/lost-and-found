@@ -1,5 +1,5 @@
 import { clerkClient } from '@clerk/nextjs/server';
-import { Category } from '@prisma/client';
+import { Category, Status } from '@prisma/client';
 import { Categories } from 'types';
 import { send_email } from '~/emails/mailgun';
 import prisma from '~/server/db/client';
@@ -60,7 +60,7 @@ export async function sendDailyUpdateEmails() {
     }
 
     const items = await prisma.item.findMany({
-      where: { categories: { hasSome: category } }
+      where: { categories: { hasSome: category }, status: Status.APPROVED }
     });
     if (items.length === 0) {
       console.log(`No items for category: ${cat_string}`);
