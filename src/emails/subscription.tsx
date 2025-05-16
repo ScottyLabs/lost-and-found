@@ -34,7 +34,7 @@ export function Email({ previewText = '', category, items }: Props) {
               <Row>
                 <Column className="flex items-center space-x-8 font-semibold">
                   <Img
-                    src="../../public/logo.svg"
+                    src="https://lost-and-found-rni32iluj-scottylabs.vercel.app/logo.svg"
                     width="42"
                     height="42"
                     alt="Lost and Found Logo"
@@ -45,7 +45,7 @@ export function Email({ previewText = '', category, items }: Props) {
             </Section>
             <Section className="mt-[32px]">
               <Img
-                src="LostandFoundHeader.png"
+                src="https://lost-and-found-rni32iluj-scottylabs.vercel.app/LostandFoundHeader.png"
                 alt="Lost and Found"
                 height={225}
                 className="my-0 mx-auto"
