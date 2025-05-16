@@ -28,7 +28,7 @@ export function ArchiveEmail({ items }: Props) {
               <Row>
                 <Column className="flex items-center space-x-8 font-semibold">
                   <Img
-                    src="../../public/logo.svg"
+                    src="https://lost-and-found-rni32iluj-scottylabs.vercel.app/logo.svg"
                     width="42"
                     height="42"
                     alt="Lost and Found Logo"
