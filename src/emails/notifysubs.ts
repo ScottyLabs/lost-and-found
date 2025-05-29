@@ -54,7 +54,7 @@ export async function removeExpiredSubscriptions() {
 
       const subject = `Lost and Found Subscription End: ${cat_string}`;
       const email_body = await renderSubEndEmail({
-        previewText: '',
+        previewText: 'Your subscription has come to an end',
         category: category
       });
 
@@ -105,7 +105,7 @@ export async function sendDailyUpdateEmails() {
 
     const subject = `Lost and Found Daily Update: ${cat_string}`;
     const email_body = await renderSubscriptionEmail({
-      previewText: '',
+      previewText: 'See what new items were found',
       category: category,
       items: items
     });
