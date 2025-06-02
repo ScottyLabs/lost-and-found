@@ -22,6 +22,8 @@ export type Props = {
   items: Item[];
 };
 
+const baseUrl = process.env.DEPLOY_URL;
+
 export function Email({ previewText = '', category, items }: Props) {
   return (
     <Html>
@@ -34,7 +36,7 @@ export function Email({ previewText = '', category, items }: Props) {
               <Row>
                 <Column className="flex items-center space-x-8 font-semibold">
                   <Img
-                    src="https://lost-and-found-rni32iluj-scottylabs.vercel.app/logo.svg"
+                    src={`${baseUrl}/logo.svg`}
                     width="42"
                     height="42"
                     alt="Lost and Found Logo"
@@ -45,7 +47,7 @@ export function Email({ previewText = '', category, items }: Props) {
             </Section>
             <Section className="mt-[32px]">
               <Img
-                src="https://lost-and-found-rni32iluj-scottylabs.vercel.app/LostandFoundHeader.png"
+                src={`${baseUrl}/LostandFoundHeader.png`}
                 alt="Lost and Found"
                 height={225}
                 className="my-0 mx-auto"
