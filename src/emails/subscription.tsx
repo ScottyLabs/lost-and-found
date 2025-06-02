@@ -36,7 +36,7 @@ export function Email({ previewText = '', category, items }: Props) {
               <Row>
                 <Column className="flex items-center space-x-8 font-semibold">
                   <Img
-                    src={`${baseUrl}/logo.svg`}
+                    src={`${baseUrl}/logo.png`}
                     width="42"
                     height="42"
                     alt="Lost and Found Logo"
@@ -65,13 +65,13 @@ export function Email({ previewText = '', category, items }: Props) {
             <Section>
               {items?.map((item) => (
                 <Row key={item.id}>
-                  <Column align="right" className="w-1/3 pl-[8px]">
+                  <Column align="right" className="w-1/4 pl-[8px]">
                     <Text>
                       Item Name:{' '}
                       <span className="font-semibold">{item.name}</span>
                     </Text>
                   </Column>
-                  <Column align="right" className="w-1/3 px-[8px]">
+                  <Column align="right" className="w-3/8 px-[8px]">
                     <Text>
                       Description:{' '}
                       <span className="font-semibold">
@@ -79,7 +79,7 @@ export function Email({ previewText = '', category, items }: Props) {
                       </span>
                     </Text>
                   </Column>
-                  <Column align="right" className="w-1/3 pr-[8px]">
+                  <Column align="right" className="w-3/8 pr-[8px]">
                     <Text>
                       Location Found:{' '}
                       <span className="font-semibold">
