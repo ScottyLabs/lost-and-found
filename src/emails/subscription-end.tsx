@@ -35,7 +35,7 @@ export function EndEmail({ previewText = '', category }: EndProps) {
               <Row>
                 <Column className="flex items-center space-x-8 font-semibold">
                   <Img
-                    src={`${baseUrl}/logo.svg`}
+                    src={`${baseUrl}/logo.png`}
                     width="42"
                     height="42"
                     alt="Lost and Found Logo"
