@@ -62,6 +62,26 @@ export function EndEmail({ previewText = '', category }: EndProps) {
             </Text>
 
             <Hr className="my-[26px] mx-0 w-full border border-solid border-[#eaeaea]" />
+
+            <Section className="mt-[20px] text-center">
+              <Text className="leading-[6px] text-[#1F4C4C]">
+                <a
+                  href="https://lostandfound.andrew.cmu.edu"
+                  className="text-[#1F4C4C] underline"
+                >
+                  lostandfound.andrew.cmu.edu
+                </a>
+              </Text>
+              <Text className="leading-[6px] text-[#1F4C4C]">
+                Powered by{' '}
+                <a
+                  href="https://scottylabs.org"
+                  className="text-[#1F4C4C] underline"
+                >
+                  ScottyLabs &lt;3
+                </a>
+              </Text>
+            </Section>
           </Container>
         </Body>
       </Tailwind>
