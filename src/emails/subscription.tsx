@@ -14,7 +14,7 @@ import {
   Tailwind,
   Text
 } from '@react-email/components';
-import { Categories, Locations } from 'types';
+import { Categories } from 'types';
 
 export type Props = {
   previewText?: string;
@@ -64,34 +64,80 @@ export function Email({ previewText = '', category, items }: Props) {
 
             <Section>
               {items?.map((item) => (
-                <Row key={item.id}>
-                  <Column align="right" className="w-1/4 pl-[8px]">
-                    <Text>
-                      Item Name:{' '}
-                      <span className="font-semibold">{item.name}</span>
-                    </Text>
-                  </Column>
-                  <Column align="right" className="w-3/8 px-[8px]">
-                    <Text>
-                      Description:{' '}
-                      <span className="font-semibold">
-                        {item.shortDescription}
-                      </span>
-                    </Text>
-                  </Column>
-                  <Column align="right" className="w-3/8 pr-[8px]">
-                    <Text>
-                      Location Found:{' '}
-                      <span className="font-semibold">
-                        {Locations[item.foundLocation]}
-                      </span>
-                    </Text>
-                  </Column>
-                </Row>
+                <div key={item.id}>
+                  <Row className="mb-[0px] pb-[0px]">
+                    <Column align="left" className="w-1 pl-[8px]">
+                      <Text className="leading-[0px] text-[#7B9E94]">
+                        <span className="font-bold">{item.name}</span>
+                      </Text>
+                    </Column>
+                  </Row>
+                  <Row className="my-[0px] py-[0px]">
+                    <Column align="left" className="w-1/3 pl-[8px]">
+                      <Text className="font-semibold leading-[0px]">
+                        Date Found:{' '}
+                        <span className="font-normal">
+                          {`${(item.foundDate.getMonth() + 1)
+                            .toString()
+                            .padStart(2, '0')}/` +
+                            `${item.foundDate
+                              .getDate()
+                              .toString()
+                              .padStart(2, '0')}/` +
+                            `${item.foundDate.getFullYear()}`}
+                        </span>
+                      </Text>
+                    </Column>
+                    <Column align="left" className="w-1/3 px-[8px]">
+                      <Text className="font-semibold leading-[0px]">
+                        Location Found:{' '}
+                        <span className="font-normal">{item.itemLocation}</span>
+                      </Text>
+                    </Column>
+                    <Column align="left" className="w-1/3 pr-[8px]">
+                      <Text className="font-semibold leading-[0px]">
+                        Color:{' '}
+                        <span className="font-normal">
+                          {item.shortDescription}
+                        </span>
+                      </Text>
+                    </Column>
+                  </Row>
+                  <Row className="mt-[0px] mb-[14px]">
+                    <Column align="left" className="w-1 pl-[8px]">
+                      <Text className="font-semibold leading-[0px]">
+                        Description:{' '}
+                        <span className="font-normal">
+                          {item.shortDescription}
+                        </span>
+                      </Text>
+                    </Column>
+                  </Row>
+                </div>
               ))}
             </Section>
 
             <Hr className="my-[26px] mx-0 w-full border border-solid border-[#eaeaea]" />
+
+            <Section className="mt-[20px] text-center">
+              <Text className="leading-[6px] text-[#1F4C4C]">
+                <a
+                  href="https://lostandfound.andrew.cmu.edu"
+                  className="text-[#1F4C4C] underline"
+                >
+                  lostandfound.andrew.cmu.edu
+                </a>
+              </Text>
+              <Text className="leading-[6px] text-[#1F4C4C]">
+                Powered by{' '}
+                <a
+                  href="https://scottylabs.org"
+                  className="text-[#1F4C4C] underline"
+                >
+                  ScottyLabs &lt;3
+                </a>
+              </Text>
+            </Section>
           </Container>
         </Body>
       </Tailwind>
