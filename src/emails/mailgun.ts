@@ -39,7 +39,7 @@ export const archived_items = async (archivedItems: Item[]) => {
 
   await send_email(
     ['annagu@andrew.cmu.edu'],
-    '30 day items',
+    '90 day items',
     'HELLO',
     email_body
   );

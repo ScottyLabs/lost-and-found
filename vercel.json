@@ -3,11 +3,11 @@
   "crons": [
     {
       "path": "/api/autoArchive",
-      "schedule": "0 0 * * *"
+      "schedule": "0 4 * * 1"
     },
     {
       "path": "/api/subscriptions",
-      "schedule": "0 0 * * *"
+      "schedule": "0 1 * * *"
     }
   ]
 }

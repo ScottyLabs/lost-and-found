@@ -23,8 +23,8 @@ export async function GET(request: NextRequest) {
     where: {
       status: Status.APPROVED,
       foundDate: {
-        // 30 days ago
-        lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
+        // 90 days ago
+        lt: new Date(new Date().getTime() - 90 * 1000 * 60 * 60 * 24)
       }
     }
   });
@@ -32,19 +32,6 @@ export async function GET(request: NextRequest) {
   if (archivedItems.length > 0) {
     await archived_items(archivedItems);
   }
-
-  /*
-  await prisma.item.updateMany({
-    where: {
-      status: Status.APPROVED,
-      foundDate: {
-        // 30 days ago
-        lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
-      }
-    },
-    data: { status: Status.ARCHIVED }
-  });
-  */
 
   return NextResponse.json({ success: true });
 }

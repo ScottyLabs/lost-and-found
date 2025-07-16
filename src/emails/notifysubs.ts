@@ -96,7 +96,13 @@ export async function sendDailyUpdateEmails() {
     }
 
     const items = await prisma.item.findMany({
-      where: { categories: { hasSome: category }, status: Status.APPROVED }
+      where: {
+        categories: { hasSome: category },
+        status: Status.APPROVED,
+        foundDate: {
+          gte: new Date(Date.now() - 24 * 60 * 60 * 1000)
+        }
+      }
     });
     if (items.length === 0) {
       console.log(`No items for category: ${cat_string}`);
