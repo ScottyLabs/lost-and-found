@@ -43,7 +43,7 @@ export function ArchiveEmail({ items }: Props) {
               Hello,
             </Text>
             <Text className="text-[14px] leading-[24px] text-black">
-              The following items have been in inventory for over 30 days.
+              The following items have been in inventory for over 90 days.
             </Text>
 
             <Section>
