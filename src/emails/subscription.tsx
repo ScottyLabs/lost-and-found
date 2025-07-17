@@ -117,6 +117,11 @@ export function Email({ previewText = '', category, items }: Props) {
               ))}
             </Section>
 
+            <Text className="font-normal">
+              Want to unsubscribe? Return to our website and delete your
+              subscription.
+            </Text>
+
             <Hr className="my-[26px] mx-0 w-full border border-solid border-[#eaeaea]" />
 
             <Section className="mt-[20px] text-center">
