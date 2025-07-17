@@ -39,6 +39,14 @@ export function ArchiveEmail({ items }: Props) {
                 </Column>
               </Row>
             </Section>
+            <Section className="mt-[32px]">
+              <Img
+                src={`${baseUrl}/LostandFoundHeader.png`}
+                alt="Lost and Found"
+                height={225}
+                className="my-0 mx-auto"
+              />
+            </Section>
             <Text className="text-[14px] leading-[24px] text-black">
               Hello,
             </Text>
