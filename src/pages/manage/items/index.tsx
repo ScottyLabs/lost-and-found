@@ -58,7 +58,8 @@ const Manage: NextPageWithLayout = () => {
       status: null,
       color: null,
       value: null,
-      category: null
+      category: null,
+      date: null
     }
   });
   const items = trpc.item.search.useQuery(methods.getValues());
@@ -149,6 +150,17 @@ const Manage: NextPageWithLayout = () => {
                         displayValue={(item) => Categories[item]}
                         keyValue={(item) => item}
                         values={Object.values(Category)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between p-4">
+                    <div className="font-bold">Date</div>
+                    <div className="w-48">
+                      <input
+                        type="date"
+                        placeholder="Type here"
+                        className="input-bordered input input-sm w-full max-w-xs"
+                        {...methods.register('date')}
                       />
                     </div>
                   </div>
@@ -271,7 +283,8 @@ const Manage: NextPageWithLayout = () => {
           status: methods.watch('status'),
           color: methods.watch('color'),
           value: methods.watch('value'),
-          category: methods.watch('category')
+          category: methods.watch('category'),
+          date: methods.watch('date')
         }}
       />
     </>

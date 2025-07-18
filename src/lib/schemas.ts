@@ -45,7 +45,8 @@ export const ItemSearchSchema = z.object({
   color: z.nativeEnum(Color).nullable(),
   status: z.nativeEnum(Status).nullable(),
   value: z.nativeEnum(Value).nullable(),
-  category: z.nativeEnum(Category).nullable()
+  category: z.nativeEnum(Category).nullable(),
+  date: z.coerce.date().nullable()
 });
 
 export const UserSchema = z.object({

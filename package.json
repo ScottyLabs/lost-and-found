@@ -27,6 +27,7 @@
     "@trpc/server": "^10.11.0",
     "clsx": "^1.2.1",
     "daisyui": "^2.39.1",
+    "luxon": "^3.7.1",
     "mailgun.js": "^10.2.3",
     "mongodb": "^4.11.0",
     "next": "14",

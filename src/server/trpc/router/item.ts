@@ -5,6 +5,7 @@ import {
   ItemsUpdateSchema,
   ItemUpdateSchema
 } from 'lib/schemas';
+import { DateTime } from 'luxon';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
 import { archived_items } from '../../../emails/mailgun';
@@ -32,8 +33,19 @@ export default router({
       }
     })
   ),
-  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) =>
-    ctx.prisma.item.findMany({
+  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
+    let startOfDay: Date | undefined;
+    let endOfDay: Date | undefined;
+
+    const dtUtc = DateTime.fromJSDate(input.date, { zone: 'utc' });
+    const dtEt = dtUtc.setZone('America/New_York');
+    const startET = dtEt.startOf('day');
+    const endET = startET.plus({ days: 1 });
+
+    (startOfDay = startET.toUTC().toJSDate()),
+      (endOfDay = endET.toUTC().toJSDate());
+
+    return ctx.prisma.item.findMany({
       where: {
         name: {
           contains: input.query
@@ -41,10 +53,11 @@ export default router({
         color: input.color ?? undefined,
         status: input.status ?? undefined,
         value: input.value ?? undefined,
-        categories: input.category ? { has: input.category } : undefined
+        categories: input.category ? { has: input.category } : undefined,
+        foundDate: input.date ? { gte: startOfDay, lte: endOfDay } : undefined
       }
-    })
-  ),
+    });
+  }),
   download: moderatorProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
