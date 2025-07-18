@@ -40,7 +40,8 @@ export default router({
         },
         color: input.color ?? undefined,
         status: input.status ?? undefined,
-        value: input.value ?? undefined
+        value: input.value ?? undefined,
+        categories: input.category ? { has: input.category } : undefined
       }
     })
   ),

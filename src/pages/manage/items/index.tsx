@@ -3,7 +3,7 @@
 /* eslint-disable jsx-a11y/label-has-associated-control */
 
 import { Popover, Transition } from '@headlessui/react';
-import { Color, Status, Value } from '@prisma/client';
+import { Category, Color, Status, Value } from '@prisma/client';
 import MyListbox from 'components/Form/Listbox';
 import ItemRow from 'components/ItemRow';
 import ManageLayout from 'components/Layouts/ManageLayout';
@@ -25,7 +25,7 @@ import {
 import { toast } from 'react-toastify';
 import useDialogStore from 'stores/DialogStore';
 import useSelectedItemsStore from 'stores/SelectedItemStore';
-import { Colors } from 'types';
+import { Categories, Colors } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
@@ -57,7 +57,8 @@ const Manage: NextPageWithLayout = () => {
       query: '',
       status: null,
       color: null,
-      value: null
+      value: null,
+      category: null
     }
   });
   const items = trpc.item.search.useQuery(methods.getValues());
@@ -135,6 +136,19 @@ const Manage: NextPageWithLayout = () => {
                         displayValue={(item) => item}
                         keyValue={(item) => item}
                         values={Object.values(Value)}
+                      />
+                    </div>
+                  </div>
+                  <div className="flex w-full items-center justify-between p-4">
+                    <div className="font-bold">Category</div>
+                    <div className="w-48">
+                      <MyListbox
+                        control={methods.control}
+                        name="category"
+                        placeholder="Select Category"
+                        displayValue={(item) => Categories[item]}
+                        keyValue={(item) => item}
+                        values={Object.values(Category)}
                       />
                     </div>
                   </div>
@@ -256,7 +270,8 @@ const Manage: NextPageWithLayout = () => {
           query: methods.watch('query'),
           status: methods.watch('status'),
           color: methods.watch('color'),
-          value: methods.watch('value')
+          value: methods.watch('value'),
+          category: methods.watch('category')
         }}
       />
     </>
