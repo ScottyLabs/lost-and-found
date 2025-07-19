@@ -10,7 +10,8 @@
     "start": "next start",
     "format": "yarn prettier . --write --ignore-path ./.gitignore",
     "email-dev": "email dev",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "vault:setup": "VAULT_ADDR=https://secrets.scottylabs.org vault login -method=oidc"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
