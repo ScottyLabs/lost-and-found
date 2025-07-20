@@ -11,7 +11,7 @@
     "format": "yarn prettier . --write --ignore-path ./.gitignore",
     "email-dev": "email dev",
     "typecheck": "tsc --noEmit",
-    "vault:setup": "VAULT_ADDR=https://secrets.scottylabs.org vault login -method=oidc"
+    "vault:setup": "cross-env VAULT_ADDR=https://secrets.scottylabs.org vault login -method=oidc"
   },
   "dependencies": {
     "@clerk/nextjs": "^4.29.7",
@@ -56,6 +56,7 @@
     "@typescript-eslint/eslint-plugin": "^5.41.0",
     "@typescript-eslint/parser": "^5.41.0",
     "autoprefixer": "^10.4.7",
+    "cross-env": "^7.0.3",
     "eslint": "^8.2.0",
     "eslint-config-next": "^13.0.0",
     "eslint-config-prettier": "^8.5.0",
