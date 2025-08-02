@@ -5,7 +5,6 @@ import {
   ItemsUpdateSchema,
   ItemUpdateSchema
 } from 'lib/schemas';
-import { DateTime } from 'luxon';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
 import { archived_items } from '../../../emails/mailgun';
@@ -34,16 +33,14 @@ export default router({
     })
   ),
   search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
-    let startOfDay: Date | undefined;
-    let endOfDay: Date | undefined;
-
-    const dtUtc = DateTime.fromJSDate(input.date, { zone: 'utc' });
-    const dtEt = dtUtc.setZone('America/New_York');
-    const startET = dtEt.startOf('day');
-    const endET = startET.plus({ days: 1 });
-
-    (startOfDay = startET.toUTC().toJSDate()),
-      (endOfDay = endET.toUTC().toJSDate());
+    let startOfDayDate;
+    let endOfDayDate;
+    if (input.date) {
+      startOfDayDate = input.date;
+      startOfDayDate.setHours(0, 0, 0, 0);
+      endOfDayDate = input.date;
+      endOfDayDate.setHours(23, 59, 59, 999);
+    }
 
     return ctx.prisma.item.findMany({
       where: {
@@ -54,7 +51,9 @@ export default router({
         status: input.status ?? undefined,
         value: input.value ?? undefined,
         categories: input.category ? { has: input.category } : undefined,
-        foundDate: input.date ? { gte: startOfDay, lte: endOfDay } : undefined
+        foundDate: input.date
+          ? { gte: startOfDayDate, lte: endOfDayDate }
+          : undefined
       }
     });
   }),
