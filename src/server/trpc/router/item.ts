@@ -44,7 +44,7 @@ export default router({
       }
     })
   ),
-  download: moderatorProcedure
+  download: adminProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
       const items = await ctx.prisma.item.findMany({
@@ -87,7 +87,7 @@ export default router({
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.create({ data: input })
     ),
-  update: adminProcedure
+  update: moderatorProcedure
     .input(ItemUpdateSchema)
     .mutation(async ({ ctx, input }) =>
       ctx.prisma.item.update({ where: { id: input.id }, data: input.data })
