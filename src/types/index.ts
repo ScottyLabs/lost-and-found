@@ -1,4 +1,10 @@
-import { Category, Color, Location, RetrieveLocation } from '@prisma/client';
+import {
+  Category,
+  Color,
+  Location,
+  RetrieveLocation,
+  Value
+} from '@prisma/client';
 
 export const Locations: Record<Location, string> = {
   AN: 'Ansys Hall',
@@ -57,4 +63,12 @@ export const Categories: Record<Category, string> = {
   CARDS_WALLETS: 'Cards/Wallets',
   UMBRELLA: 'Umbrellas',
   OTHER: 'Other'
+};
+
+export type EmailItem = {
+  name: string;
+  foundDate: Date;
+  foundLocation: Location;
+  shortDescription: string;
+  value: Value;
 };
