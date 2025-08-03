@@ -1,5 +1,7 @@
 import { Item } from '@prisma/client';
 import { render } from '@react-email/render';
+import { EmailItem } from '~/types';
+import { ApprovalEmail } from './approval';
 import { ArchiveEmail } from './archive';
 import { Email, Props } from './subscription';
 import { EndEmail, EndProps } from './subscription-end';
@@ -20,4 +22,8 @@ export function renderSubscriptionEmail({
 
 export function renderSubEndEmail({ previewText = '', category }: EndProps) {
   return render(<EndEmail previewText={previewText} category={category} />);
+}
+
+export function renderApprovalEmail(item: EmailItem) {
+  return render(<ApprovalEmail item={item} />);
 }

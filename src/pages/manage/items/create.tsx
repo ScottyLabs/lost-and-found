@@ -20,6 +20,7 @@ import { NextPageWithLayout } from 'pages/_app';
 import { toast } from 'react-toastify';
 import { Categories, Colors, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
+import { sendApprovalEmail } from '~/emails/adminemail';
 
 const CreateItem: NextPageWithLayout = () => {
   const context = trpc.useContext();
@@ -50,6 +51,13 @@ const CreateItem: NextPageWithLayout = () => {
       <form
         onSubmit={methods.handleSubmit(async (data) => {
           await itemMutation.mutateAsync(data);
+          await sendApprovalEmail({
+            name: data.name,
+            foundDate: data.foundDate,
+            foundLocation: data.foundLocation,
+            shortDescription: data.shortDescription,
+            value: data.value
+          });
           methods.reset();
         })}
         className="form-control gap-2"
