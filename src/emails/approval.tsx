@@ -1,3 +1,4 @@
+import { Item } from '@prisma/client';
 import {
   Body,
   Column,
@@ -11,15 +12,10 @@ import {
   Tailwind,
   Text
 } from '@react-email/components';
-import { EmailItem } from '~/types';
 
 const baseUrl = process.env.DEPLOY_URL;
 
-type Props = {
-  item: EmailItem;
-};
-
-export function ApprovalEmail({ item }: Props) {
+export function ApprovalEmail({ item }: { item: Item }) {
   return (
     <Html>
       <Head />

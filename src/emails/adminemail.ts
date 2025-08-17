@@ -1,12 +1,12 @@
-import { send_email } from '~/emails/mailgun';
-import { EmailItem } from '~/types';
+import { Item } from '@prisma/client';
+import { sendEmail } from '~/emails/mailgun';
 import { renderApprovalEmail } from './renderemail';
 
-export async function sendApprovalEmail(input: EmailItem) {
+export async function sendApprovalEmail(input: Item) {
   const emails = ['annagu@andrew.cmu.edu'];
   const subject =
     'New Item Added: Approval Needed' +
     (input.value === 'HIGH' ? ' - HIGH VALUE' : '');
-  const email_body = await renderApprovalEmail(input);
-  await send_email(emails, subject, 'HELLO', email_body);
+  const emailBody = await renderApprovalEmail(input);
+  await sendEmail(emails, subject, 'HELLO', emailBody);
 }

@@ -5,9 +5,13 @@ import { renderArchiveEmail } from './renderemail';
 
 const mailgun = new Mailgun(FormData);
 
+if (!process.env.MAILGUN_API_KEY) {
+  throw new Error('Missing MAILGUN_API_KEY environment variable');
+}
+
 const mg = mailgun.client({
   username: 'api',
-  key: process.env.MAILGUN_API_KEY || ''
+  key: process.env.MAILGUN_API_KEY
 });
 
 // To gracefully exit the process on SIGINT (Ctrl+C)
@@ -16,7 +20,7 @@ process.on('SIGINT', () => {
   process.exit(0); // Use a numeric exit code
 });
 
-export const send_email = async (
+export const sendEmail = async (
   to: string[],
   subject: string,
   desc: string,
@@ -34,13 +38,13 @@ export const send_email = async (
     .catch((err) => console.error(err)); // logs any error
 };
 
-export const archived_items = async (archivedItems: Item[]) => {
-  const email_body = await renderArchiveEmail(archivedItems);
+export const sendArchivedItems = async (archivedItems: Item[]) => {
+  const emailBody = await renderArchiveEmail(archivedItems);
 
-  await send_email(
+  await sendEmail(
     ['annagu@andrew.cmu.edu'],
     '90 day items',
     'HELLO',
-    email_body
+    emailBody
   );
 };
