@@ -1,7 +1,7 @@
 import { Status } from '@prisma/client';
 import { NextRequest, NextResponse } from 'next/server';
 import prisma from 'server/db/client';
-import { sendArchivedItems } from '~/emails/mailgun';
+import { sendArchivedEmail } from '~/emails/mailgun';
 
 // To gracefully exit the process on SIGINT (Ctrl+C)
 process.on('SIGINT', () => {
@@ -30,7 +30,7 @@ export async function GET(request: NextRequest) {
   });
 
   if (archivedItems.length > 0) {
-    await sendArchivedItems(archivedItems);
+    await sendArchivedEmail(archivedItems);
   }
 
   return NextResponse.json({ success: true });
