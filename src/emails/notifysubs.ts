@@ -1,8 +1,8 @@
-import { clerkClient } from '@clerk/nextjs/server';
 import { Category, Status } from '@prisma/client';
 import { Categories } from 'types';
 import { sendEmail } from '~/emails/mailgun';
 import prisma from '~/server/db/client';
+import { getEmails } from './common';
 import { renderSubEndEmail, renderSubscriptionEmail } from './renderemail';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -11,7 +11,7 @@ type Subscription = Awaited<
   ReturnType<typeof prisma.subscription.findMany>
 >[number];
 
-async function getEmails(subscriptions: Subscription[]) {
+async function getSubscriptionEmails(subscriptions: Subscription[]) {
   if (subscriptions.length === 0) return [];
   const users = await Promise.all(
     subscriptions.map((sub) =>
@@ -21,15 +21,7 @@ async function getEmails(subscriptions: Subscription[]) {
     )
   );
 
-  const clerkUsers = await Promise.all(
-    users.map((user) => clerkClient.users.getUser(user.externalId))
-  );
-
-  const emails = clerkUsers.map(
-    (clerkUser) => clerkUser.emailAddresses[0]!.emailAddress
-  );
-
-  return emails;
+  return getEmails(users);
 }
 
 export async function removeExpiredSubscriptions() {
@@ -46,7 +38,7 @@ export async function removeExpiredSubscriptions() {
           }
         }
       });
-      const emails = await getEmails(subscriptions);
+      const emails = await getSubscriptionEmails(subscriptions);
       if (emails.length === 0) {
         console.log(`No expired subscriptions for category: ${catString}`);
         continue;
@@ -58,7 +50,7 @@ export async function removeExpiredSubscriptions() {
         category: category
       });
 
-      await sendEmail(emails, subject, 'HELLO', emailBody);
+      await sendEmail(emails, subject, emailBody);
     }
 
     const deleteResult = await prisma.subscription.deleteMany({
@@ -89,7 +81,7 @@ export async function sendDailyUpdateEmails() {
       }
     });
 
-    const emails = await getEmails(subscriptions);
+    const emails = await getSubscriptionEmails(subscriptions);
     if (emails.length === 0) {
       console.log(`No valid subscriptions for category: ${catString}`);
       continue;
@@ -116,6 +108,6 @@ export async function sendDailyUpdateEmails() {
       items: items
     });
 
-    await sendEmail(emails, subject, 'HELLO', emailBody);
+    await sendEmail(emails, subject, emailBody);
   }
 }

@@ -1,7 +1,9 @@
 import { Item } from '@prisma/client';
 import FormData from 'form-data';
+import { htmlToText } from 'html-to-text';
 import Mailgun from 'mailgun.js';
-import { renderArchiveEmail } from './renderemail';
+import { getAdminEmails } from './common';
+import { renderApprovalEmail, renderArchiveEmail } from './renderemail';
 
 const mailgun = new Mailgun(FormData);
 
@@ -23,7 +25,6 @@ process.on('SIGINT', () => {
 export const sendEmail = async (
   to: string[],
   subject: string,
-  desc: string,
   html: string
 ) => {
   mg.messages
@@ -31,20 +32,25 @@ export const sendEmail = async (
       from: `Lost and Found <mailgun@${process.env.MAILGUN_DOMAIN}>`,
       to: to,
       subject: subject,
-      text: desc,
+      text: htmlToText(html),
       html: html
     })
     .then((msg) => console.log(msg)) // logs response data
     .catch((err) => console.error(err)); // logs any error
 };
 
-export const sendArchivedItems = async (archivedItems: Item[]) => {
+export const sendArchivedEmail = async (archivedItems: Item[]) => {
   const emailBody = await renderArchiveEmail(archivedItems);
+  const adminEmails = await getAdminEmails();
 
-  await sendEmail(
-    ['annagu@andrew.cmu.edu'],
-    '90 day items',
-    'HELLO',
-    emailBody
-  );
+  await sendEmail(adminEmails, '90 day items', emailBody);
 };
+
+export async function sendApprovalEmail(input: Item) {
+  const adminEmails = await getAdminEmails();
+  const subject =
+    'New Item Added: Approval Needed' +
+    (input.value === 'HIGH' ? ' - HIGH VALUE' : '');
+  const emailBody = await renderApprovalEmail(input);
+  await sendEmail(adminEmails, subject, emailBody);
+}

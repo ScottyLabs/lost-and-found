@@ -7,8 +7,7 @@ import {
 } from 'lib/schemas';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
-import { sendApprovalEmail } from '~/emails/adminemail';
-import { sendArchivedItems } from '~/emails/mailgun';
+import { sendApprovalEmail, sendArchivedEmail } from '~/emails/mailgun';
 import {
   adminProcedure,
   moderatorProcedure,
@@ -131,7 +130,7 @@ export default router({
       }
     });
 
-    await sendArchivedItems(archivedItems);
+    await sendArchivedEmail(archivedItems);
 
     return ctx.prisma.item.updateMany({
       where: {
