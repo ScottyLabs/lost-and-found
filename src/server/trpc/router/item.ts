@@ -56,8 +56,8 @@ export default router({
           ? { gte: startOfDayDate, lte: endOfDayDate }
           : undefined
       }
-    })
-  ),
+    });
+  }),
   download: adminProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
