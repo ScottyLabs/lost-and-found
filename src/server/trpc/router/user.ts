@@ -5,12 +5,7 @@ import {
   UserUpdateSchema
 } from 'lib/schemas';
 import { z } from 'zod';
-import {
-  adminProcedure,
-  moderatorProcedure,
-  publicProcedure,
-  router
-} from '../trpc';
+import { adminProcedure, publicProcedure, router } from '../trpc';
 
 export default router({
   me: publicProcedure.query(({ ctx }) => {
@@ -25,7 +20,7 @@ export default router({
     return null;
   }),
   count: publicProcedure.query(({ ctx }) => ctx.prisma.user.count()),
-  search: moderatorProcedure
+  search: adminProcedure
     .input(UserSearchSchema)
     .query(async ({ ctx, input }) => {
       const users = await ctx.prisma.user.findMany();
@@ -46,7 +41,7 @@ export default router({
         return true;
       });
     }),
-  byId: moderatorProcedure
+  byId: adminProcedure
     .input(z.string())
     .query(({ ctx, input }) =>
       ctx.prisma.user.findFirst({ where: { externalId: input } })
