@@ -1,8 +1,8 @@
-import { clerkClient } from '@clerk/nextjs/server';
 import { Category, Status } from '@prisma/client';
 import { Categories } from 'types';
-import { send_email } from '~/emails/mailgun';
+import { sendEmail } from '~/emails/mailgun';
 import prisma from '~/server/db/client';
+import { getEmails } from './common';
 import { renderSubEndEmail, renderSubscriptionEmail } from './renderemail';
 
 const WEEK_IN_MS = 7 * 24 * 60 * 60 * 1000;
@@ -11,7 +11,7 @@ type Subscription = Awaited<
   ReturnType<typeof prisma.subscription.findMany>
 >[number];
 
-async function getEmails(subscriptions: Subscription[]) {
+async function getSubscriptionEmails(subscriptions: Subscription[]) {
   if (subscriptions.length === 0) return [];
   const users = await Promise.all(
     subscriptions.map((sub) =>
@@ -21,15 +21,7 @@ async function getEmails(subscriptions: Subscription[]) {
     )
   );
 
-  const clerkUsers = await Promise.all(
-    users.map((user) => clerkClient.users.getUser(user.externalId))
-  );
-
-  const emails = clerkUsers.map(
-    (clerkUser) => clerkUser.emailAddresses[0]!.emailAddress
-  );
-
-  return emails;
+  return getEmails(users);
 }
 
 export async function removeExpiredSubscriptions() {
@@ -37,7 +29,7 @@ export async function removeExpiredSubscriptions() {
   const validSince = new Date(now.getTime() - WEEK_IN_MS);
   try {
     for (const category of Object.values(Category)) {
-      const cat_string = Categories[category];
+      const catString = Categories[category];
       const subscriptions = await prisma.subscription.findMany({
         where: {
           category,
@@ -46,19 +38,19 @@ export async function removeExpiredSubscriptions() {
           }
         }
       });
-      const emails = await getEmails(subscriptions);
+      const emails = await getSubscriptionEmails(subscriptions);
       if (emails.length === 0) {
-        console.log(`No expired subscriptions for category: ${cat_string}`);
+        console.log(`No expired subscriptions for category: ${catString}`);
         continue;
       }
 
-      const subject = `Lost and Found Subscription End: ${cat_string}`;
-      const email_body = await renderSubEndEmail({
+      const subject = `Lost and Found Subscription End: ${catString}`;
+      const emailBody = await renderSubEndEmail({
         previewText: 'Your subscription has come to an end',
         category: category
       });
 
-      await send_email(emails, subject, 'HELLO', email_body);
+      await sendEmail(emails, subject, emailBody);
     }
 
     const deleteResult = await prisma.subscription.deleteMany({
@@ -79,7 +71,7 @@ export async function sendDailyUpdateEmails() {
   const validSince = new Date(now.getTime() - WEEK_IN_MS);
 
   for (const category of Object.values(Category)) {
-    const cat_string = Categories[category];
+    const catString = Categories[category];
     const subscriptions = await prisma.subscription.findMany({
       where: {
         category,
@@ -89,9 +81,9 @@ export async function sendDailyUpdateEmails() {
       }
     });
 
-    const emails = await getEmails(subscriptions);
+    const emails = await getSubscriptionEmails(subscriptions);
     if (emails.length === 0) {
-      console.log(`No valid subscriptions for category: ${cat_string}`);
+      console.log(`No valid subscriptions for category: ${catString}`);
       continue;
     }
 
@@ -105,17 +97,17 @@ export async function sendDailyUpdateEmails() {
       }
     });
     if (items.length === 0) {
-      console.log(`No items for category: ${cat_string}`);
+      console.log(`No items for category: ${catString}`);
       continue;
     }
 
-    const subject = `Lost and Found Daily Update: ${cat_string}`;
-    const email_body = await renderSubscriptionEmail({
+    const subject = `Lost and Found Daily Update: ${catString}`;
+    const emailBody = await renderSubscriptionEmail({
       previewText: 'See what new items were found',
       category: category,
       items: items
     });
 
-    await send_email(emails, subject, 'HELLO', email_body);
+    await sendEmail(emails, subject, emailBody);
   }
 }

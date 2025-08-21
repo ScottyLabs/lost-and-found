@@ -7,7 +7,7 @@ import {
 } from 'lib/schemas';
 import { unparse } from 'papaparse';
 import { z } from 'zod';
-import { archived_items } from '../../../emails/mailgun';
+import { sendApprovalEmail } from '~/emails/mailgun';
 import {
   adminProcedure,
   moderatorProcedure,
@@ -32,15 +32,29 @@ export default router({
       }
     })
   ),
-  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) =>
-    ctx.prisma.item.findMany({
+  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
+    let startOfDayDate;
+    let endOfDayDate;
+    if (input.date) {
+      startOfDayDate = new Date(input.date);
+      startOfDayDate.setUTCHours(0, 0, 0, 0);
+
+      endOfDayDate = new Date(input.date);
+      endOfDayDate.setUTCHours(23, 59, 59, 999);
+    }
+
+    return ctx.prisma.item.findMany({
       where: {
         name: {
           contains: input.query
         },
         color: input.color ?? undefined,
         status: input.status ?? undefined,
-        value: input.value ?? undefined
+        value: input.value ?? undefined,
+        categories: input.category ? { has: input.category } : undefined,
+        foundDate: input.date
+          ? { gte: startOfDayDate, lte: endOfDayDate }
+          : undefined
       }
     })
   ),
@@ -84,9 +98,11 @@ export default router({
     }),
   create: moderatorProcedure
     .input(ItemCreateSchema)
-    .mutation(async ({ ctx, input }) =>
-      ctx.prisma.item.create({ data: input })
-    ),
+    .mutation(async ({ ctx, input }) => {
+      const createdItem = await ctx.prisma.item.create({ data: input });
+      await sendApprovalEmail(createdItem);
+      return createdItem;
+    }),
   update: moderatorProcedure
     .input(ItemUpdateSchema)
     .mutation(async ({ ctx, input }) =>
@@ -116,29 +132,5 @@ export default router({
           }
         }
       })
-    ),
-  autoArchive: adminProcedure.mutation(async ({ ctx }) => {
-    const archivedItems = await ctx.prisma.item.findMany({
-      where: {
-        status: Status.APPROVED,
-        foundDate: {
-          // 30 days ago
-          lt: new Date(new Date().getTime() - 30 * 1000 * 60 * 60 * 24)
-        }
-      }
-    });
-
-    await archived_items(archivedItems);
-
-    return ctx.prisma.item.updateMany({
-      where: {
-        status: Status.APPROVED,
-        foundDate: {
-          // 30 days ago
-          lt: new Date(new Date().getTime() - 30000)
-        }
-      },
-      data: { status: Status.ARCHIVED }
-    });
-  })
+    )
 });
