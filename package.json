@@ -29,6 +29,7 @@
     "@trpc/server": "^10.11.0",
     "clsx": "^1.2.1",
     "daisyui": "^2.39.1",
+    "html-to-text": "^9.0.5",
     "mailgun.js": "^10.2.3",
     "mongodb": "^4.11.0",
     "next": "14",
@@ -50,6 +51,7 @@
     "zustand": "^4.3.3"
   },
   "devDependencies": {
+    "@types/html-to-text": "^9.0.4",
     "@types/node": "18.0.0",
     "@types/papaparse": "^5.3.5",
     "@types/react": "18.0.14",
