@@ -32,18 +32,32 @@ export default router({
       }
     })
   ),
-  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) =>
-    ctx.prisma.item.findMany({
+  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
+    let startOfDayDate;
+    let endOfDayDate;
+    if (input.date) {
+      startOfDayDate = new Date(input.date);
+      startOfDayDate.setUTCHours(0, 0, 0, 0);
+
+      endOfDayDate = new Date(input.date);
+      endOfDayDate.setUTCHours(23, 59, 59, 999);
+    }
+
+    return ctx.prisma.item.findMany({
       where: {
         name: {
           contains: input.query
         },
         color: input.color ?? undefined,
         status: input.status ?? undefined,
-        value: input.value ?? undefined
+        value: input.value ?? undefined,
+        categories: input.category ? { has: input.category } : undefined,
+        foundDate: input.date
+          ? { gte: startOfDayDate, lte: endOfDayDate }
+          : undefined
       }
-    })
-  ),
+    });
+  }),
   download: moderatorProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
