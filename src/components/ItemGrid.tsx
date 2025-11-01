@@ -67,6 +67,7 @@ export default function ItemGrid({ query }: Props) {
       {items.map((item) => (
         <ItemCard key={item.id} item={item} onClick={(id) => {}} />
       ))}
+      {/*<ItemModal itemId={'cmgctw9n900005ru4dh0uuys5'} onClose={() => {}} /> */}
     </div>
   );
 }
