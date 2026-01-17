@@ -37,7 +37,7 @@ const Questions: Record<string, () => ReactNode> = {
             Lost & Found website.
           </li>
         </ul>
-        <h4>Website Update Frequency</h4>
+        {/* <h4>Website Update Frequency</h4>
         <ul>
           <li>
             Items are added at the end of the day, check back on the site to see
@@ -52,13 +52,14 @@ const Questions: Record<string, () => ReactNode> = {
             </button>{' '}
             for daily updates.
           </li>
-        </ul>
+        </ul> */}
       </div>
     );
   },
   'How often are items added to the website?': () => (
     <div className="prose">
-      Items are added to the website within 24 hours of receipt.
+      Items are typically added to the Lost and Found website within 24 hours of
+      receipt.
     </div>
   ),
   'How long are items held for?': () => (
@@ -97,7 +98,7 @@ const Questions: Record<string, () => ReactNode> = {
   ),
   'Still need more information?': () => (
     <div className="prose">
-      Here&apos;s a link to our <Link href="/policy">Policy Page</Link>.
+      Here&apos;s a link to our <Link href="/policies">Policy Page</Link>.
     </div>
   )
 };
