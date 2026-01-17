@@ -52,6 +52,15 @@ export default function MainLayout({ children }: PropsWithChildren) {
         >
           <span>FAQ</span>
         </Link>
+        <Link
+          href="/policies"
+          className={clsx(
+            'inline-flex h-12 flex-1 items-center justify-center rounded-xl border border-primary uppercase shadow-lg',
+            router.pathname === '/policies' && 'bg-accent text-accent-content'
+          )}
+        >
+          <span>Policies</span>
+        </Link>
       </div>
       <main className="p-2 md:my-8">{children}</main>
     </div>
