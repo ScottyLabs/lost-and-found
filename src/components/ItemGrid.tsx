@@ -12,6 +12,19 @@ export default function ItemGrid({ query }: Props) {
   const itemsQuery = trpc.item.list.useQuery();
   const { categories, colors, date, locations } = useItemFilterStore();
 
+  // store:
+  // selected item id
+  // selected item
+  // modal?
+
+  // select that gets passed in
+  // url params: router.push('/items/{itemid}')
+  // open modal
+
+  // deselect
+  // close modal
+  // router.push('/items')
+
   if (itemsQuery.status === 'loading')
     return (
       <span className="my-10">
@@ -52,8 +65,9 @@ export default function ItemGrid({ query }: Props) {
   return (
     <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
       {items.map((item) => (
-        <ItemCard key={item.id} item={item} />
+        <ItemCard key={item.id} item={item} onClick={(id) => {}} />
       ))}
+      {/*<ItemModal itemId={'cmgctw9n900005ru4dh0uuys5'} onClose={() => {}} /> */}
     </div>
   );
 }
