@@ -5,7 +5,6 @@ const Policies: NextPageWithLayout = () => {
   return (
     <div className="prose mx-auto">
       <h1>Policies</h1>
-
       <h2>General</h2>
       <p>
         All Carnegie Mellon students, faculty, staff, and guests, are
@@ -23,7 +22,6 @@ const Policies: NextPageWithLayout = () => {
         Carnegie Mellon University complies with all applicable laws pertaining
         to lost/abandoned property.
       </p>
-
       <h2>Item Categorization</h2>
       <p>
         Carnegie Mellon University categorizes lost/abandoned property as
@@ -46,8 +44,9 @@ const Policies: NextPageWithLayout = () => {
           General Items — Any item not considered a “High-Value” item, that
           still maintains some level of monetary value
         </li>
+        <li>Beverage Containers — Reusable water bottles, coffee mugs, etc.</li>
+        <li>CMU ID Cards</li>
       </ul>
-
       <h2>Procedures</h2>
       <h3>Procedures for Lost/Abandoned Property*:</h3>
       <ul>
@@ -92,6 +91,35 @@ const Policies: NextPageWithLayout = () => {
           </ul>
         </li>
         <li>
+          <h4>Beverage Containers</h4>
+          <ul>
+            <li>
+              Beverage containers turned into the lost and found will be emptied
+              of their contents.
+            </li>
+            <li>
+              Containers will be held for 1 week, at which time they will be
+              discarded.
+            </li>
+          </ul>
+        </li>
+        <li>
+          <h4>CMU ID Cards</h4>
+          <ul>
+            <li>
+              CMU ID Cards turned into the Information Desk will be held for a
+              minimum of 1 week, and the owner will be contacted.
+            </li>
+            <li>
+              Cards left for longer than 1 week will be returned to The HUB.
+            </li>
+            <li>
+              Cards will not be returned to The HUB if they are turned in within
+              a wallet, cell-phone, or other personal property.
+            </li>
+          </ul>
+        </li>
+        <li>
           <h4>Returning Property</h4>
           <ul>
             <li>
@@ -105,11 +133,23 @@ const Policies: NextPageWithLayout = () => {
           </ul>
         </li>
       </ul>
-      <p>
-        *Any items which contain food, or may carry bodily fluids will not be
-        accepted. The Cohon Center may refuse to take any lost items at the
-        discretion of it&apos; staff.
-      </p>
+      *The Cohon Center will not accept the following items:
+      <ul>
+        <li>Any item that may carry bodily fluids</li>
+        <li>Wet, dirty, or soiled items</li>
+        <li>
+          Undergarments, including underwear, socks, bras, bathing suits, etc.
+        </li>
+        <li>Towels, pillows, sheets, blankets, and other bedding</li>
+        <li>Toiletries, including makeup, chemicals, or detergents</li>
+        <li>Food items, containers with food, or other perishable items</li>
+        <li>
+          Weapons of any kind, including knives with blades longer than 6 inches
+        </li>
+        <li>
+          Any item that is deemed unsanitary and/or hazardous by the CUC staff
+        </li>
+      </ul>
     </div>
   );
 };

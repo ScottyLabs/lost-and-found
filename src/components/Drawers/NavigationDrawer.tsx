@@ -60,6 +60,10 @@ export default function NavigationDrawer() {
                 <li>
                   <Link href="/faq">FAQ</Link>
                 </li>
+                <li />
+                <li>
+                  <Link href="/policies">Policies</Link>
+                </li>
               </ul>
             </div>
           </Transition.Child>
