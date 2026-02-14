@@ -32,9 +32,9 @@ export default router({
       }
     })
   ),
-  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
-    let startOfDayDate;
-    let endOfDayDate;
+  search: publicProcedure.input(ItemSearchSchema).query(async ({ ctx, input }) => {
+    let startOfDayDate: Date | undefined;
+    let endOfDayDate: Date | undefined;
     if (input.date) {
       startOfDayDate = new Date(input.date);
       startOfDayDate.setUTCHours(0, 0, 0, 0);
@@ -43,20 +43,30 @@ export default router({
       endOfDayDate.setUTCHours(23, 59, 59, 999);
     }
 
-    return ctx.prisma.item.findMany({
-      where: {
-        name: {
-          contains: input.query
-        },
-        color: input.color ?? undefined,
-        status: input.status ?? undefined,
-        value: input.value ?? undefined,
-        categories: input.category ? { has: input.category } : undefined,
-        foundDate: input.date
-          ? { gte: startOfDayDate, lte: endOfDayDate }
-          : undefined
-      }
-    });
+    const where = {
+      name: {
+        contains: input.query
+      },
+      color: input.color ?? undefined,
+      status: input.status ?? undefined,
+      value: input.value ?? undefined,
+      categories: input.category ? { has: input.category } : undefined,
+      foundDate: input.date
+        ? { gte: startOfDayDate, lte: endOfDayDate }
+        : undefined
+    };
+
+    const [items, totalCount] = await Promise.all([
+      ctx.prisma.item.findMany({
+        where,
+        orderBy: { foundDate: 'desc' },
+        skip: (input.page - 1) * input.limit,
+        take: input.limit
+      }),
+      ctx.prisma.item.count({ where })
+    ]);
+
+    return { items, totalCount };
   }),
   download: adminProcedure
     .input(z.array(z.string()))
