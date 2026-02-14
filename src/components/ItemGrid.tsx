@@ -1,5 +1,5 @@
 import { FaCircleNotch } from 'react-icons/fa';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { trpc } from 'utils/trpc';
 import ItemCard from './ItemCard';
@@ -12,6 +12,7 @@ type Props = {
 
 export default function ItemGrid({ query }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
+  const isFirstRender = useRef(true);
   const { categories, colors, date, locations } = useItemFilterStore();
   const itemsQuery = trpc.item.listPublic.useQuery({
     query,
@@ -26,6 +27,14 @@ export default function ItemGrid({ query }: Props) {
   useEffect(() => {
     setCurrentPage(1);
   }, [query, categories, colors, locations, date]);
+
+  useEffect(() => {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }, [currentPage]);
 
   if (itemsQuery.status === 'loading')
     return (
