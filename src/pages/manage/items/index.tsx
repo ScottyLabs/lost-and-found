@@ -11,7 +11,7 @@ import useZodForm from 'hooks/useZodForm';
 import { ItemSearchSchema } from 'lib/schemas';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
-import { Fragment } from 'react';
+import { Fragment, useEffect, useState } from 'react';
 import {
   FaArchive,
   FaBox,
@@ -29,21 +29,59 @@ import { Categories, Colors } from 'types';
 import { trpc } from 'utils/trpc';
 import { z } from 'zod';
 
+const ITEMS_PER_PAGE = 50;
+
 const ItemList: React.FC<{
-  search: z.infer<typeof ItemSearchSchema>;
-}> = ({ search }) => {
-  const items = trpc.item.search.useQuery(search);
+  search: Omit<z.infer<typeof ItemSearchSchema>, 'page' | 'limit'>;
+  page: number;
+  onPageChange: (page: number) => void;
+}> = ({ search, page, onPageChange }) => {
+  const items = trpc.item.search.useQuery({
+    ...search,
+    page,
+    limit: ITEMS_PER_PAGE
+  });
   if (items.isLoading) return <FaCircleNotch className="animate-spin p-4" />;
   if (items.error) return <p>Error...</p>;
-  if (items.data.length === 0)
-    return <p className="m-4 font-bold">No Items Found</p>;
+  const { items: list, totalCount } = items.data ?? {
+    items: [],
+    totalCount: 0
+  };
+  if (list.length === 0) return <p className="m-4 font-bold">No Items Found</p>;
+
+  const totalPages = Math.ceil(totalCount / ITEMS_PER_PAGE);
 
   return (
-    <div className="mt-4 flex flex-col gap-2">
-      {items.data.map((item) => (
-        <ItemRow key={item.id} item={item} />
-      ))}
-    </div>
+    <>
+      <div className="mt-4 flex flex-col gap-2">
+        {list.map((item) => (
+          <ItemRow key={item.id} item={item} />
+        ))}
+      </div>
+      {totalPages > 1 && (
+        <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
+          <button
+            type="button"
+            className="btn-ghost btn-sm btn"
+            disabled={page <= 1}
+            onClick={() => onPageChange(page - 1)}
+          >
+            Previous
+          </button>
+          <span className="text-sm">
+            Page {page} of {totalPages}
+          </span>
+          <button
+            type="button"
+            className="btn-ghost btn-sm btn"
+            disabled={page >= totalPages}
+            onClick={() => onPageChange(page + 1)}
+          >
+            Next
+          </button>
+        </div>
+      )}
+    </>
   );
 };
 
@@ -51,6 +89,7 @@ const Manage: NextPageWithLayout = () => {
   const context = trpc.useContext();
   const itemDownloadMutation = trpc.item.download.useMutation();
   const { selectedItems, setSelectedItems } = useSelectedItemsStore();
+  const [currentPage, setCurrentPage] = useState(1);
   const methods = useZodForm({
     schema: ItemSearchSchema,
     defaultValues: {
@@ -59,10 +98,35 @@ const Manage: NextPageWithLayout = () => {
       color: null,
       value: null,
       category: null,
-      date: null
+      date: null,
+      page: 1,
+      limit: ITEMS_PER_PAGE
     }
   });
-  const items = trpc.item.search.useQuery(methods.getValues());
+  const searchParams = {
+    query: methods.watch('query'),
+    status: methods.watch('status'),
+    color: methods.watch('color'),
+    value: methods.watch('value'),
+    category: methods.watch('category'),
+    date: methods.watch('date')
+  };
+  const items = trpc.item.search.useQuery({
+    ...searchParams,
+    page: currentPage,
+    limit: ITEMS_PER_PAGE
+  });
+
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [
+    searchParams.query,
+    searchParams.status,
+    searchParams.color,
+    searchParams.value,
+    searchParams.category,
+    searchParams.date
+  ]);
   const itemMassUpdateMutation = trpc.item.massUpdate.useMutation({
     onSuccess: (res) => {
       context.item.search.invalidate();
@@ -185,12 +249,14 @@ const Manage: NextPageWithLayout = () => {
               className="checkbox"
               checked={
                 selectedItems.length > 0 &&
-                selectedItems.length === items.data?.length
+                selectedItems.length === items.data?.items?.length
               }
               onChange={(e) => {
-                console.log(e.target.checked);
                 if (!e.target.checked) setSelectedItems([]);
-                else setSelectedItems(items.data?.map((item) => item.id) ?? []);
+                else
+                  setSelectedItems(
+                    items.data?.items?.map((item) => item.id) ?? []
+                  );
               }}
             />
           </div>
@@ -278,14 +344,9 @@ const Manage: NextPageWithLayout = () => {
         </div>
       </div>
       <ItemList
-        search={{
-          query: methods.watch('query'),
-          status: methods.watch('status'),
-          color: methods.watch('color'),
-          value: methods.watch('value'),
-          category: methods.watch('category'),
-          date: methods.watch('date')
-        }}
+        search={searchParams}
+        page={currentPage}
+        onPageChange={setCurrentPage}
       />
     </>
   );
