@@ -1,5 +1,5 @@
-import { FaCircleNotch } from 'react-icons/fa';
 import { useEffect, useRef, useState } from 'react';
+import { FaCircleNotch } from 'react-icons/fa';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { trpc } from 'utils/trpc';
 import ItemCard from './ItemCard';

@@ -52,7 +52,12 @@ export default router({
           ? {}
           : {
               OR: [
-                { name: { contains: queryTrimmed, mode: 'insensitive' as const } },
+                {
+                  name: {
+                    contains: queryTrimmed,
+                    mode: 'insensitive' as const
+                  }
+                },
                 {
                   shortDescription: {
                     contains: queryTrimmed,
@@ -90,42 +95,44 @@ export default router({
       ]);
       return { items, totalCount };
     }),
-  search: publicProcedure.input(ItemSearchSchema).query(async ({ ctx, input }) => {
-    let startOfDayDate: Date | undefined;
-    let endOfDayDate: Date | undefined;
-    if (input.date) {
-      startOfDayDate = new Date(input.date);
-      startOfDayDate.setUTCHours(0, 0, 0, 0);
+  search: publicProcedure
+    .input(ItemSearchSchema)
+    .query(async ({ ctx, input }) => {
+      let startOfDayDate: Date | undefined;
+      let endOfDayDate: Date | undefined;
+      if (input.date) {
+        startOfDayDate = new Date(input.date);
+        startOfDayDate.setUTCHours(0, 0, 0, 0);
 
-      endOfDayDate = new Date(input.date);
-      endOfDayDate.setUTCHours(23, 59, 59, 999);
-    }
+        endOfDayDate = new Date(input.date);
+        endOfDayDate.setUTCHours(23, 59, 59, 999);
+      }
 
-    const where = {
-      name: {
-        contains: input.query
-      },
-      color: input.color ?? undefined,
-      status: input.status ?? undefined,
-      value: input.value ?? undefined,
-      categories: input.category ? { has: input.category } : undefined,
-      foundDate: input.date
-        ? { gte: startOfDayDate, lte: endOfDayDate }
-        : undefined
-    };
+      const where = {
+        name: {
+          contains: input.query
+        },
+        color: input.color ?? undefined,
+        status: input.status ?? undefined,
+        value: input.value ?? undefined,
+        categories: input.category ? { has: input.category } : undefined,
+        foundDate: input.date
+          ? { gte: startOfDayDate, lte: endOfDayDate }
+          : undefined
+      };
 
-    const [items, totalCount] = await Promise.all([
-      ctx.prisma.item.findMany({
-        where,
-        orderBy: { foundDate: 'desc' },
-        skip: (input.page - 1) * input.limit,
-        take: input.limit
-      }),
-      ctx.prisma.item.count({ where })
-    ]);
+      const [items, totalCount] = await Promise.all([
+        ctx.prisma.item.findMany({
+          where,
+          orderBy: { foundDate: 'desc' },
+          skip: (input.page - 1) * input.limit,
+          take: input.limit
+        }),
+        ctx.prisma.item.count({ where })
+      ]);
 
-    return { items, totalCount };
-  }),
+      return { items, totalCount };
+    }),
   download: adminProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
@@ -156,7 +163,7 @@ export default router({
       let nextCursor: typeof cursor | undefined;
       if (items.length > limit) {
         const nextItem = items.pop();
-        nextCursor = nextItem!.id;
+        nextCursor = nextItem?.id;
       }
 
       return {
