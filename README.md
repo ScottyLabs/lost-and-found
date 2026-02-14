@@ -28,6 +28,7 @@ For Mac:
 ```
 
 If you encounter linting errors when building the project, run
+
 ```
 yarn lint -- --fix
 ```
