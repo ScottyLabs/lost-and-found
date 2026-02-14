@@ -17,6 +17,7 @@ import useZodForm from 'hooks/useZodForm';
 import { ItemCreateSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
+import { Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Categories, Colors, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
@@ -38,8 +39,10 @@ const CreateItem: NextPageWithLayout = () => {
     }
   });
 
-  const methods = useZodForm({ schema: ItemCreateSchema });
-
+  const methods = useZodForm({
+    schema: ItemCreateSchema,
+    defaultValues: { identifiable: false }
+  });
   const idDetails = methods.watch('identifiable');
   const selectedColor = methods.watch('color');
 
@@ -220,19 +223,42 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
         </div>
         <div>
-          <label className="label cursor-pointer">
-            <span className="label-text">Identifiable?</span>
-            <input
-              type="checkbox"
-              className="checkbox"
-              {...methods.register('identifiable')}
+          <fieldset className="flex items-center gap-4">
+            <legend className="label-text">Identifiable?</legend>
+
+            <Controller
+              control={methods.control}
+              name="identifiable"
+              render={({ field: { value, onChange, ref } }) => (
+                <>
+                  <label className="flex cursor-pointer items-center gap-3">
+                    <span>Yes</span>
+                    <input
+                      type="radio"
+                      className="radio radio-sm"
+                      checked={value === true}
+                      onChange={() => onChange(true)}
+                      ref={ref}
+                    />
+                  </label>
+                  <label className="flex cursor-pointer items-center gap-3">
+                    <span>No</span>
+                    <input
+                      type="radio"
+                      className="radio radio-sm"
+                      checked={value === false}
+                      onChange={() => onChange(false)}
+                    />
+                  </label>
+                </>
+              )}
             />
-          </label>
+          </fieldset>
           <label className="text-xs text-error">
             {methods.formState.errors.identifiable?.message}
           </label>
         </div>
-        {idDetails ? (
+        {idDetails === true ? (
           <div>
             <div>
               <label className="label">

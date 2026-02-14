@@ -32,19 +32,20 @@ export default router({
       }
     })
   ),
-  search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
-    let startOfDayDate;
-    let endOfDayDate;
-    if (input.date) {
-      startOfDayDate = new Date(input.date);
-      startOfDayDate.setUTCHours(0, 0, 0, 0);
+  search: publicProcedure
+    .input(ItemSearchSchema)
+    .query(async ({ ctx, input }) => {
+      let startOfDayDate: Date | undefined;
+      let endOfDayDate: Date | undefined;
+      if (input.date) {
+        startOfDayDate = new Date(input.date);
+        startOfDayDate.setUTCHours(0, 0, 0, 0);
 
-      endOfDayDate = new Date(input.date);
-      endOfDayDate.setUTCHours(23, 59, 59, 999);
-    }
+        endOfDayDate = new Date(input.date);
+        endOfDayDate.setUTCHours(23, 59, 59, 999);
+      }
 
-    return ctx.prisma.item.findMany({
-      where: {
+      const where = {
         name: {
           contains: input.query
         },
@@ -55,9 +56,20 @@ export default router({
         foundDate: input.date
           ? { gte: startOfDayDate, lte: endOfDayDate }
           : undefined
-      }
-    });
-  }),
+      };
+
+      const [items, totalCount] = await Promise.all([
+        ctx.prisma.item.findMany({
+          where,
+          orderBy: { foundDate: 'desc' },
+          skip: (input.page - 1) * input.limit,
+          take: input.limit
+        }),
+        ctx.prisma.item.count({ where })
+      ]);
+
+      return { items, totalCount };
+    }),
   download: adminProcedure
     .input(z.array(z.string()))
     .mutation(async ({ ctx, input }) => {
@@ -88,7 +100,7 @@ export default router({
       let nextCursor: typeof cursor | undefined;
       if (items.length > limit) {
         const nextItem = items.pop();
-        nextCursor = nextItem!.id;
+        nextCursor = nextItem?.id;
       }
 
       return {
