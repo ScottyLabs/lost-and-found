@@ -1,4 +1,4 @@
-import { Status } from '@prisma/client';
+import { Category, Color, Location, Status } from '@prisma/client';
 import {
   ItemCreateSchema,
   ItemSearchSchema,
@@ -29,9 +29,67 @@ export default router({
     ctx.prisma.item.findMany({
       orderBy: {
         foundDate: 'desc'
-      }
+      },
+      take: 50
     })
   ),
+  listPublic: publicProcedure
+    .input(
+      z.object({
+        query: z.string().default(''),
+        categories: z.array(z.nativeEnum(Category)).default([]),
+        colors: z.array(z.nativeEnum(Color)).default([]),
+        locations: z.array(z.nativeEnum(Location)).default([]),
+        date: z.coerce.date().nullable().default(null),
+        page: z.number().min(1).default(1),
+        limit: z.number().min(1).max(100).default(50)
+      })
+    )
+    .query(async ({ ctx, input }) => {
+      const queryTrimmed = input.query.trim();
+      const queryFilter =
+        queryTrimmed === ''
+          ? {}
+          : {
+              OR: [
+                { name: { contains: queryTrimmed, mode: 'insensitive' as const } },
+                {
+                  shortDescription: {
+                    contains: queryTrimmed,
+                    mode: 'insensitive' as const
+                  }
+                },
+                {
+                  foundDescription: {
+                    contains: queryTrimmed,
+                    mode: 'insensitive' as const
+                  }
+                }
+              ]
+            };
+      const where = {
+        status: Status.APPROVED,
+        ...queryFilter,
+        ...(input.categories.length
+          ? { categories: { hasSome: input.categories } }
+          : {}),
+        ...(input.colors.length ? { color: { in: input.colors } } : {}),
+        ...(input.locations.length
+          ? { foundLocation: { in: input.locations } }
+          : {}),
+        ...(input.date ? { foundDate: { gt: input.date } } : {})
+      };
+      const [items, totalCount] = await Promise.all([
+        ctx.prisma.item.findMany({
+          where,
+          orderBy: { foundDate: 'desc' },
+          skip: (input.page - 1) * input.limit,
+          take: input.limit
+        }),
+        ctx.prisma.item.count({ where })
+      ]);
+      return { items, totalCount };
+    }),
   search: publicProcedure.input(ItemSearchSchema).query(async ({ ctx, input }) => {
     let startOfDayDate: Date | undefined;
     let endOfDayDate: Date | undefined;
