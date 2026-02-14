@@ -258,7 +258,7 @@ const CreateItem: NextPageWithLayout = () => {
             {methods.formState.errors.identifiable?.message}
           </label>
         </div>
-        {idDetails === true || idDetails === 'true' ? (
+        {idDetails === true ? (
           <div>
             <div>
               <label className="label">
