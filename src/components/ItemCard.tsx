@@ -3,11 +3,15 @@ import { Locations } from 'types';
 
 type Props = {
   item: Item;
+  onClick: (id: string) => void;
 };
 
-export default function ItemCard({ item }: Props) {
+export default function ItemCard({ item, onClick }: Props) {
   return (
-    <div className="w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg">
+    <div
+      className="w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg"
+      onClick={() => onClick(item.id)}
+    >
       <div className="flex md:flex-col">
         <h2 className="flex-1 text-lg font-bold">{item.name}</h2>
         <span className="text-xs">
