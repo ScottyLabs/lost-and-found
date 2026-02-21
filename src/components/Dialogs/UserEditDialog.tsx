@@ -13,7 +13,7 @@ function EditUserForm() {
   const context = trpc.useContext();
   const { selectedUser, setSelectedUser } = useSelectedUserStore();
   const userUpdateMutation = trpc.user.update.useMutation({
-    onSuccess: (res) => {
+    onSuccess: () => {
       context.user.search.invalidate();
       setSelectedUser(null);
       toast.success(`Updated account`);
@@ -31,6 +31,7 @@ function EditUserForm() {
       permission: selectedUser.user.permission,
       notifications: selectedUser.user.notifications
     });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- only reset when selectedUser changes
   }, [selectedUser]);
   const { clearDialog } = useDialogStore();
 

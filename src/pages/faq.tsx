@@ -15,7 +15,7 @@ const Questions: Record<string, () => ReactNode> = {
   ),
   "Why can't I find my item?": () => {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    const { subscribeDialog } = useDialogStore();
+    useDialogStore(); // subscribeDialog unused (commented-out button)
 
     return (
       <div className="prose">

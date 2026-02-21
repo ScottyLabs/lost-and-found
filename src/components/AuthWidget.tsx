@@ -17,7 +17,7 @@ import useDialogStore from 'stores/DialogStore';
 import { trpc } from 'utils/trpc';
 
 function AuthWidget() {
-  const { isLoaded: isUserLoaded, isSignedIn, user } = useUser();
+  const { isLoaded: isUserLoaded, isSignedIn } = useUser();
   const { isLoaded: isSignInLoaded } = useSignIn();
   const { subscribeDialog, manageSubscriptionsDialog } = useDialogStore();
   const { data, isSuccess } = trpc.user.me.useQuery();

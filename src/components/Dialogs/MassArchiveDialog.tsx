@@ -33,7 +33,7 @@ export default function MassArchiveDialog() {
       <div className="flex h-full flex-col gap-4">
         <span className="text-2xl font-bold">Mass Archive</span>
         <form
-          onSubmit={methods.handleSubmit((data) => {
+          onSubmit={methods.handleSubmit(() => {
             clearDialog();
             itemMassUpdateMutation.mutate({
               ids: itemsToArchive.data?.map((item) => item.id) ?? [],

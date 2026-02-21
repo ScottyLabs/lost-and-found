@@ -41,7 +41,9 @@ export function Dialog({
               leaveTo="opacity-0 scale-95"
             >
               <HeadlessDialog.Panel
-                className={`h-full w-full transform overflow-hidden bg-base-100 p-6 text-left align-middle shadow-xl transition-all md:h-auto md:max-w-md md:rounded-2xl ${panelClassName ?? ''}`}
+                className={`h-full w-full transform overflow-hidden bg-base-100 p-6 text-left align-middle shadow-xl transition-all md:h-auto md:max-w-md md:rounded-2xl ${
+                  panelClassName ?? ''
+                }`}
               >
                 {children}
               </HeadlessDialog.Panel>

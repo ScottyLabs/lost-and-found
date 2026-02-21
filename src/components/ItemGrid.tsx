@@ -1,10 +1,10 @@
+import type { Item } from '@prisma/client';
 import { useEffect, useRef, useState } from 'react';
 import { FaCircleNotch } from 'react-icons/fa';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { trpc } from 'utils/trpc';
-import ItemCard from './ItemCard';
 import ItemDetailDialog from './Dialogs/ItemDetailDialog';
-import type { Item } from '@prisma/client';
+import ItemCard from './ItemCard';
 
 const ITEMS_PER_PAGE = 50;
 

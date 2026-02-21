@@ -22,7 +22,9 @@ export default function ItemCard({ item, onClick }: Props) {
           : undefined
       }
       onClick={onClick}
-      className={`w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg ${onClick ? 'cursor-pointer' : ''}`}
+      className={`w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg ${
+        onClick ? 'cursor-pointer' : ''
+      }`}
     >
       <div className="flex md:flex-col">
         <h2 className="flex-1 text-lg font-bold">{item.name}</h2>
