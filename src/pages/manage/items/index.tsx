@@ -59,7 +59,8 @@ const Manage: NextPageWithLayout = () => {
       color: null,
       value: null,
       category: null,
-      date: null
+      dateStart: null,
+      dateEnd: null
     }
   });
   const items = trpc.item.search.useQuery(methods.getValues());
@@ -154,13 +155,20 @@ const Manage: NextPageWithLayout = () => {
                     </div>
                   </div>
                   <div className="flex w-full items-center justify-between p-4">
-                    <div className="font-bold">Date</div>
+                    <div className="font-bold">Date Found</div>
                     <div className="w-48">
                       <input
-                        type="date"
+                        type="dateStart"
                         placeholder="Type here"
-                        className="input-bordered input input-sm w-full max-w-xs"
-                        {...methods.register('date')}
+                        className="input-bordered input input-sm w-full sm:w-1/2"
+                        {...methods.register('dateStart')}
+                      />
+
+                      <input
+                        type="dateEnd"
+                        placeholder="Type here"
+                        className="input-bordered input input-sm w-full sm:w-1/2"
+                        {...methods.register('dateEnd')}
                       />
                     </div>
                   </div>
@@ -284,7 +292,8 @@ const Manage: NextPageWithLayout = () => {
           color: methods.watch('color'),
           value: methods.watch('value'),
           category: methods.watch('category'),
-          date: methods.watch('date')
+          dateStart: methods.watch('dateStart'),
+          dateEnd: methods.watch('dateEnd')
         }}
       />
     </>

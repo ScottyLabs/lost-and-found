@@ -14,13 +14,15 @@ import MyListbox from './Form/Listbox';
 export default function FilterWidget() {
   const methods = useZodForm({
     schema: z.object({
-      date: z.coerce.date().nullable(),
+      dateStart: z.coerce.date().nullable(),
+      dateEnd: z.coerce.date().nullable(),
       categories: z.array(z.nativeEnum(Category)),
       locations: z.array(z.nativeEnum(Location)),
       colors: z.array(z.nativeEnum(Color))
     }),
     defaultValues: {
-      date: null,
+      dateStart: null,
+      dateEnd: null,
       categories: [],
       locations: [],
       colors: []
@@ -46,21 +48,26 @@ export default function FilterWidget() {
       </div>
       <form
         className="form-control gap-4"
-        onSubmit={methods.handleSubmit(async (data) => setFilter(data))}
+        onSubmit={methods.handleSubmit(async (data) => setFilter({ ...data }))}
       >
         <div className="form-control w-full max-w-xs">
           <label className="label">
-            <span className="label-text">Date Lost</span>
+            <span className="label-text">Date Found</span>
           </label>
-          <input
-            type="date"
-            placeholder="Type here"
-            className="input-bordered input input-sm w-full max-w-xs font-bold"
-            {...methods.register('date')}
-          />
-          <span className="text-xs text-error">
-            {methods.formState.errors.date?.message}
-          </span>
+
+          <div className="flex flex-col gap-2 sm:flex-row">
+            <input
+              type="date"
+              className="input-bordered input input-sm w-full font-bold sm:w-1/2"
+              {...methods.register('dateStart')}
+            />
+
+            <input
+              type="date"
+              className="input-bordered input input-sm w-full font-bold sm:w-1/2"
+              {...methods.register('dateEnd')}
+            />
+          </div>
         </div>
         <div className="form-control w-full max-w-xs">
           <label className="label">
