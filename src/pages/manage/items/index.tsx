@@ -79,11 +79,34 @@ const Manage: NextPageWithLayout = () => {
           onSubmit={methods.handleSubmit(console.log, console.error)}
         >
           <div className="flex gap-2">
+            <div className="inline-flex rounded-lg border border-gray-300 bg-white shadow-sm">
+              {Object.values(Status).map((statusKey) => (
+                <button
+                  key={statusKey}
+                  type="button"
+                  className={`px-4 py-2 text-sm font-medium focus:outline-none
+          ${methods.watch('status') === statusKey ? 'btn-accent' : 'btn-ghost'}
+          ${
+            // Add rounded corners only to first and last buttons
+            statusKey === 'PENDING'
+              ? 'rounded-l-lg'
+              : statusKey === 'ARCHIVED'
+              ? 'rounded-r-lg'
+              : ''
+          }
+        `}
+                  onClick={() => methods.setValue('status', statusKey)}
+                >
+                  {statusKey.charAt(0) + statusKey.slice(1).toLowerCase()}
+                </button>
+              ))}
+            </div>
             <input
               placeholder="Search..."
               className="input-bordered input w-full"
               {...methods.register('query')}
             />
+
             <Popover as="div" className="relative inline-block text-left">
               <Popover.Button className="btn-accent btn">
                 <FaSortAmountDown />
