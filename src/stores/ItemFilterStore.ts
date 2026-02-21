@@ -2,17 +2,20 @@ import { Category, Color, Location } from '@prisma/client';
 import { create } from 'zustand';
 
 type ItemFilterStore = {
-  date: Date | null;
+  dateStart: Date | null;
+  dateEnd: Date | null;
   categories: Category[];
   locations: Location[];
   colors: Color[];
   setFilter: ({
-    date,
+    dateStart,
+    dateEnd,
     categories,
     locations,
     colors
   }: {
-    date: Date | null;
+    dateStart: Date | null;
+    dateEnd: Date | null;
     categories: Category[];
     locations: Location[];
     colors: Color[];
@@ -21,12 +24,24 @@ type ItemFilterStore = {
 };
 
 export default create<ItemFilterStore>((set) => ({
-  date: null,
+  dateStart: null,
+  dateEnd: null,
   categories: [],
   locations: [],
   colors: [],
-  setFilter: ({ date = null, categories = [], locations = [], colors = [] }) =>
-    set(() => ({ date, categories, locations, colors })),
+  setFilter: ({
+    dateStart = null,
+    dateEnd = null,
+    categories = [],
+    locations = [],
+    colors = []
+  }) => set(() => ({ dateStart, dateEnd, categories, locations, colors })),
   resetFilter: () =>
-    set(() => ({ date: null, categories: [], locations: [], colors: [] }))
+    set(() => ({
+      dateStart: null,
+      dateEnd: null,
+      categories: [],
+      locations: [],
+      colors: []
+    }))
 }));
