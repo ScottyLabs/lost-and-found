@@ -223,37 +223,36 @@ const CreateItem: NextPageWithLayout = () => {
           </label>
         </div>
         <div>
-          <fieldset className="flex items-center gap-4">
-            <legend className="label-text">Identifiable?</legend>
-
-            <Controller
-              control={methods.control}
-              name="identifiable"
-              render={({ field: { value, onChange, ref } }) => (
-                <>
-                  <label className="flex cursor-pointer items-center gap-3">
-                    <span>Yes</span>
-                    <input
-                      type="radio"
-                      className="radio radio-sm"
-                      checked={value === true}
-                      onChange={() => onChange(true)}
-                      ref={ref}
-                    />
-                  </label>
-                  <label className="flex cursor-pointer items-center gap-3">
-                    <span>No</span>
-                    <input
-                      type="radio"
-                      className="radio radio-sm"
-                      checked={value === false}
-                      onChange={() => onChange(false)}
-                    />
-                  </label>
-                </>
-              )}
-            />
-          </fieldset>
+          <label className="label">
+            <span className="label-text">Identifiable?</span>
+          </label>
+          <Controller
+            control={methods.control}
+            name="identifiable"
+            render={({ field: { value, onChange, ref } }) => (
+              <>
+                <label className="label cursor-pointer justify-start gap-3">
+                  <input
+                    type="radio"
+                    className="radio radio-sm"
+                    checked={value === true}
+                    onChange={() => onChange(true)}
+                    ref={ref}
+                  />
+                  <span className="label-text-alt">Yes</span>
+                </label>
+                <label className="label cursor-pointer justify-start gap-3">
+                  <input
+                    type="radio"
+                    className="radio radio-sm"
+                    checked={value === false}
+                    onChange={() => onChange(false)}
+                  />
+                  <span className="label-text-alt">No</span>
+                </label>
+              </>
+            )}
+          />
           <label className="text-xs text-error">
             {methods.formState.errors.identifiable?.message}
           </label>
