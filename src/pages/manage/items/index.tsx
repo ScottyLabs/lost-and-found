@@ -80,7 +80,7 @@ const Manage: NextPageWithLayout = () => {
         >
           <div className="flex gap-2">
             <div className="inline-flex rounded-lg border border-gray-300 bg-white shadow-sm">
-              {['PENDING', 'APPROVED', 'ARCHIVED'].map((statusKey) => (
+              {Object.values(Status).map((statusKey) => (
                 <button
                   key={statusKey}
                   type="button"
