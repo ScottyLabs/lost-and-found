@@ -13,6 +13,7 @@ import useZodForm from 'hooks/useZodForm';
 import { ItemSchema } from 'lib/schemas';
 import { useRouter } from 'next/router';
 import { NextPageWithLayout } from 'pages/_app';
+import { Controller } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { Categories, Colors, Locations, RetrieveLocations } from 'types';
 import { trpc } from 'utils/trpc';
@@ -203,14 +204,36 @@ function EditItemForm({ item }: EditItemFormProps) {
         </label>
       </div>
       <div>
-        <label className="label cursor-pointer">
+        <div className="flex flex-wrap items-center gap-4">
           <span className="label-text">Identifiable?</span>
-          <input
-            type="checkbox"
-            className="checkbox"
-            {...methods.register('identifiable')}
+          <Controller
+            control={methods.control}
+            name="identifiable"
+            render={({ field: { value, onChange, ref } }) => (
+              <>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <span>Yes</span>
+                  <input
+                    type="radio"
+                    className="radio radio-sm"
+                    checked={value === true}
+                    onChange={() => onChange(true)}
+                    ref={ref}
+                  />
+                </label>
+                <label className="flex cursor-pointer items-center gap-2">
+                  <span>No</span>
+                  <input
+                    type="radio"
+                    className="radio radio-sm"
+                    checked={value === false}
+                    onChange={() => onChange(false)}
+                  />
+                </label>
+              </>
+            )}
           />
-        </label>
+        </div>
         <label className="text-xs text-error">
           {methods.formState.errors.identifiable?.message}
         </label>
