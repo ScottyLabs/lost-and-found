@@ -3,11 +3,27 @@ import { Locations } from 'types';
 
 type Props = {
   item: Item;
+  onClick?: () => void;
 };
 
-export default function ItemCard({ item }: Props) {
+export default function ItemCard({ item, onClick }: Props) {
   return (
-    <div className="w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg">
+    <div
+      role={onClick ? 'button' : undefined}
+      tabIndex={onClick ? 0 : undefined}
+      onKeyDown={
+        onClick
+          ? (e) => {
+              if (e.key === 'Enter' || e.key === ' ') {
+                e.preventDefault();
+                onClick();
+              }
+            }
+          : undefined
+      }
+      onClick={onClick}
+      className={`w-full rounded-lg border border-accent p-3 text-black text-opacity-60 shadow-md transition-all hover:shadow-lg ${onClick ? 'cursor-pointer' : ''}`}
+    >
       <div className="flex md:flex-col">
         <h2 className="flex-1 text-lg font-bold">{item.name}</h2>
         <span className="text-xs">

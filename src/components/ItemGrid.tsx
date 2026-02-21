@@ -3,6 +3,8 @@ import { FaCircleNotch } from 'react-icons/fa';
 import useItemFilterStore from 'stores/ItemFilterStore';
 import { trpc } from 'utils/trpc';
 import ItemCard from './ItemCard';
+import ItemDetailDialog from './Dialogs/ItemDetailDialog';
+import type { Item } from '@prisma/client';
 
 const ITEMS_PER_PAGE = 50;
 
@@ -12,6 +14,7 @@ type Props = {
 
 export default function ItemGrid({ query }: Props) {
   const [currentPage, setCurrentPage] = useState(1);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
   const isFirstRender = useRef(true);
   const { categories, colors, date, locations } = useItemFilterStore();
   const itemsQuery = trpc.item.listPublic.useQuery({
@@ -63,9 +66,18 @@ export default function ItemGrid({ query }: Props) {
     <>
       <div className="grid w-full grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
         {items.map((item) => (
-          <ItemCard key={item.id} item={item} />
+          <ItemCard
+            key={item.id}
+            item={item}
+            onClick={() => setSelectedItem(item)}
+          />
         ))}
       </div>
+      <ItemDetailDialog
+        item={selectedItem}
+        isOpen={!!selectedItem}
+        onClose={() => setSelectedItem(null)}
+      />
       {totalPages > 1 && (
         <div className="mt-4 flex flex-wrap items-center justify-center gap-2">
           <button
