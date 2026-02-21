@@ -33,23 +33,27 @@ export default function ItemDetailDialog({
     : [{ key: 'none', label: '—' }];
 
   return (
-    <Dialog isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col gap-3">
+    <Dialog
+      isOpen={isOpen}
+      onClose={onClose}
+      panelClassName="border border-accent pt-4 px-4 pb-6 text-black text-opacity-60 md:min-h-[26rem] md:rounded-xl"
+    >
+      <div className="flex flex-col gap-3 pb-6">
         <div className="flex items-start justify-between gap-2">
-          <h2 className="text-xl font-bold text-base-content">{item.name}</h2>
+          <h2 className="text-xl font-bold">{item.name}</h2>
           <button
             type="button"
-            className="btn-ghost btn-sm btn-circle btn shrink-0"
+            className="btn-ghost btn-sm btn-circle btn shrink-0 hover:text-opacity-100"
             onClick={onClose}
             aria-label="Close"
           >
             <FaTimes className="h-5 w-5" />
           </button>
         </div>
-        <p className="text-sm text-base-content/70">
+        <p className="-mt-2 text-sm">
           Date Found: {formatDateFound(new Date(item.foundDate))}
         </p>
-        <div className="flex flex-wrap gap-1">
+        <div className="mt-4 flex flex-wrap gap-1">
           {categoryPills.map(({ key, label }) => (
             <span
               key={key}
@@ -59,25 +63,23 @@ export default function ItemDetailDialog({
             </span>
           ))}
         </div>
-        <p className="text-base text-base-content">
+        <p className="text-base font-light">
           {item.shortDescription ?? 'No description'}
         </p>
-        <div className="divider my-0 border-base-content/20" />
-        <div className="flex flex-col gap-1 text-sm text-base-content/60">
-          <p>
-            <span className="font-semibold text-base-content/80">Found: </span>
-            {Locations[item.foundLocation]}
-          </p>
-          <p>
-            <span className="font-semibold text-base-content/80">Color: </span>
-            {Colors[item.color]}
-          </p>
-          <p>
-            <span className="font-semibold text-base-content/80">
-              Retrieve From:{' '}
-            </span>
-            {item.retrieveLocation}
-          </p>
+        <div className="divider mt-4 border-black border-opacity-20" />
+        <div className="flex flex-col gap-3.5">
+          <div>
+            <span className="font-bold">Found: </span>
+            <span>{Locations[item.foundLocation]}</span>
+          </div>
+          <div>
+            <span className="font-bold">Color: </span>
+            <span>{Colors[item.color]}</span>
+          </div>
+          <div>
+            <span className="font-bold">Retrieve From: </span>
+            <span>{item.retrieveLocation}</span>
+          </div>
         </div>
       </div>
     </Dialog>

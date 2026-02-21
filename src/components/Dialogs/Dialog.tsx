@@ -5,9 +5,15 @@ type DialogProps = {
   children: React.ReactNode;
   isOpen: boolean;
   onClose: () => void;
+  panelClassName?: string;
 };
 
-export function Dialog({ children, isOpen, onClose }: DialogProps) {
+export function Dialog({
+  children,
+  isOpen,
+  onClose,
+  panelClassName
+}: DialogProps) {
   return (
     <Transition appear show={isOpen} as={Fragment}>
       <HeadlessDialog as="div" className="relative z-10" onClose={onClose}>
@@ -34,7 +40,9 @@ export function Dialog({ children, isOpen, onClose }: DialogProps) {
               leaveFrom="opacity-100 scale-100"
               leaveTo="opacity-0 scale-95"
             >
-              <HeadlessDialog.Panel className="h-full w-full transform overflow-hidden bg-base-100 p-6 text-left align-middle shadow-xl transition-all md:h-auto md:max-w-md md:rounded-2xl">
+              <HeadlessDialog.Panel
+                className={`h-full w-full transform overflow-hidden bg-base-100 p-6 text-left align-middle shadow-xl transition-all md:h-auto md:max-w-md md:rounded-2xl ${panelClassName ?? ''}`}
+              >
                 {children}
               </HeadlessDialog.Panel>
             </Transition.Child>
