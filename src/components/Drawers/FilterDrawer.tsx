@@ -14,13 +14,15 @@ export default function FilterDrawer() {
   const { drawer, clearDrawer } = useDrawerStore();
   const methods = useZodForm({
     schema: z.object({
-      date: z.coerce.date().nullable(),
+      dateStart: z.coerce.date().nullable(),
+      dateEnd: z.coerce.date().nullable(),
       categories: z.array(z.nativeEnum(Category)),
       locations: z.array(z.nativeEnum(Location)),
       colors: z.array(z.nativeEnum(Color))
     }),
     defaultValues: {
-      date: null,
+      dateStart: null,
+      dateEnd: null,
       categories: [],
       locations: [],
       colors: []
@@ -76,11 +78,18 @@ export default function FilterDrawer() {
                 className="m-4"
                 onSubmit={methods.handleSubmit(async (data) => setFilter(data))}
               >
-                <MyDisclosure title="Date Lost">
+                <MyDisclosure title="Date Lost Start">
                   <input
                     type="date"
                     className="input input-sm w-full"
-                    {...methods.register('date')}
+                    {...methods.register('dateStart')}
+                  />
+                </MyDisclosure>
+                <MyDisclosure title="Date Lost End">
+                  <input
+                    type="date"
+                    className="input input-sm w-full"
+                    {...methods.register('dateEnd')}
                   />
                 </MyDisclosure>
                 <MyDisclosure title="Item Category">

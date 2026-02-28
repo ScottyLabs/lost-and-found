@@ -33,13 +33,17 @@ export default router({
     })
   ),
   search: publicProcedure.input(ItemSearchSchema).query(({ ctx, input }) => {
+    console.log('HELLO');
+    console.error('WORK');
     let startOfDayDate;
     let endOfDayDate;
-    if (input.date) {
-      startOfDayDate = new Date(input.date);
+    if (input.dateStart) {
+      startOfDayDate = new Date(input.dateStart);
       startOfDayDate.setUTCHours(0, 0, 0, 0);
+    }
 
-      endOfDayDate = new Date(input.date);
+    if (input.dateEnd) {
+      endOfDayDate = new Date(input.dateEnd);
       endOfDayDate.setUTCHours(23, 59, 59, 999);
     }
 
@@ -52,9 +56,13 @@ export default router({
         status: input.status ?? undefined,
         value: input.value ?? undefined,
         categories: input.category ? { has: input.category } : undefined,
-        foundDate: input.date
-          ? { gte: startOfDayDate, lte: endOfDayDate }
-          : undefined
+        foundDate:
+          startOfDayDate || endOfDayDate
+            ? {
+                gte: startOfDayDate ?? undefined,
+                lte: endOfDayDate ?? undefined
+              }
+            : undefined
       }
     });
   }),
