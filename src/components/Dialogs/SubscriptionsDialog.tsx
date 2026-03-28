@@ -11,7 +11,7 @@ type SubscriptionItemProps = {
 };
 
 function SubscriptionItem({
-  subscription: { id, createdAt, category }
+  subscription: { createdAt, category }
 }: SubscriptionItemProps) {
   const context = trpc.useContext();
 

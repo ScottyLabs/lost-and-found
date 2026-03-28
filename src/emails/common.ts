@@ -8,7 +8,7 @@ export async function getEmails(users: User[]) {
   );
 
   const emails = clerkUsers.map(
-    (clerkUser) => clerkUser.emailAddresses[0]!.emailAddress
+    (clerkUser) => clerkUser.emailAddresses[0]?.emailAddress ?? ''
   );
 
   return emails;

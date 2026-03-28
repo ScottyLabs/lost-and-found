@@ -31,7 +31,7 @@ export default router({
         })
       );
 
-      return data.filter(({ clerkUser, user }) => {
+      return data.filter(({ clerkUser }) => {
         if (clerkUser.username) {
           return clerkUser.username
             .toLowerCase()

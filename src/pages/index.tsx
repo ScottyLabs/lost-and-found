@@ -20,7 +20,7 @@ import { NextPageWithLayout } from './_app';
 const Home: NextPageWithLayout = () => {
   const { filterDrawer } = useDrawerStore();
   const { subscribeDialog } = useDialogStore();
-  const { setFilter } = useActiveFilterStore();
+  useActiveFilterStore();
   const [query, setQuery] = useState('');
 
   return (

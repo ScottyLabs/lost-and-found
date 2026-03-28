@@ -1,7 +1,11 @@
 import MainLayout from 'components/Layouts/MainLayout';
-import Image from 'next/image';
+import dynamic from 'next/dynamic';
 import { FaLocationArrow, FaMailBulk, FaPhoneAlt } from 'react-icons/fa';
 import { NextPageWithLayout } from './_app';
+
+const FoundMapDynamic = dynamic(() => import('components/FoundMap'), {
+  ssr: false
+});
 
 const Found: NextPageWithLayout = () => {
   return (
@@ -42,12 +46,10 @@ const Found: NextPageWithLayout = () => {
         </div>
       </div>
       <div className="flex-1">
-        <Image
-          className="my-8 rounded-lg border"
-          alt="Cohon University Center"
-          src="/cuc.png"
+        <FoundMapDynamic
           width={384}
           height={384}
+          className="my-8 overflow-hidden rounded-lg border border-base-content/20"
         />
       </div>
     </div>

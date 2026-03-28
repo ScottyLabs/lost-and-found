@@ -25,4 +25,5 @@ Object.keys(serverEnv.data).forEach((key) => {
   }
 });
 
-export default { ...serverEnv.data, ...clientEnv };
+const env = { ...serverEnv.data, ...clientEnv };
+export default env;
