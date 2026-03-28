@@ -11,7 +11,7 @@ import useZodForm from 'hooks/useZodForm';
 import { ItemSearchSchema } from 'lib/schemas';
 import Link from 'next/link';
 import { NextPageWithLayout } from 'pages/_app';
-import { Fragment, useEffect, useState } from 'react';
+import { Fragment, useEffect, useRef, useState } from 'react';
 import {
   FaArchive,
   FaBox,
@@ -116,6 +116,21 @@ const Manage: NextPageWithLayout = () => {
     page: currentPage,
     limit: ITEMS_PER_PAGE
   });
+
+  const pageItems = items.data?.items ?? [];
+  const allOnPageSelected =
+    pageItems.length > 0 &&
+    pageItems.every((item) => selectedItems.includes(item.id));
+  const someOnPageSelected = pageItems.some((item) =>
+    selectedItems.includes(item.id)
+  );
+  const selectAllRef = useRef<HTMLInputElement>(null);
+  useEffect(() => {
+    const el = selectAllRef.current;
+    if (el) {
+      el.indeterminate = someOnPageSelected && !allOnPageSelected;
+    }
+  }, [someOnPageSelected, allOnPageSelected]);
 
   useEffect(() => {
     setCurrentPage(1);
@@ -245,18 +260,13 @@ const Manage: NextPageWithLayout = () => {
         <div className="mt-2 flex flex-wrap justify-end gap-2">
           <div className="ml-3 flex flex-1 items-center">
             <input
+              ref={selectAllRef}
               type="checkbox"
               className="checkbox"
-              checked={
-                selectedItems.length > 0 &&
-                selectedItems.length === items.data?.items?.length
-              }
+              checked={allOnPageSelected}
               onChange={(e) => {
                 if (!e.target.checked) setSelectedItems([]);
-                else
-                  setSelectedItems(
-                    items.data?.items?.map((item) => item.id) ?? []
-                  );
+                else setSelectedItems(pageItems.map((item) => item.id));
               }}
             />
           </div>
