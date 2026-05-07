@@ -14,8 +14,9 @@ import {
   Text
 } from '@react-email/components';
 
-import { Tailwind } from './TailwindCompat';
 import { Categories } from 'types';
+
+import { Tailwind } from './TailwindCompat';
 
 const baseUrl = process.env.DEPLOY_URL;
 

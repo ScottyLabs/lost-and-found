@@ -14,8 +14,9 @@ import {
   Text
 } from '@react-email/components';
 
-import { Tailwind } from './TailwindCompat';
 import { Categories } from 'types';
+
+import { Tailwind } from './TailwindCompat';
 
 export type Props = {
   previewText?: string;

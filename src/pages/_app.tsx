@@ -8,17 +8,16 @@ import FilterDrawer from 'components/Drawers/FilterDrawer';
 import NavigationDrawer from 'components/Drawers/NavigationDrawer';
 import { NextPage } from 'next';
 import { ThemeProvider } from 'next-themes';
+import { AppProps } from 'next/app';
 import { Lato } from 'next/font/google';
 import Head from 'next/head';
-import { AppProps } from 'next/app';
 import React, { PropsWithChildren } from 'react';
 import { ToastContainer } from 'react-toastify';
 import { trpc } from 'utils/trpc';
 
 /** Clerk v7 types ClerkProvider as async; bridge for TS + React 18 JSX rules. */
-const ClerkProvider = ClerkProviderNext as unknown as React.ComponentType<
-  PropsWithChildren
->;
+const ClerkProvider =
+  ClerkProviderNext as unknown as React.ComponentType<PropsWithChildren>;
 
 const lato = Lato({
   subsets: ['latin-ext'],
