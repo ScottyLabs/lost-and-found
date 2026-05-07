@@ -1,4 +1,4 @@
-import { SignInButton, SignOutButton, useSignIn, useUser } from '@clerk/nextjs';
+import { SignInButton, SignOutButton, useAuth, useUser } from '@clerk/nextjs';
 import { Menu, Transition } from '@headlessui/react';
 import { Permission } from '@prisma/client';
 import Link from 'next/link';
@@ -18,14 +18,14 @@ import { trpc } from 'utils/trpc';
 
 function AuthWidget() {
   const { isLoaded: isUserLoaded, isSignedIn } = useUser();
-  const { isLoaded: isSignInLoaded } = useSignIn();
+  const { isLoaded: isAuthLoaded } = useAuth();
   const { subscribeDialog, manageSubscriptionsDialog } = useDialogStore();
   const { data, isSuccess } = trpc.user.me.useQuery();
 
-  if (!isUserLoaded || !isSignInLoaded || !isSuccess) {
+  if (!isUserLoaded || !isAuthLoaded || !isSuccess) {
     return (
       <div className="btn-disabled btn-ghost btn-circle btn">
-        <FaCircleNotch className="animate-spin text-white md:text-black" />;
+        <FaCircleNotch className="animate-spin text-white md:text-black" />
       </div>
     );
   }

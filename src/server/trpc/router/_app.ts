@@ -4,6 +4,7 @@ import account from './account';
 import audit from './audit';
 import item from './item';
 import subscription from './subscription';
+import test from './test';
 import user from './user';
 
 export const appRouter = router({
@@ -11,6 +12,7 @@ export const appRouter = router({
   audit,
   item,
   subscription,
+  test,
   user
 });
 

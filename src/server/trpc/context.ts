@@ -1,13 +1,14 @@
-import {
-  SignedInAuthObject,
-  SignedOutAuthObject
-} from '@clerk/nextjs/dist/types/server';
 import type { inferAsyncReturnType } from '@trpc/server';
 import prisma from 'server/db/client';
 
+/** Same shape as `getAuth(req)` from `@clerk/nextjs/server` (session auth, not OAuth machine tokens). */
+export type ClerkSessionAuth = ReturnType<
+  typeof import('@clerk/nextjs/server').getAuth
+>;
+
 export const createTRPCContext = async (opts: {
   headers: Headers;
-  session: SignedInAuthObject | SignedOutAuthObject;
+  session: ClerkSessionAuth;
 }) => {
   const session = opts.session;
   const source = opts.headers.get('x-trpc-source') ?? 'unknown';

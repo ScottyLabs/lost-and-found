@@ -9,9 +9,10 @@ import {
   Img,
   Row,
   Section,
-  Tailwind,
   Text
 } from '@react-email/components';
+
+import { Tailwind } from './TailwindCompat';
 
 const baseUrl = process.env.DEPLOY_URL;
 

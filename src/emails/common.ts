@@ -3,8 +3,9 @@ import prisma from '~/server/db/client';
 
 type User = Awaited<ReturnType<typeof prisma.user.findMany>>[number];
 export async function getEmails(users: User[]) {
+  const client = await clerkClient();
   const clerkUsers = await Promise.all(
-    users.map((user) => clerkClient.users.getUser(user.externalId))
+    users.map((user) => client.users.getUser(user.externalId))
   );
 
   const emails = clerkUsers.map(

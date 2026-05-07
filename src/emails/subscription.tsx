@@ -11,9 +11,10 @@ import {
   Preview,
   Row,
   Section,
-  Tailwind,
   Text
 } from '@react-email/components';
+
+import { Tailwind } from './TailwindCompat';
 import { Categories } from 'types';
 
 export type Props = {

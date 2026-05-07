@@ -24,9 +24,10 @@ export default router({
     .input(UserSearchSchema)
     .query(async ({ ctx, input }) => {
       const users = await ctx.prisma.user.findMany();
+      const client = await clerkClient();
       const data = await Promise.all(
         users.map(async (user) => {
-          const clerkUser = await clerkClient.users.getUser(user.externalId);
+          const clerkUser = await client.users.getUser(user.externalId);
           return { clerkUser, user };
         })
       );
